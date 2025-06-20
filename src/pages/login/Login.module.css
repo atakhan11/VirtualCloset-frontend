@@ -130,3 +130,20 @@
     height: 20px;
     margin-right: 12px;
 }
+
+/* Signup.module.css faylının sonuna əlavə edin */
+
+.forgotPasswordLink {
+    display: block; /* Bütün sətri tutması və sağa sıxışdırılması üçün */
+    text-align: right;
+    margin-top: -10px; /* Parol sahəsi ilə arasını bir az azaltmaq üçün */
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: #007bff;
+    text-decoration: none;
+    transition: text-decoration 0.2s;
+}
+
+.forgotPasswordLink:hover {
+    text-decoration: underline;
+}

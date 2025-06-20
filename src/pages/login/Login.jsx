@@ -61,6 +61,9 @@ const LoginPage = () => {
                             required
                         />
                     </div>
+                    <Link to="/forgot-password" className={styles.forgotPasswordLink}>
+                        Şifrəni Unutdum
+                    </Link>
                     <button type="submit" className={styles.button}>Daxil Ol</button>
                     <p className={styles.switchLink}>
                         Hesabınız yoxdur? <Link to="/register">Qeydiyyatdan keçin</Link>

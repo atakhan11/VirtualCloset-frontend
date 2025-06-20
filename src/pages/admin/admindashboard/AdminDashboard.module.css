@@ -1,0 +1,89 @@
+/* src/pages/admin/AdminDashboard.module.css */
+
+.dashboard {
+    padding: 2rem;
+    background-color: #f9f9f9;
+}
+
+.title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.summaryCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.icon {
+    font-size: 3rem;
+    padding: 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.card h3 {
+    font-size: 2.5rem;
+    margin: 0;
+    color: #333;
+}
+
+.card p {
+    margin: 0;
+    color: #777;
+    font-size: 1rem;
+}
+
+.quickNav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.navLink {
+    background: #ffffff;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.navLink:hover {
+    transform: translateY(-5px);
+    color: #007bff;
+}
+
+.navIcon {
+    font-size: 2.5rem;
+}
