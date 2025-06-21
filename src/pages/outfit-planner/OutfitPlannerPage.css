@@ -1,0 +1,224 @@
+.planner-container {
+    padding: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.planner-container h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.planner-layout {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* Sol Panel: Geyim Siyahısı */
+.all-clothes-panel {
+    flex: 1;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    border: 1px solid #dee2e6;
+}
+
+.all-clothes-panel h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ced4da;
+    padding-bottom: 0.5rem;
+}
+
+.clothes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.cloth-item-small {
+    position: relative;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.cloth-item-small img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    display: block;
+}
+
+.add-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+.cloth-item-small:hover .add-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 1;
+}
+
+/* Sağ Panel: Kombin Qurucu */
+.outfit-builder-panel {
+    flex: 2;
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.outfit-builder-panel h3 {
+    margin-top: 0;
+}
+
+.outfit-drop-zone {
+    min-height: 200px;
+    border: 2px dashed #ced4da;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 1rem;
+    align-content: flex-start;
+}
+
+.outfit-drop-zone p {
+    width: 100%;
+    text-align: center;
+    color: #adb5bd;
+    font-size: 1.2rem;
+    align-self: center;
+}
+
+.outfit-item {
+    position: relative;
+    width: 120px;
+    height: 140px;
+}
+
+.outfit-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.remove-item-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.outfit-item:hover .remove-item-btn {
+    opacity: 1;
+}
+
+.outfit-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.outfit-name-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.save-outfit-btn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Yadda Saxlanılan Kombinlər Bölməsi */
+.saved-outfits-section h2 {
+    border-top: 1px solid #dee2e6;
+    padding-top: 2rem;
+}
+
+.outfits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.outfit-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    position: relative;
+}
+
+.outfit-card h4 {
+    margin-top: 0;
+}
+
+.outfit-card-images {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+.outfit-card-images img {
+    width: 60px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.delete-outfit-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #fa5252;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.5;
+}
+.outfit-card:hover .delete-outfit-btn {
+    opacity: 1;
+}
+
+
+.outfit-card-link {
+    text-decoration: none;
+    color: inherit;
+}

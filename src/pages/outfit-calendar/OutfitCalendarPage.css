@@ -1,0 +1,71 @@
+.calendar-page-container {
+    display: flex;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    height: calc(100vh - 80px); /* 80px header hündürlüyü üçün nəzərdə tutulub, öz proyektinizə görə dəyişin */
+}
+
+/* Sol Panel: Kombin Siyahısı */
+.calendar-sidebar {
+    width: 25%;
+    max-width: 300px;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-sidebar h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.calendar-sidebar p {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.unplanned-outfits-list {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.unplanned-outfit-item {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    background-color: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.unplanned-outfit-item:hover {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+
+.unplanned-outfit-item.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+    font-weight: bold;
+}
+
+/* Sağ Panel: Təqvim */
+.calendar-main {
+    flex-grow: 1;
+    padding: 1.5rem;
+}
+
+/* react-big-calendar üçün bəzi stil dəyişiklikləri */
+.rbc-event {
+    background-color: #28a745 !important; /* Planlanmış kombinlərin rəngi */
+    border-radius: 4px !important;
+}
+
+.rbc-day-slot .rbc-event {
+    border: 1px solid #1e7e34 !important;
+}

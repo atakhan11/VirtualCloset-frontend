@@ -75,7 +75,16 @@ const userSlice = createSlice({
             state.token = action.payload.token;
             state.status = 'succeeded';
             state.error = null;
-        }
+        },
+        setCredentials(state, action) {
+            const { user, token } = action.payload;
+            state.userInfo = user;
+            state.token = token;
+            // Məlumatları localStorage-a da yazırıq ki, səhifə yenilənəndə itməsin
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('token', token);
+        },
+   
     },
     extraReducers: (builder) => {
         builder
@@ -102,7 +111,7 @@ const userSlice = createSlice({
     }
 });
 
-export const { logout, setAuth } = userSlice.actions;
+export const { logout, setAuth, setCredentials } = userSlice.actions;
 export const selectUser = (state) => state.user.user;
 export const selectToken = (state) => state.user.token;
 export default userSlice.reducer;

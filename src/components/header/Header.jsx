@@ -9,7 +9,7 @@ import { logout } from '../../redux/reducers/userSlice'; // logout action-ının
 
 import styles from './Header.module.css';
 import logo from '../../assets/StyleFolio.png';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUserCircle } from 'react-icons/fa';
 
 const Header = ({ user }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -59,6 +59,11 @@ const Header = ({ user }) => {
                                 </Link>
                             </li>
                             <li className={styles.navItem}>
+                <Link to="/calendar" className={styles.navLinks} onClick={closeMobileMenu}>
+                    Calendar
+                </Link>
+            </li>
+                            <li className={styles.navItem}>
                                 <Link to="/wishlist" className={styles.navLinks} onClick={closeMobileMenu}>
                                     Wishlist
                                 </Link>
@@ -85,6 +90,9 @@ const Header = ({ user }) => {
                         <div className={styles.navProfile}>
                             {/* DİQQƏT: user.username yerinə user.name istifadə etdim, çünki backend-dən belə gəlir */}
                             <span>Welcome, {user.name}</span>
+                            <Link to="/profile" className={styles.profileIconLink} title="My Profile">
+        <FaUserCircle className={styles.profileIcon} />
+    </Link>
                             
                             {/* DƏYİŞİKLİK: <Link> yerinə <button> və onClick hadisəsi */}
                             <button onClick={handleLogout} className={`${styles.btn} ${styles.btnSecondary}`}>

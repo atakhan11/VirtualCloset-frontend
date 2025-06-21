@@ -1,65 +1,125 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './AllClothes.css';
 
+// Redaktə pəncərəsi (modal) üçün köməkçi komponent
+const EditClothModal = ({ cloth, onClose, onSave }) => {
+    const [clothData, setClothData] = useState({ 
+        name: cloth.name, 
+        category: cloth.category, 
+        season: cloth.season || '' 
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setClothData(prevState => ({ ...prevState, [name]: value }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSave(cloth._id, clothData);
+    };
+
+    return (
+        <div className="modal-backdrop">
+            <div className="modal-content">
+                <h2>Geyimi Redaktə Et</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label>Ad</label>
+                        <input type="text" name="name" value={clothData.name} onChange={handleChange} required />
+                    </div>
+                    <div className="form-group">
+                        <label>Kateqoriya</label>
+                        <input type="text" name="category" value={clothData.category} onChange={handleChange} required />
+                    </div>
+                     <div className="form-group">
+                        <label>Mövsüm</label>
+                        <input type="text" name="season" value={clothData.season} onChange={handleChange} />
+                    </div>
+                    {/* Digər sahələr üçün də inputlar əlavə edə bilərsiniz */}
+                    <div className="modal-actions">
+                        <button type="submit" className="btn-primary">Yadda Saxla</button>
+                        <button type="button" onClick={onClose}>Ləğv Et</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+
+// Ana komponent
 const AllClothesScreen = () => {
     const [clothes, setClothes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    
+    // === Redaktə Modal üçün State-lər ===
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [currentClothToEdit, setCurrentClothToEdit] = useState(null);
 
     useEffect(() => {
         const fetchAllClothes = async () => {
-            // Tokeni brauzerin yaddaşından götürürük
             const token = localStorage.getItem('token');
             if (!token) {
-                setError("Autentifikasiya tokeni tapılmadı. Zəhmət olmasa, admin olaraq yenidən daxil olun.");
+                setError("Autentifikasiya tokeni tapılmadı.");
                 setLoading(false);
                 return;
             }
-
-            // Hər qorunan sorğu üçün tokeni başlıqda göndərmək üçün konfiqurasiya
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json', // Bu başlığı əlavə etmək yaxşı praktikadır
-                    Authorization: `Bearer ${token}`
-                }
-            };
-
+            const config = { headers: { Authorization: `Bearer ${token}` } };
             try {
-                setLoading(true);
-                // 1. BÜTÜN geyimləri gətirən admin endpoint-ini birbaşa axios ilə çağırırıq
                 const { data } = await axios.get('http://localhost:5000/api/clothes/all', config); 
-                
                 setClothes(data);
             } catch (err) {
-                setError('Geyimləri yükləmək mümkün olmadı. Admin icazəniz olduğundan əmin olun.');
+                setError('Geyimləri yükləmək mümkün olmadı.');
                 console.error("Bütün geyimləri yükləyərkən xəta:", err);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchAllClothes();
-    }, []); // Boş massiv, bu effektin yalnız komponent yüklənəndə bir dəfə işə düşməsini təmin edir
+    }, []);
 
     const handleDeleteCloth = async (clothId) => {
         if(window.confirm('Bu geyimi silməyə əminsinizmi?')) {
             try {
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-
-                // 2. Admin olaraq geyimi birbaşa axios ilə silirik
                 await axios.delete(`http://localhost:5000/api/clothes/${clothId}`, config);
-                
-                // UI-nı dərhal yeniləmək üçün geyimi siyahıdan çıxarırıq
                 setClothes(clothes.filter(c => c._id !== clothId));
                 alert('Geyim uğurla silindi.');
             } catch (err) {
                 const errorMessage = err.response?.data?.message || 'Server xətası';
-                console.error("Geyimi silərkən xəta baş verdi:", err);
                 alert(`Xəta: ${errorMessage}`);
             }
         }
-    }
+    };
+
+    // === Redaktə Modalını idarə edən funksiyalar ===
+    const openEditModal = (cloth) => {
+        setCurrentClothToEdit(cloth);
+        setIsEditModalOpen(true);
+    };
+
+    const handleUpdateCloth = async (clothId, updatedData) => {
+        try {
+            const token = localStorage.getItem('token');
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const { data: updatedCloth } = await axios.put(`http://localhost:5000/api/clothes/${clothId}`, updatedData, config);
+            
+            // Siyahını yeniləyirik
+            setClothes(clothes.map(c => c._id === clothId ? updatedCloth : c));
+            
+            // Modalı bağlayırıq
+            setIsEditModalOpen(false);
+            setCurrentClothToEdit(null);
+            alert('Geyim məlumatları yeniləndi.');
+        } catch (err) {
+            const errorMessage = err.response?.data?.message || 'Server xətası';
+            alert(`Xəta: ${errorMessage}`);
+        }
+    };
 
     if (loading) return <p>Yüklənir...</p>;
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
@@ -70,14 +130,13 @@ const AllClothesScreen = () => {
             <div className="clothes-grid">
                 {clothes.length > 0 ? clothes.map((cloth) => (
                     <div key={cloth._id} className="cloth-card">
-                        {/* Şəkillərin düzgün görünməsi üçün backend ünvanını əlavə edirik */}
-                        <img src={`http://localhost:5000${cloth.image}`} alt={cloth.name} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+                        <img src={`http://localhost:5000${cloth.image}`} alt={cloth.name} />
                         <h4>{cloth.name}</h4>
                         <p>Kateqoriya: {cloth.category}</p>
-                        {/* populate() etdiyimiz üçün istifadəçi məlumatını göstərə bilirik */}
                         <p>Sahibi: {cloth.user ? cloth.user.name : 'Naməlum'}</p>
                         <div className='action-buttons'>
-                            <button className="edit-btn">Redaktə Et</button>
+                            {/* DÜYMƏYƏ ONCLICK ƏLAVƏ EDİLDİ */}
+                            <button className="edit-btn" onClick={() => openEditModal(cloth)}>Redaktə Et</button>
                             <button className="delete-btn" onClick={() => handleDeleteCloth(cloth._id)}>Sil</button>
                         </div>
                     </div>
@@ -85,6 +144,15 @@ const AllClothesScreen = () => {
                     <p>Heç bir geyim tapılmadı.</p>
                 )}
             </div>
+
+            {/* MODAL PƏNCƏRƏSİNİN RENDER OLUNMASI */}
+            {isEditModalOpen && (
+                <EditClothModal
+                    cloth={currentClothToEdit}
+                    onClose={() => setIsEditModalOpen(false)}
+                    onSave={handleUpdateCloth}
+                />
+            )}
         </div>
     );
 };

@@ -96,10 +96,9 @@
 }
 
 .navProfile {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    color: #333;
+     display: flex;
+    align-items: center; /* Elementləri vertikal olaraq mərkəzləyir */
+    gap: 1rem; /* Elementlər arası məsafə */
 }
 
 /* --- Mobil Responsivlik --- */
@@ -109,6 +108,22 @@
     font-size: 1.8rem;
     cursor: pointer;
     color: #333;
+}
+
+.profileIconLink {
+    display: flex; /* İkonu mərkəzləmək üçün */
+    align-items: center;
+    color: #333; /* İkonun rəngi */
+    transition: color 0.2s ease-in-out;
+}
+
+.profileIconLink:hover {
+    color: #007bff; /* Hover zamanı rəngi */
+}
+
+/* Profil ikonunun özünün stilləri */
+.profileIcon {
+    font-size: 1.8rem; /* İkonun ölçüsü */
 }
 
 @media screen and (max-width: 960px) {

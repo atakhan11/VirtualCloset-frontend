@@ -1,0 +1,68 @@
+.outfit-detail-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.outfit-detail-container h1 {
+    text-align: center;
+    font-size: 2.8rem;
+    color: #333;
+    margin-bottom: 2.5rem;
+}
+
+.outfit-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.cloth-card-detail {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    text-align: center;
+}
+
+.cloth-card-detail img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.cloth-info {
+    padding: 1rem;
+}
+
+.cloth-info h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.cloth-info p {
+    margin: 0;
+    color: #777;
+}
+
+.page-status {
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 2rem;
+}
+.page-status.error {
+    color: #dc3545;
+}

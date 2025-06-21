@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './UserListPage.css';
+
 
 // Redaktə pəncərəsi (modal) üçün köməkçi komponent
 const EditUserModal = ({ user, onClose, onSave }) => {

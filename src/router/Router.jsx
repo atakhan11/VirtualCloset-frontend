@@ -1,40 +1,67 @@
-import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router'
-import Layout from '../components/layout/Layout.jsx'
-import Features from '../pages/features/Features.jsx'
-import SignupPage from '../pages/signup/SignUp.jsx'
-import LoginPage from '../pages/login/Login.jsx'
-import AuthSuccessPage from '../pages/auth/AuthSuccessPage.jsx'
-import AdminRoute from '../components/adminroute/AdminRoute.jsx'; // <-- YENİ
-import AdminDashboard from '../pages/admin/admindashboard/AdminDashboard.jsx'; // <-- YENİ
-import UserListPage from '../pages/admin/userlist/UserListPage.jsx'; // <-- YENİ
-import ForgotPasswordPage from '../pages/password/ForgotPasswordPage.jsx'
-import ResetPasswordPage from '../pages/password/ResetPasswordPage.jsx'
-import AllClothesScreen from '../pages/admin/allclothes/AllClothes.jsx'
+import React from 'react';
+// BrowserRouter, Routes, Route importlarının düzgün olduğundan əmin olun
+import { BrowserRouter, Route, Routes } from 'react-router-dom'; 
+
+// Komponentlərin importları
+import Layout from '../components/layout/Layout.jsx';
+import PrivateRoute from '../components/privateroute/PrivateRoute.jsx'; // Qorunan route üçün komponent
+import AdminRoute from '../components/adminroute/AdminRoute.jsx';
+
+// Səhifələrin importları
+import Features from '../pages/features/Features.jsx';
+import SignupPage from '../pages/signup/SignUp.jsx';
+import LoginPage from '../pages/login/Login.jsx';
+import AuthSuccessPage from '../pages/auth/AuthSuccessPage.jsx';
+import ForgotPasswordPage from '../pages/password/ForgotPasswordPage.jsx';
+import ResetPasswordPage from '../pages/password/ResetPasswordPage.jsx';
+import ProfilePage from '../pages/profile/ProfilePage.jsx';
+
+
+// Admin səhifələrinin importları
+import AdminDashboard from '../pages/admin/admindashboard/AdminDashboard.jsx';
+import UserListPage from '../pages/admin/userlist/UserListPage.jsx';
+import AllClothesScreen from '../pages/admin/allclothes/AllClothes.jsx';
+import MyWardrobePage from '../pages/userwardrobe/MyWardrobePage.jsx';
+import OutfitPlannerPage from '../pages/outfit-planner/OutfitPlannerPage.jsx';
+import OutfitDetailPage from '../pages/outfit-detail/OutfitDetailPage.jsx';
+import OutfitCalendarPage from '../pages/outfit-calendar/OutfitCalendarPage.jsx';
+import WishlistPage from '../pages/wishlist/WishlistPage.jsx';
 
 const Router = () => {
   return (
     <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<Layout />}>
-               <Route path='features' element={<Features />} />
-               <Route path='register' element={<SignupPage />} />
-               <Route path='login' element={<LoginPage />} />
-               <Route path="/auth-success" element={<AuthSuccessPage />} />
-               <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
-               <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-            </Route>
-            <Route path="/admin" element={<AdminRoute />}>
-                {/* /admin yazanda AdminDashboard açılacaq */}
-                <Route index element={<AdminDashboard />} /> 
-                {/* /admin/users yazanda UserListPage açılacaq */}
-                <Route path="users" element={<UserListPage />} />
-                <Route path="clothes" element={<AllClothesScreen />} />
-                {/* Gələcəkdə digər admin səhifələrini bura əlavə edə bilərsiniz */}
-            </Route>
-        </Routes>
+      <Routes>
+        {/* Public və Layout-a bağlı Route-lar */}
+        <Route path="/" element={<Layout />}>
+          {/* Public olanlar */}
+          <Route path='features' element={<Features />} />
+          <Route path='register' element={<SignupPage />} />
+          <Route path='login' element={<LoginPage />} />
+          <Route path="/auth-success" element={<AuthSuccessPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+          
+          {/* === ADİ İSTİFADƏÇİLƏR ÜÇÜN QORUNAN ROUTE-LAR === */}
+          <Route path='' element={<PrivateRoute />}>
+            <Route path="/profile" element={<ProfilePage />} />
+            {/* YENİ ROUTE BURADA ƏLAVƏ EDİLDİ */}
+            <Route path="/my-wardrobe" element={<MyWardrobePage />} />
+            <Route path="/outfit-planner" element={<OutfitPlannerPage />} />
+            <Route path="/outfits/:id" element={<OutfitDetailPage />} />
+            <Route path="/calendar" element={<OutfitCalendarPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
+          </Route>
+        </Route>
+        
+        {/* Admin üçün Qorunan Route-lar */}
+        <Route path="/admin" element={<AdminRoute />}>
+          <Route index element={<AdminDashboard />} /> 
+          <Route path="users" element={<UserListPage />} />
+          <Route path="clothes" element={<AllClothesScreen />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
-  )
-}
+  );
+};
 
-export default Router
+export default Router;
