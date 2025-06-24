@@ -1,0 +1,92 @@
+.features-page-container {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #333;
+}
+
+.features-header {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.features-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.features-header p {
+    font-size: 1.2rem;
+    color: #6c757d;
+    max-width: 700px;
+    margin: 1rem auto 0;
+}
+
+.features-main-content {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+}
+
+.feature-detail-card {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.feature-detail-card:last-of-type {
+    border-bottom: none;
+}
+
+.feature-detail-icon {
+    font-size: 2.5rem;
+    color: #007bff;
+    background-color: #e7f5ff;
+    width: 70px;
+    height: 70px;
+    min-width: 70px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.feature-detail-content h3 {
+    margin-top: 0;
+    font-size: 1.6rem;
+}
+
+.feature-detail-content p {
+    line-height: 1.7;
+    color: #495057;
+}
+
+.features-cta {
+    text-align: center;
+    padding: 3rem;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    margin-top: 4rem;
+}
+
+.features-cta h2 {
+    font-size: 2rem;
+}
+
+.cta-button-features {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: #28a745;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+.cta-button-features:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}

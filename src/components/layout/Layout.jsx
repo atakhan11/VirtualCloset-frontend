@@ -10,6 +10,7 @@ import Footer from '../footer/Footer';
 
 // Redux selector-unu import edirik
 import { selectUser } from '../../redux/reducers/userSlice'; // Fayl yolunu öz proyektinizə uyğunlaşdırın
+import Chat from '../chat/Chat';
 
 const Layout = () => {
     // 2. Redux store-dan cari user məlumatını götürürük
@@ -24,7 +25,7 @@ const Layout = () => {
                 {/* <Outlet /> komponenti Router.jsx-dəki sub-route-ları (Login, Register və s.) burada render edir */}
                 <Outlet />
             </main>
-
+            {user && <Chat />}
             <Footer />
         </>
     )

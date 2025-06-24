@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaPlus, FaTrash, FaShoppingCart, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaShoppingCart, FaExternalLinkAlt, FaEdit } from 'react-icons/fa';
 import './WishlistPage.css';
 
 // Yeni Arzu Əlavə Etmə/Redaktə Modalı
@@ -72,7 +72,7 @@ const WishlistItemFormModal = ({ itemToEdit, onSave, onClose }) => {
                         <input type="number" name="price" value={formData.price} onChange={handleChange} />
                     </div>
                     <div className="form-group">
-                        <label>Mağaza Linki (URL)</label>
+                        <label>Məhsulun Linki (URL)</label>
                         <input type="text" name="storeUrl" value={formData.storeUrl} onChange={handleChange} />
                     </div>
                     <div className="form-group">
@@ -96,6 +96,7 @@ const WishlistPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingItem, setEditingItem] = useState(null); // Redaktə üçün state
     
     const fetchWishlist = async () => {
         try {
@@ -115,16 +116,24 @@ const WishlistPage = () => {
         fetchWishlist();
     }, []);
 
-    const handleSave = async (formData) => {
+    const handleSave = async (formData, itemId) => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
             const config = { headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` }};
-            await axios.post('http://localhost:5000/api/wishlist', formData, config);
+            
+            if (itemId) { // Əgər ID varsa, deməli bu redaktədir (PUT)
+                await axios.put(`http://localhost:5000/api/wishlist/${itemId}`, formData, config);
+            } else { // Əgər ID yoxdursa, deməli yeni əlavə etmədir (POST)
+                await axios.post('http://localhost:5000/api/wishlist', formData, config);
+            }
+
             setIsModalOpen(false);
+            setEditingItem(null);
             await fetchWishlist();
         } catch(err) {
             alert(`Xəta: ${err.response?.data?.message || 'Server xətası'}`);
+        } finally {
             setLoading(false);
         }
     };
@@ -135,25 +144,34 @@ const WishlistPage = () => {
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
                 await axios.delete(`http://localhost:5000/api/wishlist/${itemId}`, config);
-                await fetchWishlist();
+                await fetchWishlist(); // Siyahını yeniləmək üçün datanı yenidən çəkirik
             } catch (err) {
+                console.error("Məhsul silinərkən xəta baş verdi:", err);
                 alert('Məhsul silinərkən xəta baş verdi.');
             }
         }
     };
     
+    // === DÜZƏLİŞ: handleMoveToWardrobe funksiyası tam yazıldı ===
     const handleMoveToWardrobe = async (itemId) => {
         if (window.confirm('Bu məhsulu aldınız və qarderoba köçürmək istəyirsiniz?')) {
             try {
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
+                // Backend-ə boş bir obyekt göndəririk, çünki bütün məlumatlar artıq serverdədir
                 await axios.post(`http://localhost:5000/api/wishlist/${itemId}/move`, {}, config);
                 alert('Təbriklər! Məhsul qarderobunuza əlavə edildi.');
-                await fetchWishlist();
+                await fetchWishlist(); // Arzu siyahısını yeniləyirik
             } catch(err) {
+                 console.error("Qarderoba köçürərkən xəta baş verdi:", err);
                  alert(`Xəta: ${err.response?.data?.message || 'Server xətası'}`);
             }
         }
+    };
+
+    const openModal = (item = null) => {
+        setEditingItem(item);
+        setIsModalOpen(true);
     };
 
     if (loading) return <p>Yüklənir...</p>;
@@ -163,13 +181,13 @@ const WishlistPage = () => {
         <div className="wishlist-container">
             <div className="wishlist-header">
                 <h1>Arzu Siyahım</h1>
-                <button className="add-new-btn" onClick={() => setIsModalOpen(true)}>
+                <button className="add-new-btn" onClick={() => openModal()}>
                     <FaPlus /> Yeni Arzu Əlavə Et
                 </button>
             </div>
 
             <div className="wishlist-grid">
-                {wishlistItems.length > 0 ? wishlistItems.map((item) => (
+                {wishlistItems.map((item) => (
                     <div key={item._id} className="wishlist-card">
                         {item.image && <img src={`http://localhost:5000${item.image}`} alt={item.name} />}
                         <div className="wishlist-card-content">
@@ -179,28 +197,27 @@ const WishlistPage = () => {
                             {item.notes && <p className="notes-text">{item.notes}</p>}
                             <div className="wishlist-card-actions">
                                 {item.storeUrl && (
-                                    <a href={item.storeUrl} target="_blank" rel="noopener noreferrer" className="action-btn store-link">
-                                        <FaExternalLinkAlt /> Mağazaya Keçid
+                                    <a href={item.storeUrl} target="_blank" rel="noopener noreferrer" className="action-btn store-link" title="Məhsulun linki">
+                                        <FaExternalLinkAlt /> Məhsula Bax
                                     </a>
                                 )}
                                 <button className="action-btn move-btn" onClick={() => handleMoveToWardrobe(item._id)}>
                                     <FaShoppingCart /> Qarderoba Köçür
                                 </button>
-                                <button className="action-btn delete-btn" onClick={() => handleDelete(item._id)}>
-                                    <FaTrash /> Sil
-                                </button>
+                            </div>
+                             {/* === YENİ REDAKTƏ VƏ SİLMƏ DÜYMƏLƏRİ === */}
+                            <div className="wishlist-card-edit-delete">
+                                <button className="icon-btn edit-btn" onClick={() => openModal(item)}><FaEdit /></button>
+                                <button className="icon-btn delete-btn" onClick={() => handleDelete(item._id)}><FaTrash /></button>
                             </div>
                         </div>
                     </div>
-                )) : (
-                    <div className="empty-wishlist">
-                        <p>Arzu siyahınız boşdur. Yeni arzular əlavə edin!</p>
-                    </div>
-                )}
+                ))}
             </div>
             
             {isModalOpen && (
                 <WishlistItemFormModal
+                    itemToEdit={editingItem}
                     onSave={handleSave}
                     onClose={() => setIsModalOpen(false)}
                 />

@@ -1,0 +1,223 @@
+.dashboard-container {
+    padding: 2rem 3rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dashboard-greeting {
+    margin-bottom: 2rem;
+}
+.dashboard-greeting h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #212529;
+}
+.dashboard-greeting p {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+/* Sürətli Keçidlər */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+.action-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    text-decoration: none;
+    color: #343a40;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    color: #007bff;
+}
+.action-card svg {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #007bff;
+}
+
+/* Widget-lər üçün Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+/* Ümumi Widget Stili */
+.dashboard-widget {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+.dashboard-widget h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #f1f3f5;
+    padding-bottom: 1rem;
+}
+
+/* Bu Günün Kombini Widgeti */
+.todays-outfit-images, .suggestion-images {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+.todays-outfit-images img, .suggestion-images img {
+    width: 100px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Boş Widget Stili */
+.empty-widget {
+    text-align: center;
+    padding: 2rem 0;
+}
+.empty-widget p {
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+.widget-link {
+    background-color: #f1f3f5;
+    color: #495057;
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.widget-link:hover {
+    background-color: #e9ecef;
+}
+
+/* Arzu Siyahısı Widgeti */
+.wishlist-reminder-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.wishlist-reminder-item img {
+    width: 70px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.wishlist-reminder-item p {
+    font-weight: 600;
+    flex-grow: 1;
+}
+
+.page-status { /* Yüklənir... və Xəta mesajları üçün */
+    text-align: center;
+    padding: 4rem;
+    font-size: 1.2rem;
+}
+.page-status.error {
+    color: #dc3545;
+}
+
+
+.suggestion-banner {
+    margin: 2.5rem 0;
+    text-align: center;
+}
+.suggestion-button {
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(45deg, #8E2DE2, #4A00E0);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+.suggestion-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* --- Modal Stilleri (Təklif üçün) --- */
+.modal-backdrop {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex; justify-content: center; align-items: center; z-index: 1000;
+}
+.modal-content.suggestion-modal {
+    background-color: white; padding: 2rem; border-radius: 12px; width: 90%; 
+    max-width: 700px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    position: relative;
+}
+.suggestion-modal h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.suggestion-images-large {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+.suggestion-item {
+    text-align: center;
+}
+.suggestion-item img {
+    width: 160px;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.suggestion-item p {
+    margin-top: 0.75rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+.modal-actions.suggestion-actions {
+    justify-content: center !important;
+    gap: 1.5rem !important;
+}
+
+.empty-suggestion {
+    padding: 2rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #adb5bd;
+    cursor: pointer;
+}
+.close-modal-btn:hover {
+    color: #495057;
+}

@@ -46,6 +46,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+     position: relative;
 }
 
 .wishlist-card img {
@@ -115,6 +116,7 @@
 }
 
 .store-link {
+    width: 100%;
     background-color: #17a2b8;
     color: white;
     text-decoration: none;
@@ -140,4 +142,33 @@
     padding: 4rem;
     background-color: #fff;
     border-radius: 12px;
+}
+
+.wishlist-card-edit-delete {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #868e96;
+    transition: color 0.2s ease;
+}
+
+.icon-btn.edit-btn:hover { color: #1c7ed6; }
+.icon-btn.delete-btn:hover { color: #fa5252; }
+
+/* === MODAL DÜZƏLİŞİ: Qeydlər sahəsi üçün === */
+.form-group textarea {
+    resize: vertical; /* Yalnız vertikal böyüməyə icazə verir */
+    min-height: 80px;
 }

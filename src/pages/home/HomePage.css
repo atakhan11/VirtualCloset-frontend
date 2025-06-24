@@ -1,0 +1,243 @@
+/* ======================================================= */
+/* ===         HomePage.css (Təkmilləşdirilmiş)        === */
+/* ======================================================= */
+
+.home-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: #212529;
+    overflow-x: hidden; /* Yan scroll-un qarşısını alır */
+}
+
+/* === Hero Section === */
+.hero-section-enhanced {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6rem 5%;
+    background: #f8f9fa;
+    min-height: 90vh;
+}
+.hero-content-enhanced {
+    max-width: 50%;
+    padding-right: 3rem;
+}
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 3.8rem); /* Responsiv yazı ölçüsü */
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+}
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+}
+.cta-button-primary {
+    padding: 1rem 2rem;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+.cta-button-primary:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+.cta-button-secondary {
+    padding: 1rem 2rem;
+    background: transparent;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+.cta-button-secondary:hover {
+    background: #007bff;
+    color: white;
+}
+.hero-image-enhanced img {
+    width: 100%;
+    max-width: 450px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+/* === Ümumi Bölmə Başlıqları === */
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+.section-title span {
+    color: #007bff;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+.section-title h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+/* === Features Section === */
+.features-section-enhanced {
+    padding: 6rem 5%;
+}
+.features-grid-enhanced {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.feature-card-enhanced {
+    background: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+.feature-card-enhanced:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+}
+.feature-icon-enhanced {
+    font-size: 2.5rem;
+    color: #007bff;
+    margin-bottom: 1.5rem;
+}
+.feature-card-enhanced h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+.feature-card-enhanced p {
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+/* === Inspiration Section === */
+.inspiration-section {
+    padding: 6rem 5%;
+    background-color: #f8f9fa;
+}
+.inspiration-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.inspiration-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.4s ease;
+}
+.inspiration-card img:hover {
+    transform: scale(1.05);
+}
+
+/* === Testimonials Section === */
+.testimonials-section-enhanced {
+    padding: 6rem 5%;
+}
+.testimonials-grid-enhanced {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+.testimonial-card-enhanced {
+    background: #f8f9fa;
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+.testimonial-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.testimonial-card-enhanced blockquote {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #495057;
+    margin: 0 0 1rem 0;
+}
+.testimonial-card-enhanced cite {
+    font-weight: 600;
+    font-style: normal;
+    color: #212529;
+}
+
+/* === Final CTA Section === */
+.final-cta-section-enhanced {
+    padding: 6rem 2rem;
+    text-align: center;
+    background-color: #343a40;
+    color: #fff;
+}
+.final-cta-section-enhanced p {
+    font-size: 1.2rem;
+    color: #adb5bd;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.cta-button-final {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.2rem 3rem;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+.cta-button-final:hover {
+    background: #fff;
+    color: #007bff;
+}
+
+/* === Responsiveness === */
+@media (max-width: 992px) {
+    .hero-section-enhanced {
+        flex-direction: column-reverse;
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+    .hero-content-enhanced {
+        max-width: 100%;
+        padding-right: 0;
+        margin-top: 3rem;
+    }
+    .hero-buttons {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .testimonials-grid-enhanced, .inspiration-grid {
+        grid-template-columns: 1fr;
+    }
+}

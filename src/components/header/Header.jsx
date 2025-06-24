@@ -1,42 +1,36 @@
 // src/components/Header/Header.jsx
 
 import React, { useState } from 'react';
-// DƏYİŞİKLİK: useNavigate-i import edirik
 import { Link, useNavigate } from 'react-router-dom';
-// DƏYİŞİKLİK: Redux üçün lazımi funksiyaları import edirik
-import { useDispatch } from 'react-redux';
-import { logout } from '../../redux/reducers/userSlice'; // logout action-ının yolunu yoxlayın
+import { useDispatch, useSelector } from 'react-redux'; // useSelector əlavə edildi
+import { logout, selectUser } from '../../redux/reducers/userSlice'; // selectUser əlavə edildi
 
 import styles from './Header.module.css';
 import logo from '../../assets/StyleFolio.png';
 import { FaBars, FaTimes, FaUserCircle } from 'react-icons/fa';
 
-const Header = ({ user }) => {
+const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    
-    // DƏYİŞİKLİK: useDispatch və useNavigate hook-larını çağırırıq
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    
+    // İstifadəçi məlumatını birbaşa Redux-dan alırıq
+    const user = useSelector(selectUser);
 
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
+    const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const closeMobileMenu = () => setIsMenuOpen(false);
 
-    const closeMobileMenu = () => {
-        setIsMenuOpen(false);
-    };
-
-    // DƏYİŞİKLİK: Yeni logout funksiyası
     const handleLogout = () => {
-        dispatch(logout());    // Redux state-ini və localStorage-ı təmizləyir
-        closeMobileMenu();     // Mobil menyunu bağlayır
-        navigate('/');    // Login səhifəsinə yönləndirir
+        dispatch(logout());
+        closeMobileMenu();
+        navigate('/login'); // Çıxışdan sonra login səhifəsinə yönləndir
     };
 
     return (
         <nav className={styles.navbar}>
             <div className={styles.navbarContainer}>
-                <Link to="/" className={styles.navbarLogo} onClick={closeMobileMenu}>
+                {/* DƏYİŞİKLİK: Loqonun linki artıq dinamikdir */}
+                <Link to={user ? "/dashboard" : "/"} className={styles.navbarLogo} onClick={closeMobileMenu}>
                     <img src={logo} alt="StyleFolio Logo" />
                 </Link>
 
@@ -44,10 +38,10 @@ const Header = ({ user }) => {
                     {isMenuOpen ? <FaTimes /> : <FaBars />}
                 </div>
                 
-                {/* Bu hissə olduğu kimi qalır */}
                 <ul className={`${styles.navMenu} ${isMenuOpen ? styles.active : ''}`}>
                     {user ? (
                         <>
+                            {/* DƏYİŞİKLİK: Daxil olmuş istifadəçi üçün "Home" linki artıq yoxdur */}
                             <li className={styles.navItem}>
                                 <Link to="/my-wardrobe" className={styles.navLinks} onClick={closeMobileMenu}>
                                     My Wardrobe
@@ -59,10 +53,10 @@ const Header = ({ user }) => {
                                 </Link>
                             </li>
                             <li className={styles.navItem}>
-                <Link to="/calendar" className={styles.navLinks} onClick={closeMobileMenu}>
-                    Calendar
-                </Link>
-            </li>
+                                <Link to="/calendar" className={styles.navLinks} onClick={closeMobileMenu}>
+                                    Təqvim
+                                </Link>
+                            </li>
                             <li className={styles.navItem}>
                                 <Link to="/wishlist" className={styles.navLinks} onClick={closeMobileMenu}>
                                     Wishlist
@@ -71,6 +65,7 @@ const Header = ({ user }) => {
                         </>
                     ) : (
                         <>
+                            {/* Qeydiyyatsız istifadəçi üçün "Home" linki qalır */}
                             <li className={styles.navItem}>
                                 <Link to="/" className={styles.navLinks} onClick={closeMobileMenu}>
                                     Home
@@ -81,6 +76,16 @@ const Header = ({ user }) => {
                                     Features
                                 </Link>
                             </li>
+                            <li className={styles.navItem}>
+                                <Link to="/about" className={styles.navLinks} onClick={closeMobileMenu}>
+                                    About
+                                </Link>
+                            </li>
+                            <li className={styles.navItem}>
+                                <Link to="/contact" className={styles.navLinks} onClick={closeMobileMenu}>
+                                    Contact
+                                </Link>
+                            </li>
                         </>
                     )}
                 </ul>
@@ -88,13 +93,10 @@ const Header = ({ user }) => {
                 <div className={styles.navAuth}>
                     {user ? (
                         <div className={styles.navProfile}>
-                            {/* DİQQƏT: user.username yerinə user.name istifadə etdim, çünki backend-dən belə gəlir */}
                             <span>Welcome, {user.name}</span>
-                            <Link to="/profile" className={styles.profileIconLink} title="My Profile">
-        <FaUserCircle className={styles.profileIcon} />
-    </Link>
-                            
-                            {/* DƏYİŞİKLİK: <Link> yerinə <button> və onClick hadisəsi */}
+                            <Link to="/profile" className={styles.profileIconLink} title="My Profile" onClick={closeMobileMenu}>
+                                <FaUserCircle className={styles.profileIcon} />
+                            </Link>
                             <button onClick={handleLogout} className={`${styles.btn} ${styles.btnSecondary}`}>
                                 Logout
                             </button>
