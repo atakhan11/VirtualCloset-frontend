@@ -31,6 +31,7 @@ import HomePage from '../pages/home/Home.jsx';
 import About from '../pages/about/About.jsx';
 import Contact from '../pages/contact/Contact.jsx';
 import ScrollToTop from '../components/scroll-to-top/ScrollToTop.jsx';
+import ChatPage from '../pages/chat/ChatPage.jsx';
 
 
 const Router = () => {
@@ -61,6 +62,8 @@ const Router = () => {
             <Route path="/outfits/:id" element={<OutfitDetailPage />} />
             <Route path="/calendar" element={<OutfitCalendarPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
+            <Route path="/chat" element={<ChatPage />} /> {/* <-- Ümumi çat səhifəsi */}
+            <Route path="/chat/:conversationId" element={<ChatPage />} /> {/* Seçilmiş söhbət üçün */}
           </Route>
         </Route>
         
