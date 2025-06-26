@@ -32,6 +32,7 @@ import About from '../pages/about/About.jsx';
 import Contact from '../pages/contact/Contact.jsx';
 import ScrollToTop from '../components/scroll-to-top/ScrollToTop.jsx';
 import ChatPage from '../pages/chat/ChatPage.jsx';
+import DonatePage from '../pages/donatepage/DonatePage.jsx';
 
 
 const Router = () => {
@@ -51,7 +52,7 @@ const Router = () => {
           <Route path="/auth-success" element={<AuthSuccessPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-          
+          <Route path='donate' element={<DonatePage />} />
           {/* === ADİ İSTİFADƏÇİLƏR ÜÇÜN QORUNAN ROUTE-LAR === */}
           <Route path='' element={<PrivateRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />

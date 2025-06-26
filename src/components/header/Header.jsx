@@ -62,6 +62,16 @@ const Header = () => {
                                     Wishlist
                                 </Link>
                             </li>
+                            <li className={styles.navItem}>
+                                <Link to="/chat" className={styles.navLinks} onClick={closeMobileMenu}>
+                                    Chat
+                                </Link>
+                            </li>
+                            <li className={styles.navItem}>
+                <Link to="/donate" className={styles.navLinks} onClick={closeMobileMenu}>
+                    Dəstək Ol
+                </Link>
+            </li>
                         </>
                     ) : (
                         <>
@@ -86,6 +96,11 @@ const Header = () => {
                                     Contact
                                 </Link>
                             </li>
+                            <li className={styles.navItem}>
+                <Link to="/donate" className={styles.navLinks} onClick={closeMobileMenu}>
+                    Dəstək Ol
+                </Link>
+            </li>
                         </>
                     )}
                 </ul>
