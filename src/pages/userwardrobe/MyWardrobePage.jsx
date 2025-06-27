@@ -5,10 +5,8 @@ import './MyWardrobePage.css';
 
 // =======================================================
 // YARDIMÇI FUNKSİYA VƏ SABİTLƏR
-// Bu, kodu daha təmiz saxlayır və təkrarçılığın qarşısını alır.
 // =======================================================
 
-// Rəng adlarını CSS-in başa düşdüyü formata çevirir
 const colorTranslator = (colorName) => {
     const trimmedColor = colorName.trim().toLowerCase();
     const colorMap = {
@@ -20,33 +18,34 @@ const colorTranslator = (colorName) => {
     return colorMap[trimmedColor] || trimmedColor;
 };
 
-// Kateqoriyalar siyahısı (backend-dəki enum ilə tam eyni olmalıdır)
 const CATEGORIES = [
     'Köynək (T-shirt)', 'Köynək (Klassik)', 'Polo', 'Swea / Hudi', 
     'Sviter / Cemper', 'Gödəkçə / Palto', 'Pencək / Blazer', 'Şalvar / Cins', 
     'Şort', 'Ayaqqabı', 'Aksesuar', 'İdman Geyimi', 'Kostyum', 'Başqa'
 ];
 
-// Mövsümlər siyahısı
 const SEASONS = ['Yay', 'Qış', 'Payız', 'Yaz', 'Mövsümsüz'];
 
 
 // =======================================================
-// 1. MODAL (PƏNCƏRƏ) ÜÇÜN AYRI KOMPONENT
-// Bu komponent yalnız geyim əlavə etmə və redaktə forması ilə məşğul olur.
+// 1. MODAL KOMPONENTİ (YENİLƏNMİŞ)
+// Fon təmizləmə məntiqi bura inteqrasiya edildi.
 // =======================================================
 const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
     const initialFormData = {
         name: '', category: '', season: '', brand: '', colors: '', notes: ''
     };
     const [formData, setFormData] = useState(initialFormData);
-    const [imageFile, setImageFile] = useState(null);
-    const [preview, setPreview] = useState(null);
+    
+    // --- YENİ STATE-LƏR ---
+    const [imageFile, setImageFile] = useState(null); // Orijinal fayl
+    const [preview, setPreview] = useState(null); // Orijinal faylın önbaxışı
+    const [processedImageUrl, setProcessedImageUrl] = useState(''); // Fonsuz şəklin URL-i
+    const [isProcessing, setIsProcessing] = useState(false); // Fon təmizlənir?
+    const [message, setMessage] = useState(''); // İstifadəçiyə mesaj
 
-    // Bu hook, pəncərə hər dəfə açılanda onun məzmununu sıfırlayır və ya yeniləyir.
     useEffect(() => {
         if (clothToEdit) {
-            // Redaktə rejimi: Formu mövcud məlumatlarla doldurur.
             setFormData({
                 name: clothToEdit.name || '',
                 category: clothToEdit.category || '',
@@ -55,14 +54,16 @@ const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
                 colors: clothToEdit.colors?.join(', ') || '',
                 notes: clothToEdit.notes || ''
             });
-            setPreview(clothToEdit.image ? `http://localhost:5000${clothToEdit.image}` : null);
+            // Redaktə rejimində mövcud şəkli göstəririk
+            setProcessedImageUrl(clothToEdit.image || '');
+            setPreview(clothToEdit.image || null);
         } else {
-            // Yeni geyim rejimi: Formu tamamilə boşaldır.
             setFormData(initialFormData);
             setPreview(null);
+            setProcessedImageUrl('');
         }
-        // Hər dəfə açılanda köhnə fayl seçimini təmizləyir.
         setImageFile(null);
+        setMessage('');
     }, [clothToEdit]);
 
     const handleChange = (e) => {
@@ -74,17 +75,41 @@ const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
         if (file) {
             setImageFile(file);
             setPreview(URL.createObjectURL(file));
+            setProcessedImageUrl(''); // Yeni şəkil seçiləndə köhnə emal olunmuş şəkli təmizlə
+            setMessage('');
+        }
+    };
+
+    // --- YENİ FUNKSİYA: FON TƏMİZLƏMƏ ---
+    const handleRemoveBackground = async () => {
+        if (!imageFile) {
+            setMessage('Zəhmət olmasa, əvvəlcə yeni bir şəkil seçin.');
+            return;
+        }
+        setIsProcessing(true);
+        setMessage('Fon təmizlənir, zəhmət olmasa gözləyin...');
+        const uploadFormData = new FormData();
+        uploadFormData.append('image', imageFile);
+
+        try {
+            const res = await axios.post('/api/upload/remove-bg', uploadFormData);
+            setProcessedImageUrl(res.data.imageUrl);
+            setMessage('Fon uğurla təmizləndi!');
+        } catch (error) {
+            setMessage(`Xəta: ${error.response?.data?.message || 'Server xətası'}`);
+        } finally {
+            setIsProcessing(false);
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = new FormData();
-        Object.keys(formData).forEach(key => data.append(key, formData[key]));
-        if (imageFile) {
-            data.append('image', imageFile);
+        if (!processedImageUrl) {
+            setMessage('Zəhmət olmasa, "Fonunu Təmizlə" düyməsinə basın və ya redaktə üçün mövcud şəkli saxlayın.');
+            return;
         }
-        onSave(data, clothToEdit?._id);
+        const finalData = { ...formData, image: processedImageUrl };
+        onSave(finalData, clothToEdit?._id);
     };
 
     return (
@@ -92,11 +117,24 @@ const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
             <div className="modal-content">
                 <h2>{clothToEdit ? 'Geyimi Redaktə Et' : 'Yeni Geyim Əlavə Et'}</h2>
                 <form onSubmit={handleSubmit}>
+                    {/* --- Şəkil Yükləmə Bloku (Yenilənmiş) --- */}
                     <div className="form-group">
                         <label>Şəkil</label>
-                        {preview && <img src={preview} alt="Preview" className="image-preview" />}
-                        <input type="file" onChange={handleImageChange} accept="image/*" required={!clothToEdit} />
+                        <div className="image-previews">
+                           {preview && <img src={preview} alt="Önbaxış" className="image-preview" />}
+                           {processedImageUrl && preview !== processedImageUrl && (
+                               <img src={processedImageUrl} alt="Fonsuz şəkil" className="image-preview" />
+                           )}
+                        </div>
+                        <input type="file" onChange={handleImageChange} accept="image/*" />
+                        {imageFile && (
+                            <button type="button" className="btn-secondary" onClick={handleRemoveBackground} disabled={isProcessing}>
+                                {isProcessing ? 'Emal olunur...' : 'Fonunu Təmizlə'}
+                            </button>
+                        )}
                     </div>
+                    
+                    {/* Digər form sahələri olduğu kimi qalır */}
                     <div className="form-group">
                         <label>Ad</label>
                         <input type="text" name="name" value={formData.name} onChange={handleChange} required />
@@ -127,6 +165,9 @@ const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
                         <label>Qeydlər</label>
                         <textarea name="notes" value={formData.notes} onChange={handleChange} rows="3"></textarea>
                     </div>
+
+                    {message && <p className="form-message">{message}</p>}
+
                     <div className="modal-actions">
                         <button type="submit" className="btn-primary">Yadda Saxla</button>
                         <button type="button" onClick={onClose}>Ləğv Et</button>
@@ -139,20 +180,17 @@ const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
 
 
 // =======================================================
-// 2. ANA SƏHİFƏ KOMPONENTİ
-// Bu komponent səhifənin ümumi məntiqini, data yüklənməsini və filterləməni idarə edir.
+// 2. ANA SƏHİFƏ KOMPONENTİ (YENİLƏNMİŞ)
 // =======================================================
 const MyWardrobePage = () => {
     const [allClothes, setAllClothes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     
-    // Filter və axtarış üçün state-lər
     const [searchTerm, setSearchTerm] = useState('');
     const [filterCategory, setFilterCategory] = useState('All');
     const [filterSeason, setFilterSeason] = useState('All');
     
-    // Modal pəncərəni idarə etmək üçün state-lər
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingCloth, setEditingCloth] = useState(null);
 
@@ -165,7 +203,7 @@ const MyWardrobePage = () => {
                 return;
             }
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.get('http://localhost:5000/api/clothes', config);
+            const { data } = await axios.get('/api/clothes', config);
             setAllClothes(data);
         } catch (err) {
             setError('Geyimləri yükləmək mümkün olmadı.');
@@ -184,7 +222,7 @@ const MyWardrobePage = () => {
                 setLoading(true);
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.delete(`http://localhost:5000/api/clothes/${clothId}`, config);
+                await axios.delete(`/api/clothes/${clothId}`, config);
                 await fetchMyClothes(); 
             } catch (err) {
                 alert('Geyim silinərkən xəta baş verdi.');
@@ -193,18 +231,20 @@ const MyWardrobePage = () => {
         }
     };
     
-    const handleSave = async (formData, clothId) => {
+    // --- handleSave FUNKSİYASI YENİLƏNDİ ---
+    // Artıq FormData yox, JSON göndərir.
+    const handleSave = async (clothData, clothId) => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
             const config = { headers: { 
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json', // Dəyişiklik
                 Authorization: `Bearer ${token}` 
             }};
             if (clothId) {
-                await axios.put(`http://localhost:5000/api/clothes/${clothId}`, formData, config);
+                await axios.put(`/api/clothes/${clothId}`, clothData, config);
             } else {
-                await axios.post('http://localhost:5000/api/clothes', formData, config);
+                await axios.post('/api/clothes', clothData, config);
             }
             setIsModalOpen(false);
             setEditingCloth(null);
@@ -228,6 +268,17 @@ const MyWardrobePage = () => {
         const matchesSeason = filterSeason === 'All' || cloth.season === filterSeason;
         return matchesSearch && matchesCategory && matchesSeason;
     });
+
+    // --- Şəkil URL-ni düzgün göstərmək üçün yardımçı funksiya ---
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return ''; // Boş şəkil yolu üçün
+        // Əgər URL Cloudinary-dəndirsə (http ilə başlayırsa), olduğu kimi qaytar
+        if (imagePath.startsWith('http')) {
+            return imagePath;
+        }
+        // Əks halda, köhnə sistemə uyğun olaraq serverin adresini əlavə et
+        return `http://localhost:5000${imagePath}`;
+    };
 
     if (loading) return <p>Yüklənir...</p>;
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
@@ -262,7 +313,8 @@ const MyWardrobePage = () => {
             <div className="clothes-grid">
                 {filteredClothes.length > 0 ? filteredClothes.map((cloth) => (
                     <div key={cloth._id} className="cloth-card">
-                        <img src={`http://localhost:5000${cloth.image}`} alt={cloth.name} />
+                        {/* Şəkilləri düzgün göstərmək üçün getImageUrl istifadə olunur */}
+                        <img src={getImageUrl(cloth.image)} alt={cloth.name} />
                         <div className="card-content">
                             <h4>{cloth.name}</h4>
                             <div className="card-details">

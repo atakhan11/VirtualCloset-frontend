@@ -1,14 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaPlus, FaTrash, FaShoppingCart, FaExternalLinkAlt, FaEdit } from 'react-icons/fa';
-import './WishlistPage.css';
+import { FaPlus, FaEdit, FaTrash, FaExternalLinkAlt, FaMagic, FaShoppingBag } from 'react-icons/fa';
+import './WishlistPage.css'; // CSS faylını import edirik
 
-// Yeni Arzu Əlavə Etmə/Redaktə Modalı
-const WishlistItemFormModal = ({ itemToEdit, onSave, onClose }) => {
-    const initialFormData = { name: '', category: '', price: '', storeUrl: '', notes: '' };
+// =======================================================
+// YARDIMÇI FUNKSİYA VƏ SABİTLƏR
+// =======================================================
+
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http') || imagePath.startsWith('blob')) {
+        return imagePath;
+    }
+    return `http://localhost:5000${imagePath}`;
+};
+
+// Kateqoriyalar (Qarderob səhifəsi ilə eyni)
+const CATEGORIES = [
+    'Köynək (T-shirt)', 'Köynək (Klassik)', 'Polo', 'Sweatshirt / Hudi', 
+    'Sviter / Cemper', 'Gödəkçə / Palto', 'Pencək / Blazer', 'Şalvar / Cins', 
+    'Şort', 'Ayaqqabı', 'Aksesuar', 'İdman Geyimi', 'Kostyum', 'Başqa'
+];
+
+// =======================================================
+// 1. MODAL KOMPONENTİ (YENİLƏNMİŞ)
+// =======================================================
+const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
+    const initialFormData = {
+        name: '', category: '', price: '', productUrl: '', notes: ''
+    };
     const [formData, setFormData] = useState(initialFormData);
+    const [scrapeUrl, setScrapeUrl] = useState('');
+    const [isScraping, setIsScraping] = useState(false);
     const [imageFile, setImageFile] = useState(null);
     const [preview, setPreview] = useState(null);
+    const [processedImageUrl, setProcessedImageUrl] = useState('');
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         if (itemToEdit) {
@@ -16,15 +44,21 @@ const WishlistItemFormModal = ({ itemToEdit, onSave, onClose }) => {
                 name: itemToEdit.name || '',
                 category: itemToEdit.category || '',
                 price: itemToEdit.price || '',
-                storeUrl: itemToEdit.storeUrl || '',
+                productUrl: itemToEdit.productUrl || '',
                 notes: itemToEdit.notes || ''
             });
-            setPreview(itemToEdit.image ? `http://localhost:5000${itemToEdit.image}` : null);
+            const imageUrl = getImageUrl(itemToEdit.image);
+            setProcessedImageUrl(imageUrl);
+            setPreview(imageUrl);
+            setScrapeUrl(itemToEdit.productUrl || '');
         } else {
             setFormData(initialFormData);
             setPreview(null);
+            setProcessedImageUrl('');
+            setScrapeUrl('');
         }
         setImageFile(null);
+        setMessage('');
     }, [itemToEdit]);
 
     const handleChange = (e) => {
@@ -36,17 +70,78 @@ const WishlistItemFormModal = ({ itemToEdit, onSave, onClose }) => {
         if (file) {
             setImageFile(file);
             setPreview(URL.createObjectURL(file));
+            setProcessedImageUrl('');
+            setMessage('');
+        }
+    };
+
+    const handleRemoveBackground = async () => {
+        if (!imageFile) {
+            setMessage('Zəhmət olmasa, əvvəlcə yeni bir şəkil seçin.');
+            return;
+        }
+        setIsProcessing(true);
+        setMessage('Fon təmizlənir, zəhmət olmasa gözləyin...');
+        const uploadFormData = new FormData();
+        uploadFormData.append('image', imageFile);
+        try {
+            const token = localStorage.getItem('token');
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const res = await axios.post('/api/upload/remove-bg', uploadFormData, config);
+            setProcessedImageUrl(res.data.imageUrl);
+            setMessage('Fon uğurla təmizləndi!');
+        } catch (error) {
+            setMessage(`Xəta: ${error.response?.data?.message || 'Server xətası'}`);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+    
+    const handleScrapeUrl = async () => {
+        if (!scrapeUrl) {
+            setMessage('Zəhmət olmasa, bir link daxil edin.');
+            return;
+        }
+        setIsScraping(true);
+        setMessage('Məlumatlar çəkilir...');
+        try {
+            const token = localStorage.getItem('token');
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const { data } = await axios.post('/api/scrape/fetch-url', { productUrl: scrapeUrl }, config);
+
+            if (data && data.name) {
+                setFormData(prevFormData => ({
+                    ...prevFormData,
+                    name: data.name,
+                    price: data.price || '',
+                    productUrl: data.productUrl || scrapeUrl,
+                }));
+                setPreview(data.image || '');
+                setProcessedImageUrl(data.image || '');
+                setMessage('Məlumatlar uğurla çəkildi!');
+            } else {
+                setMessage('Məlumat tapılmadı. Zəhmət olmasa, əl ilə daxil edin.');
+                setFormData(prevFormData => ({ ...prevFormData, productUrl: scrapeUrl }));
+            }
+        } catch (error) {
+            setMessage(`Xəta: ${error.response?.data?.message || 'Məlumatları çəkmək mümkün olmadı.'}`);
+        } finally {
+            setIsScraping(false);
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = new FormData();
-        Object.keys(formData).forEach(key => data.append(key, formData[key]));
-        if (imageFile) {
-            data.append('image', imageFile);
+        if (!formData.name) {
+            setMessage('Məhsulun adını daxil etmək məcburidir.');
+            return;
         }
-        onSave(data, itemToEdit?._id);
+        if (!processedImageUrl) {
+            setMessage('Zəhmət olmasa, bir şəkil əlavə edin.');
+            return;
+        }
+        const finalData = { ...formData, image: processedImageUrl };
+        onSave(finalData, itemToEdit?._id);
     };
 
     return (
@@ -54,18 +149,45 @@ const WishlistItemFormModal = ({ itemToEdit, onSave, onClose }) => {
             <div className="modal-content">
                 <h2>{itemToEdit ? 'Arzunu Redaktə Et' : 'Yeni Arzu Əlavə Et'}</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label>Şəkil</label>
-                        {preview && <img src={preview} alt="Preview" className="image-preview" />}
-                        <input type="file" onChange={handleImageChange} accept="image/*" />
+                    <div className="form-group scrape-section">
+                        <label>Mağaza Linki (İstəyə Bağlı)</label>
+                        <div className="scrape-input-group">
+                            <input 
+                                type="url" 
+                                placeholder="Məhsulun linkini bura yapışdırın..."
+                                value={scrapeUrl}
+                                onChange={(e) => setScrapeUrl(e.target.value)}
+                            />
+                            <button type="button" onClick={handleScrapeUrl} disabled={isScraping} className="scrape-btn" title="Linkdən məlumatları çək">
+                                {isScraping ? '...' : <FaMagic />}
+                            </button>
+                        </div>
                     </div>
+
                     <div className="form-group">
                         <label>Məhsulun Adı</label>
                         <input type="text" name="name" value={formData.name} onChange={handleChange} required />
                     </div>
+                    
+                    <div className="form-group">
+                        <label>Şəkil</label>
+                        <div className="image-previews">
+                           {preview && <img src={getImageUrl(preview)} alt="Önbaxış" className="image-preview" />}
+                        </div>
+                        <input type="file" onChange={handleImageChange} accept="image/*" />
+                        {imageFile && (
+                            <button type="button" className="btn-secondary" onClick={handleRemoveBackground} disabled={isProcessing}>
+                                {isProcessing ? 'Emal olunur...' : 'Fonunu Təmizlə'}
+                            </button>
+                        )}
+                    </div>
+                    
                     <div className="form-group">
                         <label>Kateqoriya</label>
-                        <input type="text" name="category" value={formData.category} onChange={handleChange} />
+                        <select name="category" value={formData.category} onChange={handleChange}>
+                            <option value="">Kateqoriya seçin...</option>
+                            {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                        </select>
                     </div>
                     <div className="form-group">
                         <label>Təxmini Qiymət (AZN)</label>
@@ -73,15 +195,18 @@ const WishlistItemFormModal = ({ itemToEdit, onSave, onClose }) => {
                     </div>
                     <div className="form-group">
                         <label>Məhsulun Linki (URL)</label>
-                        <input type="text" name="storeUrl" value={formData.storeUrl} onChange={handleChange} />
+                        <input type="url" name="productUrl" value={formData.productUrl} onChange={handleChange} />
                     </div>
                     <div className="form-group">
                         <label>Qeydlər</label>
                         <textarea name="notes" value={formData.notes} onChange={handleChange} rows="3"></textarea>
                     </div>
+
+                    {message && <p className="form-message">{message}</p>}
+
                     <div className="modal-actions">
-                        <button type="submit" className="btn-primary">Yadda Saxla</button>
-                        <button type="button" onClick={onClose}>Ləğv Et</button>
+                        <button type="button" className="btn btn-secondary" onClick={onClose}>Ləğv Et</button>
+                        <button type="submit" className="btn btn-primary" disabled={isProcessing || isScraping}>Yadda Saxla</button>
                     </div>
                 </form>
             </div>
@@ -89,21 +214,22 @@ const WishlistItemFormModal = ({ itemToEdit, onSave, onClose }) => {
     );
 };
 
-
-// Ana Wishlist Səhifəsi Komponenti
+// =======================================================
+// 2. ANA SƏHİFƏ KOMPONENTİ
+// =======================================================
 const WishlistPage = () => {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingItem, setEditingItem] = useState(null); // Redaktə üçün state
-    
-    const fetchWishlist = async () => {
+    const [editingItem, setEditingItem] = useState(null);
+
+    const fetchData = async () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.get('http://localhost:5000/api/wishlist', config);
+            const { data } = await axios.get('/api/wishlist', config);
             setWishlistItems(data);
         } catch (err) {
             setError('Arzu siyahısını yükləmək mümkün olmadı.');
@@ -113,58 +239,56 @@ const WishlistPage = () => {
     };
 
     useEffect(() => {
-        fetchWishlist();
+        fetchData();
     }, []);
 
-    const handleSave = async (formData, itemId) => {
+    const handleSave = async (itemData, itemId) => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const config = { headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` }};
-            
-            if (itemId) { // Əgər ID varsa, deməli bu redaktədir (PUT)
-                await axios.put(`http://localhost:5000/api/wishlist/${itemId}`, formData, config);
-            } else { // Əgər ID yoxdursa, deməli yeni əlavə etmədir (POST)
-                await axios.post('http://localhost:5000/api/wishlist', formData, config);
+            const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }};
+            if (itemId) {
+                await axios.put(`/api/wishlist/${itemId}`, itemData, config);
+            } else {
+                await axios.post('/api/wishlist', itemData, config);
             }
-
             setIsModalOpen(false);
             setEditingItem(null);
-            await fetchWishlist();
+            await fetchData();
         } catch(err) {
             alert(`Xəta: ${err.response?.data?.message || 'Server xətası'}`);
-        } finally {
             setLoading(false);
         }
     };
 
     const handleDelete = async (itemId) => {
-        if (window.confirm('Bu arzunu siyahıdan silməyə əminsinizmi?')) {
+        if (window.confirm('Bu arzunu silməyə əminsinizmi?')) {
             try {
+                setLoading(true);
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.delete(`http://localhost:5000/api/wishlist/${itemId}`, config);
-                await fetchWishlist(); // Siyahını yeniləmək üçün datanı yenidən çəkirik
+                await axios.delete(`/api/wishlist/${itemId}`, config);
+                await fetchData();
             } catch (err) {
-                console.error("Məhsul silinərkən xəta baş verdi:", err);
-                alert('Məhsul silinərkən xəta baş verdi.');
+                alert('Arzu silinərkən xəta baş verdi.');
+                setLoading(false);
             }
         }
     };
-    
-    // === DÜZƏLİŞ: handleMoveToWardrobe funksiyası tam yazıldı ===
+
+    // YENİ FUNKSİYA: Qarderoba köçürmək üçün
     const handleMoveToWardrobe = async (itemId) => {
-        if (window.confirm('Bu məhsulu aldınız və qarderoba köçürmək istəyirsiniz?')) {
+        if (window.confirm('Bu məhsulu qarderobunuza əlavə etmək istədiyinizə əminsiniz? Məhsul arzu siyahısından silinəcək.')) {
             try {
+                setLoading(true);
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                // Backend-ə boş bir obyekt göndəririk, çünki bütün məlumatlar artıq serverdədir
-                await axios.post(`http://localhost:5000/api/wishlist/${itemId}/move`, {}, config);
-                alert('Təbriklər! Məhsul qarderobunuza əlavə edildi.');
-                await fetchWishlist(); // Arzu siyahısını yeniləyirik
-            } catch(err) {
-                 console.error("Qarderoba köçürərkən xəta baş verdi:", err);
-                 alert(`Xəta: ${err.response?.data?.message || 'Server xətası'}`);
+                await axios.post(`/api/wishlist/${itemId}/move`, {}, config); // Boş obyekt göndəririk
+                await fetchData();
+                alert('Məhsul uğurla qarderoba əlavə edildi!');
+            } catch (err) {
+                alert(`Xəta: ${err.response?.data?.message || 'Məhsulu köçürmək mümkün olmadı.'}`);
+                setLoading(false);
             }
         }
     };
@@ -187,36 +311,36 @@ const WishlistPage = () => {
             </div>
 
             <div className="wishlist-grid">
-                {wishlistItems.map((item) => (
+                {wishlistItems.length > 0 ? wishlistItems.map((item) => (
                     <div key={item._id} className="wishlist-card">
-                        {item.image && <img src={`http://localhost:5000${item.image}`} alt={item.name} />}
-                        <div className="wishlist-card-content">
+                        <img src={getImageUrl(item.image)} alt={item.name} />
+                        <div className="card-content">
                             <h4>{item.name}</h4>
                             {item.category && <p className="category-tag">{item.category}</p>}
                             {item.price && <p className="price-tag">{item.price} AZN</p>}
-                            {item.notes && <p className="notes-text">{item.notes}</p>}
-                            <div className="wishlist-card-actions">
-                                {item.storeUrl && (
-                                    <a href={item.storeUrl} target="_blank" rel="noopener noreferrer" className="action-btn store-link" title="Məhsulun linki">
-                                        <FaExternalLinkAlt /> Məhsula Bax
-                                    </a>
-                                )}
-                                <button className="action-btn move-btn" onClick={() => handleMoveToWardrobe(item._id)}>
-                                    <FaShoppingCart /> Qarderoba Köçür
-                                </button>
-                            </div>
-                             {/* === YENİ REDAKTƏ VƏ SİLMƏ DÜYMƏLƏRİ === */}
-                            <div className="wishlist-card-edit-delete">
-                                <button className="icon-btn edit-btn" onClick={() => openModal(item)}><FaEdit /></button>
-                                <button className="icon-btn delete-btn" onClick={() => handleDelete(item._id)}><FaTrash /></button>
-                            </div>
+                        </div>
+                        <div className="card-footer">
+                            <button className="card-btn" onClick={() => handleMoveToWardrobe(item._id)} title="Qarderoba Əlavə Et">
+                                <FaShoppingBag />
+                            </button>
+                            {item.productUrl && (
+                                <a href={item.productUrl} target="_blank" rel="noopener noreferrer" className="card-btn" title="Məhsula Bax">
+                                    <FaExternalLinkAlt />
+                                </a>
+                            )}
+                            <button className="card-btn" onClick={() => openModal(item)} title="Redaktə Et"><FaEdit /></button>
+                            <button className="card-btn danger" onClick={() => handleDelete(item._id)} title="Sil"><FaTrash /></button>
                         </div>
                     </div>
-                ))}
+                )) : (
+                    <div className="empty-wishlist">
+                        <p>Arzu siyahınız boşdur.</p>
+                    </div>
+                )}
             </div>
             
             {isModalOpen && (
-                <WishlistItemFormModal
+                <WishlistFormModal
                     itemToEdit={editingItem}
                     onSave={handleSave}
                     onClose={() => setIsModalOpen(false)}

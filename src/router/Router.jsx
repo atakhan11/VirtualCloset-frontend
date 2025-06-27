@@ -28,11 +28,11 @@ import OutfitCalendarPage from '../pages/outfit-calendar/OutfitCalendarPage.jsx'
 import WishlistPage from '../pages/wishlist/WishlistPage.jsx';
 import DashboardPage from '../pages/dashboard/DashboardPage.jsx';
 import HomePage from '../pages/home/Home.jsx';
-import About from '../pages/about/About.jsx';
 import Contact from '../pages/contact/Contact.jsx';
 import ScrollToTop from '../components/scroll-to-top/ScrollToTop.jsx';
 import ChatPage from '../pages/chat/ChatPage.jsx';
 import DonatePage from '../pages/donatepage/DonatePage.jsx';
+import AboutPage from '../pages/about/AboutPage.jsx';
 
 
 const Router = () => {
@@ -45,7 +45,7 @@ const Router = () => {
           {/* Public olanlar */}
           <Route index element={<HomePage />} />
           <Route path='features' element={<Features />} />
-          <Route path='about' element={<About />} />
+          <Route path='about' element={<AboutPage />} />
           <Route path='contact' element={<Contact />} />
           <Route path='register' element={<SignupPage />} />
           <Route path='login' element={<LoginPage />} />

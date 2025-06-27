@@ -1,243 +1,328 @@
-/* ======================================================= */
-/* ===         HomePage.css (Təkmilləşdirilmiş)        === */
-/* ======================================================= */
+/* === QLOBAL STİLLƏR VƏ DƏYİŞƏNLƏR === */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary-color: #6a11cb; /* Bənövşəyi */
+    --secondary-color: #2575fc; /* Mavi */
+    --dark-color: #1a1a2e; /* Tünd fon */
+    --light-color: #ffffff; /* Ağ */
+    --gray-color: #e4e4e7; /* Açıq boz */
+    --text-color: #333; /* Mətn rəngi */
+    --text-light: #f4f4f4; /* Açıq mətn */
+    --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    --border-radius: 12px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background-color: #f9f9f9;
+    color: var(--text-color);
+}
 
 .home-container {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    color: #212529;
-    overflow-x: hidden; /* Yan scroll-un qarşısını alır */
+    overflow-x: hidden;
 }
 
-/* === Hero Section === */
-.hero-section-enhanced {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6rem 5%;
-    background: #f8f9fa;
-    min-height: 90vh;
-}
-.hero-content-enhanced {
-    max-width: 50%;
-    padding-right: 3rem;
-}
-.hero-title {
-    font-size: clamp(2.5rem, 5vw, 3.8rem); /* Responsiv yazı ölçüsü */
-    font-weight: 800;
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
-}
-.hero-subtitle {
-    font-size: 1.2rem;
-    color: #6c757d;
-    margin-bottom: 2.5rem;
-    line-height: 1.7;
-}
-.hero-buttons {
-    display: flex;
-    gap: 1rem;
-}
-.cta-button-primary {
-    padding: 1rem 2rem;
-    background: #007bff;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-.cta-button-primary:hover {
-    background: #0056b3;
-    transform: translateY(-2px);
-}
-.cta-button-secondary {
-    padding: 1rem 2rem;
-    background: transparent;
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-    border: 2px solid #007bff;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-.cta-button-secondary:hover {
-    background: #007bff;
-    color: white;
-}
-.hero-image-enhanced img {
-    width: 100%;
-    max-width: 450px;
-    border-radius: 20px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-}
-
-/* === Ümumi Bölmə Başlıqları === */
 .section-title {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
 }
+
 .section-title span {
-    color: #007bff;
+    font-size: 1rem;
+    color: var(--primary-color);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.9rem;
+    letter-spacing: 1.5px;
 }
+
 .section-title h2 {
     font-size: 2.5rem;
     font-weight: 700;
     margin-top: 0.5rem;
+    color: var(--dark-color);
 }
 
-/* === Features Section === */
-.features-section-enhanced {
-    padding: 6rem 5%;
+/* === ƏSAS QARŞILAMA BÖLMƏSİ (HERO) === */
+.hero-section-enhanced {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 2rem;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: var(--light-color);
+    min-height: 90vh;
 }
-.features-grid-enhanced {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+
+.hero-content-enhanced {
+    max-width: 600px;
+    margin-right: 2rem;
+    animation: slideInFromLeft 1s ease-out;
 }
-.feature-card-enhanced {
-    background: #fff;
-    padding: 2.5rem 2rem;
-    border-radius: 12px;
-    text-align: center;
-    border: 1px solid #e9ecef;
-    transition: all 0.3s ease;
-}
-.feature-card-enhanced:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.07);
-}
-.feature-icon-enhanced {
-    font-size: 2.5rem;
-    color: #007bff;
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
     margin-bottom: 1.5rem;
 }
-.feature-card-enhanced h3 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-}
-.feature-card-enhanced p {
-    color: #6c757d;
-    line-height: 1.6;
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    opacity: 0.9;
 }
 
-/* === Inspiration Section === */
-.inspiration-section {
-    padding: 6rem 5%;
-    background-color: #f8f9fa;
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
 }
+
+.cta-button-primary, .cta-button-secondary {
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.cta-button-primary {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+}
+
+.cta-button-primary:hover {
+    background-color: transparent;
+    color: var(--light-color);
+    border-color: var(--light-color);
+    transform: translateY(-3px);
+}
+
+.cta-button-secondary {
+    background-color: transparent;
+    color: var(--light-color);
+    border-color: var(--light-color);
+}
+
+.cta-button-secondary:hover {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+.hero-image-enhanced img {
+    max-width: 500px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
+    animation: fadeIn 1.5s ease-out;
+}
+
+
+/* === XÜSUSİYYƏTLƏR BÖLMƏSİ === */
+.features-section-enhanced {
+    padding: 6rem 2rem;
+}
+
+.features-grid-enhanced {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card-enhanced {
+    background: var(--light-color);
+    padding: 2.5rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card-enhanced:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.feature-icon-enhanced {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.feature-card-enhanced h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+}
+
+.feature-card-enhanced p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+}
+
+/* === İLHAM BÖLMƏSİ === */
+.inspiration-section {
+    padding: 6rem 2rem;
+    background-color: #f0f2f5;
+}
+
 .inspiration-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
 }
+
 .inspiration-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 12px;
-    transition: transform 0.4s ease;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
 }
+
 .inspiration-card img:hover {
     transform: scale(1.05);
 }
 
-/* === Testimonials Section === */
+/* === RƏYLƏR BÖLMƏSİ === */
 .testimonials-section-enhanced {
-    padding: 6rem 5%;
+    padding: 6rem 2rem;
 }
+
 .testimonials-grid-enhanced {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 2rem;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
 }
+
 .testimonial-card-enhanced {
-    background: #f8f9fa;
+    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+    color: var(--light-color);
     padding: 2.5rem;
-    border-radius: 12px;
-    border: 1px solid #e9ecef;
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
+
 .testimonial-avatar {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    margin-bottom: 1rem;
-    border: 3px solid #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border: 3px solid var(--light-color);
+    margin-bottom: 1.5rem;
 }
+
 .testimonial-card-enhanced blockquote {
     font-size: 1.1rem;
     font-style: italic;
-    color: #495057;
-    margin: 0 0 1rem 0;
+    line-height: 1.7;
+    margin: 0 0 1.5rem 0;
+    border: none;
 }
+
 .testimonial-card-enhanced cite {
     font-weight: 600;
     font-style: normal;
-    color: #212529;
 }
 
-/* === Final CTA Section === */
+
+/* === SON ÇAĞIRIŞ BÖLMƏSİ (FINAL CTA) === */
 .final-cta-section-enhanced {
-    padding: 6rem 2rem;
     text-align: center;
-    background-color: #343a40;
-    color: #fff;
+    padding: 6rem 2rem;
+    background-color: var(--dark-color);
+    color: var(--light-color);
 }
+
+.final-cta-section-enhanced h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
 .final-cta-section-enhanced p {
     font-size: 1.2rem;
-    color: #adb5bd;
-    margin-bottom: 2.5rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.cta-button-final {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1.2rem 3rem;
-    background: #007bff;
-    color: white;
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-radius: 50px;
-    transition: all 0.3s ease;
-}
-.cta-button-final:hover {
-    background: #fff;
-    color: #007bff;
+    margin-bottom: 2rem;
+    opacity: 0.8;
 }
 
-/* === Responsiveness === */
+.cta-button-final {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: var(--light-color);
+    padding: 1.2rem 2.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.cta-button-final:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(106, 17, 203, 0.4);
+}
+
+/* === ANİMASİYALAR === */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInFromLeft {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+
+/* === RESPONSİVLİK === */
 @media (max-width: 992px) {
     .hero-section-enhanced {
-        flex-direction: column-reverse;
+        flex-direction: column;
         text-align: center;
-        padding: 4rem 2rem;
+        padding: 4rem 1rem;
     }
     .hero-content-enhanced {
-        max-width: 100%;
-        padding-right: 0;
-        margin-top: 3rem;
+        margin-right: 0;
+        margin-bottom: 3rem;
     }
-    .hero-buttons {
-        justify-content: center;
+    .hero-title {
+        font-size: 2.8rem;
+    }
+    .inspiration-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
-    .testimonials-grid-enhanced, .inspiration-grid {
+    .section-title h2 {
+        font-size: 2rem;
+    }
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    .hero-buttons {
+        flex-direction: column;
+    }
+    .features-grid-enhanced,
+    .testimonials-grid-enhanced {
+        grid-template-columns: 1fr;
+    }
+    .inspiration-grid {
         grid-template-columns: 1fr;
     }
 }

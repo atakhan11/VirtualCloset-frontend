@@ -26,6 +26,24 @@ const OutfitDetailPage = () => {
         fetchOutfitDetails();
     }, [id]);
 
+
+    const getImageUrl = (imagePath) => {
+    // Əgər imagePath yoxdursa və ya boşdursa, boş string qaytar
+    if (!imagePath) {
+        return ''; 
+    }
+    
+    // Əgər imagePath tam bir URL-dirsə (http ilə başlayırsa),
+    // ona toxunmadan olduğu kimi qaytar.
+    if (imagePath.startsWith('http')) {
+        return imagePath;
+    }
+    
+    // Əks halda, bu lokal bir yoldur, ona görə də serverin ünvanını əlavə et.
+    return `http://localhost:5000${imagePath}`;
+};
+
+
     if (loading) return <p className="page-status">Yüklənir...</p>;
     if (error) return <p className="page-status error">{error}</p>;
     if (!outfit) return <p className="page-status">Kombin tapılmadı.</p>;
@@ -37,7 +55,7 @@ const OutfitDetailPage = () => {
             <div className="outfit-items-grid">
                 {outfit.items.map(item => (
                     <div key={item._id} className="cloth-card-detail">
-                        <img src={`http://localhost:5000${item.image}`} alt={item.name} />
+                        <img src={getImageUrl(item.image)} alt={item.name} />
                         <div className="cloth-info">
                             <h4>{item.name}</h4>
                             <p>{item.category}</p>

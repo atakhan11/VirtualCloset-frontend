@@ -68,6 +68,11 @@ const Header = () => {
                                 </Link>
                             </li>
                             <li className={styles.navItem}>
+                                <Link to="/contact" className={styles.navLinks} onClick={closeMobileMenu}>
+                                    Contact
+                                </Link>
+                            </li>
+                            <li className={styles.navItem}>
                 <Link to="/donate" className={styles.navLinks} onClick={closeMobileMenu}>
                     Dəstək Ol
                 </Link>

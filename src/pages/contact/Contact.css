@@ -1,0 +1,158 @@
+/* === CONTACT SƏHİFƏSİ STİLLƏRİ === */
+.contact-container {
+    color: var(--text-color);
+    padding: 2rem 4rem;
+    background-color: #f9f9f9; /* Səhifə üçün açıq fon */
+}
+
+/* === Səhifə başlığı === */
+.contact-header {
+    text-align: center;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--gray-color);
+    margin-bottom: 3rem;
+}
+
+.contact-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.contact-header p {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0.5rem auto 0;
+}
+
+/* === Əsas məzmun (form və info) === */
+.contact-main-content {
+    display: flex;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contact-form-wrapper,
+.contact-info-wrapper {
+    background-color: var(--light-color);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    flex: 1;
+}
+
+.contact-form-wrapper h2,
+.contact-info-wrapper h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--dark-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+}
+
+/* === Əlaqə Formu === */
+.contact-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.contact-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--gray-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.cta-button {
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-3px);
+}
+
+/* === Əlaqə Məlumatları === */
+.contact-info-intro {
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.contact-details-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+}
+
+.contact-details-list li {
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.contact-icon {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-right: 1.5rem;
+    width: 25px; /* İkonların eyni hizada durması üçün */
+}
+
+.contact-map {
+    margin-top: 2rem;
+}
+
+.status-message {
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+/* === RESPONSİVLİK === */
+@media (max-width: 992px) {
+    .contact-main-content {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-container {
+        padding: 1rem 1.5rem;
+    }
+    .contact-header h1 {
+        font-size: 2.2rem;
+    }
+    .contact-main-content {
+        gap: 2rem;
+    }
+    .contact-form-wrapper,
+    .contact-info-wrapper {
+        padding: 1.5rem;
+    }
+}

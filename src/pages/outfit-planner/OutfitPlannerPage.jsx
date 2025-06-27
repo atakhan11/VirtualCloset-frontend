@@ -4,6 +4,27 @@ import { FaPlus, FaTimes, FaTrash } from 'react-icons/fa';
 import './OutfitPlannerPage.css';
 import { Link } from 'react-router-dom';
 
+// =======================================================
+// YARDIMÇI FUNKSİYA: Universal Şəkil URL-i
+// Bu funksiya həm köhnə (lokal), həm də yeni (Cloudinary) şəkilləri düzgün göstərəcək.
+// =======================================================
+const getImageUrl = (imagePath) => {
+    // Əgər imagePath yoxdursa və ya boşdursa, boş string qaytar
+    if (!imagePath) {
+        return ''; 
+    }
+    
+    // Əgər imagePath tam bir URL-dirsə (http ilə başlayırsa),
+    // ona toxunmadan olduğu kimi qaytar.
+    if (imagePath.startsWith('http')) {
+        return imagePath;
+    }
+    
+    // Əks halda, bu lokal bir yoldur, ona görə də serverin ünvanını əlavə et.
+    return `http://localhost:5000${imagePath}`;
+};
+
+
 const OutfitPlannerPage = () => {
     // Bütün geyimləri və kombinləri saxlamaq üçün state-lər
     const [allClothes, setAllClothes] = useState([]);
@@ -113,7 +134,8 @@ const OutfitPlannerPage = () => {
                     <div className="clothes-list">
                         {allClothes.map(cloth => (
                             <div key={cloth._id} className="cloth-item-small" onClick={() => addToOutfit(cloth)}>
-                                <img src={`http://localhost:5000${cloth.image}`} alt={cloth.name} />
+                                {/* DƏYİŞİKLİK 1: getImageUrl istifadə olunur */}
+                                <img src={getImageUrl(cloth.image)} alt={cloth.name} />
                                 <div className="add-overlay">
                                     <FaPlus />
                                 </div>
@@ -130,7 +152,8 @@ const OutfitPlannerPage = () => {
                             {currentOutfitItems.length > 0 ? (
                                 currentOutfitItems.map(item => (
                                     <div key={item._id} className="outfit-item">
-                                        <img src={`http://localhost:5000${item.image}`} alt={item.name} />
+                                        {/* DƏYİŞİKLİK 2: getImageUrl istifadə olunur */}
+                                        <img src={getImageUrl(item.image)} alt={item.name} />
                                         <button onClick={() => removeFromOutfit(item._id)} className="remove-item-btn"><FaTimes /></button>
                                     </div>
                                 ))
@@ -158,12 +181,13 @@ const OutfitPlannerPage = () => {
                 {allOutfits.length > 0 ? (
                     <div className="outfits-grid">
                         {allOutfits.map(outfit => (
-                               <Link to={`/outfits/${outfit._id}`} key={outfit._id} className="outfit-card-link">
+                                <Link to={`/outfits/${outfit._id}`} key={outfit._id} className="outfit-card-link">
             <div className="outfit-card">
                 <h4>{outfit.name}</h4>
                 <div className="outfit-card-images">
                     {outfit.items.slice(0, 4).map(item => ( // Yalnız ilk 4 şəkli göstərək
-                        <img key={item._id} src={`http://localhost:5000${item.image}`} alt={item.name} />
+                        /* DƏYİŞİKLİK 3: getImageUrl istifadə olunur */
+                        <img key={item._id} src={getImageUrl(item.image)} alt={item.name} />
                     ))}
                 </div>
                 <button className="delete-outfit-btn" onClick={(e) => { e.preventDefault(); handleDeleteOutfit(outfit._id); }}><FaTrash /></button>

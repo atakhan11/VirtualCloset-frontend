@@ -1,0 +1,211 @@
+/* === QLOBAL ABOUT STİLLƏRİ === */
+.about-container {
+    color: var(--text-color);
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* === ABOUT HERO BÖLMƏSİ === */
+.about-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat;
+    background-size: cover;
+    /* Dəyişiklik burada: 'center center' əvəzinə 'center 25%' istifadə edirik */
+    /* Bu, şəkli şaquli olaraq 25% yuxarıdan başlamağa məcbur edir */
+    background-position: center 15%;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--light-color);
+}
+
+.about-hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+}
+
+.about-hero-content p {
+    font-size: 1.2rem;
+    font-weight: 300;
+    opacity: 0.9;
+}
+
+
+/* === MƏQSƏD BÖLMƏSİ === */
+.mission-section {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    padding: 6rem 4rem;
+    background-color: var(--light-color);
+}
+
+.mission-content {
+    flex: 1;
+}
+
+.mission-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+}
+
+.mission-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.mission-image {
+    flex: 1;
+}
+
+.mission-image img {
+    width: 100%;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+
+/* === DƏYƏRLƏR BÖLMƏSİ === */
+.values-section {
+    padding: 6rem 2rem;
+    background-color: #f9f9f9;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.value-card {
+    background-color: var(--light-color);
+    padding: 2.5rem 2rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    border: 1px solid var(--gray-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow);
+}
+
+.value-icon {
+    font-size: 3rem;
+    color: var(--secondary-color);
+    margin-bottom: 1.5rem;
+}
+
+.value-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+}
+
+
+/* === KOMANDA (YARADICI) BÖLMƏSİ === */
+.team-section {
+    padding: 6rem 2rem;
+    background-color: var(--light-color);
+}
+
+.team-member-card {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 2rem;
+}
+
+.team-member-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid var(--primary-color);
+    margin-bottom: 1.5rem;
+    object-fit: cover;
+}
+
+.team-member-card h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.team-member-card span {
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.team-member-bio {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-top: 1.5rem;
+    color: #555;
+}
+
+
+/* === SON ÇAĞIRIŞ BÖLMƏSİ (FINAL CTA) === */
+.about-final-cta {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: var(--light-color);
+}
+.about-final-cta h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cta-button-primary-about {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: inline-block;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+.cta-button-primary-about:hover {
+    transform: translateY(-5px) scale(1.05);
+    background-color: #f0f0f0;
+}
+
+/* === RESPONSİVLİK === */
+@media (max-width: 992px) {
+    .mission-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        height: 40vh;
+    }
+    .about-hero-content h1 {
+        font-size: 2.5rem;
+    }
+    .mission-section {
+        padding: 4rem 2rem;
+    }
+    .mission-content h2 {
+        font-size: 2rem;
+    }
+}

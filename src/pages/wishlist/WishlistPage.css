@@ -1,8 +1,8 @@
+/* === ÜMUMİ Wishlist Səhifəsi === */
 .wishlist-container {
-    padding: 2rem 4rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f8f9fa;
-    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .wishlist-header {
@@ -10,165 +10,258 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-    border-bottom: 2px solid #e9ecef;
+    border-bottom: 1px solid #eee;
     padding-bottom: 1rem;
 }
 
 .wishlist-header h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: #333;
 }
 
-.add-new-btn { /* Bu stili əvvəlki fayllardan götürə bilərsiniz */
-    padding: 12px 24px;
+.add-new-btn {
     background-color: #007bff;
     color: white;
     border: none;
+    padding: 0.8rem 1.5rem;
     border-radius: 8px;
-    font-size: 1rem;
-    font-weight: bold;
     cursor: pointer;
+    font-size: 1rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
 }
 
+.add-new-btn:hover {
+    background-color: #0056b3;
+}
+
+/* === Arzu Kartları === */
 .wishlist-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem;
 }
 
 .wishlist-card {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-     position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.wishlist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .wishlist-card img {
     width: 100%;
-    height: 250px;
+    height: 300px;
     object-fit: cover;
 }
 
-.wishlist-card-content {
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
+.wishlist-card .card-content {
+    padding: 1rem;
     flex-grow: 1;
 }
 
-.wishlist-card-content h4 {
+.wishlist-card h4 {
+    font-size: 1.2rem;
     margin: 0 0 0.5rem 0;
-    font-size: 1.3rem;
+    color: #333;
 }
 
-.category-tag { /* Bu stili əvvəlki fayllardan götürə bilərsiniz */
-    display: inline-block;
-    background-color: #e7f5ff;
-    color: #1c7ed6;
-    padding: 4px 8px;
+.wishlist-card .category-tag {
+    background-color: #f0f0f0;
+    color: #555;
+    padding: 0.2rem 0.6rem;
     border-radius: 12px;
     font-size: 0.8rem;
-    font-weight: bold;
+    display: inline-block;
     margin-bottom: 0.5rem;
 }
 
-.price-tag {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #28a745;
-    margin: 0.5rem 0;
-}
-
-.notes-text { /* Bu stili əvvəlki fayllardan götürə bilərsiniz */
-    font-size: 0.9rem;
-    font-style: italic;
-    color: #6c757d;
-    margin: 0.5rem 0;
-}
-
-.wishlist-card-actions {
-    margin-top: auto;
-    padding-top: 1rem;
-    border-top: 1px solid #f1f3f5;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.action-btn {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid transparent;
-    cursor: pointer;
+.wishlist-card .price-tag {
+    font-size: 1.1rem;
     font-weight: 600;
+    color: #28a745;
+}
+
+/* YENİ: Kartların altındakı düymə paneli */
+.card-footer {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.2s ease;
+    justify-content: space-around;
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #eee;
 }
 
-.store-link {
-    width: 100%;
-    background-color: #17a2b8;
-    color: white;
-    text-decoration: none;
-}
-.store-link:hover { background-color: #138496; }
-
-.move-btn {
-    background-color: #ffc107;
-    color: #212529;
-}
-.move-btn:hover { background-color: #e0a800; }
-
-.delete-btn {
-    background-color: transparent;
-    color: #dc3545;
-    border-color: #dc3545;
-}
-.delete-btn:hover { background-color: #dc3545; color: white; }
-
-.empty-wishlist {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 4rem;
-    background-color: #fff;
-    border-radius: 12px;
-}
-
-.wishlist-card-edit-delete {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    display: flex;
-    gap: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.icon-btn {
+.card-btn {
     background: none;
     border: none;
+    color: #555;
+    font-size: 1.2rem;
     cursor: pointer;
-    font-size: 1rem;
-    color: #868e96;
-    transition: color 0.2s ease;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-.icon-btn.edit-btn:hover { color: #1c7ed6; }
-.icon-btn.delete-btn:hover { color: #fa5252; }
+.card-btn:hover {
+    background-color: #e9ecef;
+    color: #000;
+}
 
-/* === MODAL DÜZƏLİŞİ: Qeydlər sahəsi üçün === */
+.card-btn.danger:hover {
+    color: #dc3545;
+}
+
+
+/* === Modal Pəncərəsi üçün Stillər === */
+/* Köhnə modal stilləri (modal-backdrop, modal-content) olduğu kimi qalır */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
 .form-group textarea {
-    resize: vertical; /* Yalnız vertikal böyüməyə icazə verir */
-    min-height: 80px;
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.image-previews {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.image-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.form-hint {
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 0.5rem;
+}
+
+.form-message {
+    margin-top: 1rem;
+    font-weight: 500;
+    color: #007bff;
+}
+
+/* YENİ: Linkdən məlumat çəkmə bölməsi */
+.scrape-section {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.scrape-input-group {
+    display: flex;
+}
+
+.scrape-input-group input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.scrape-btn {
+    border: 1px solid #ccc;
+    border-left: none;
+    background-color: #e9ecef;
+    padding: 0 1rem;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* YENİ: Modal Düymələri üçün Təkmilləşdirilmiş Stillər */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+.btn-primary:disabled {
+    background-color: #a0c7ff;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
 }
