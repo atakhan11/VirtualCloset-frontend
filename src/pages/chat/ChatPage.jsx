@@ -12,9 +12,14 @@ import {
     getFirestore, collection, query, where, onSnapshot, 
     addDoc, serverTimestamp, orderBy, getDocs, doc, updateDoc,
 } from 'firebase/firestore';
+
+import { getDatabase, ref as dbRef, onValue,  } from "firebase/database";
+import { onDisconnect, set } from "firebase/database";
 import { 
     getStorage, ref, uploadBytesResumable, getDownloadURL 
 } from "firebase/storage";
+
+
 
 // İkonlar (FaStop və FaTrash əlavə edildi)
 import styles from './ChatPage.module.css';
@@ -31,13 +36,14 @@ const firebaseConfig = {
     storageBucket: "stylefolio-e67b1.firebasestorage.app",
     messagingSenderId: "267528552327",
     appId: "1:267528552327:web:6365c7bba25620c9179d22",
-    measurementId: "G-4L9VBQRWW3"
+    measurementId: "G-4L9VBQRWW3",
+    databaseURL: "https://stylefolio-e67b1-default-rtdb.europe-west1.firebasedatabase.app/",
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
-
+const rtdb = getDatabase(app);
 // Səs yazma müddətini formatlayan köməkçi funksiya
 const formatDuration = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -64,11 +70,51 @@ const ChatPage = () => {
     const audioChunksRef = useRef([]);
     const recordingIntervalRef = useRef(null); // Taymer üçün
 
+     const [userStatuses, setUserStatuses] = useState({});
+
     const reduxUser = useSelector(selectUser);
     const messagesEndRef = useRef(null);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const { conversationId } = useParams();
+
+
+
+
+    useEffect(() => {
+        if (!reduxUser?.id) return;
+
+        const userStatusDatabaseRef = dbRef(rtdb, '/status/' + reduxUser.id);
+        const connectedRef = dbRef(rtdb, '.info/connected');
+
+        const unsubscribe = onValue(connectedRef, (snap) => {
+            if (snap.val() === true) {
+                onDisconnect(userStatusDatabaseRef).set({
+                    isOnline: false,
+                    last_seen: rtdbServerTimestamp(),
+                }).catch((err) => console.error("onDisconnect quraşdırılarkən xəta:", err));
+
+                set(userStatusDatabaseRef, {
+                    isOnline: true,
+                });
+            }
+        });
+
+        return () => unsubscribe();
+    }, [reduxUser?.id]);
+
+    // YENİ: Bütün istifadəçilərin statuslarını izləyən useEffect
+    useEffect(() => {
+        const statusRef = dbRef(rtdb, '/status/');
+        const unsubscribe = onValue(statusRef, (snapshot) => {
+            const statuses = snapshot.val();
+            setUserStatuses(statuses || {});
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+
 
     // ... (useEffect hook-ları burada dəyişməz qalır)
      useEffect(() => {
@@ -99,6 +145,7 @@ const ChatPage = () => {
                     id: doc.id, 
                     ...convoData,
                     otherUserName: otherUser?.name || 'Naməlum istifadəçi',
+                    otherUserId: otherUserId
                 };
             });
             const convos = await Promise.all(convosPromises);
@@ -301,42 +348,52 @@ const ChatPage = () => {
     
     if (loading) return <div className={styles.loadingScreen}>Yüklənir...</div>;
 
-    return (
+   return (
         <div className={styles.chatPageContainer}>
             <div className={styles.sidebar}>
-                {/* ... (sidebar məzmunu dəyişməz) ... */}
+                 {/* Sidebar-da istifadəçilərin statusunu göstəririk */}
                  <div className={styles.userList}>
-                    <h3>Yeni Söhbət</h3>
-                    <ul>
-                        {users.map(user => (
-                            <li key={user._id} onClick={() => handleSelectUser(user)}>
-                                {user.name}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                <div className={styles.conversationList}>
-                    <h3>Söhbətlərim</h3>
-                    <ul>
-                        {conversations.map(convo => (
-                            <li 
-                                key={convo.id} 
-                                className={convo.id === selectedConversation?.id ? styles.selected : ''}
-                                onClick={() => navigate(`/chat/${convo.id}`)}
-                            >
-                                {convo.otherUserName}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                     <h3>Yeni Söhbət</h3>
+                     <ul>
+                         {users.map(user => (
+                             <li key={user._id} onClick={() => handleSelectUser(user)}>
+                                 <span className={`${styles.statusIndicator} ${userStatuses[user._id]?.isOnline ? styles.online : ''}`}></span>
+                                 {user.name}
+                             </li>
+                         ))}
+                     </ul>
+                 </div>
+                 <div className={styles.conversationList}>
+                     <h3>Söhbətlərim</h3>
+                     <ul>
+                         {conversations.map(convo => (
+                             <li 
+                                 key={convo.id} 
+                                 className={convo.id === selectedConversation?.id ? styles.selected : ''}
+                                 onClick={() => navigate(`/chat/${convo.id}`)}
+                             >
+                                 <span className={`${styles.statusIndicator} ${userStatuses[convo.otherUserId]?.isOnline ? styles.online : ''}`}></span>
+                                 {convo.otherUserName}
+                             </li>
+                         ))}
+                     </ul>
+                 </div>
             </div>
 
             <div className={styles.mainChatArea}>
+                {/* Söhbət başlığında statusu göstəririk */}
                 {!selectedConversation ? (
                     <div className={styles.chatWindowPlaceholder}>Başlamaq üçün bir istifadəçi və ya söhbət seçin.</div>
                 ) : (
                     <>
-                        <div className={styles.chatWindowHeader}>{selectedConversation.otherUserName}</div>
+                        <div className={styles.chatWindowHeader}>
+                            {selectedConversation.otherUserName}
+                            {userStatuses[selectedConversation.otherUserId]?.isOnline ? (
+                                <span className={styles.headerStatusOnline}>Aktivdir</span>
+                            ) : (
+                                <span className={styles.headerStatusOffline}>Aktiv deyil</span>
+                            )}
+                        </div>
                         <div className={styles.messagesArea}>
                             {messages.map(msg => (
                                 <div key={msg.id} className={`${styles.messageWrapper} ${msg.senderId === reduxUser.id ? styles.sentWrapper : styles.receivedWrapper}`}>
@@ -353,13 +410,13 @@ const ChatPage = () => {
                                         {msg.reactions && Object.keys(msg.reactions).length > 0 && (
                                             <div className={styles.reactionsContainer}>
                                                 {Object.entries(msg.reactions).map(([emoji, users]) => 
-                                                   users.length > 0 ? <span key={emoji}>{emoji} {users.length}</span> : null
+                                                    users.length > 0 ? <span key={emoji}>{emoji} {users.length}</span> : null
                                                 )}
                                             </div>
                                         )}
                                     </div>
                                     <div className={styles.messageInfo}>
-                                         <span className={styles.messageTimestamp}>
+                                        <span className={styles.messageTimestamp}>
                                             {msg.timestamp?.toDate().toLocaleTimeString('az-AZ', { hour: '2-digit', minute: '2-digit' })}
                                         </span>
                                         {renderStatusIcon(msg)}
@@ -369,36 +426,22 @@ const ChatPage = () => {
                             <div ref={messagesEndRef} />
                         </div>
                         
-                        {/* === MESAJ GÖNDƏRMƏ PANELİ (TAM YENİLƏNİB) === */}
                         <div className={styles.messageInputArea}>
                             {recordedAudio ? (
-                                // Səs yazılıb göndərilməyi gözləyəndə bu görünür
                                 <div className={styles.audioPreview}>
-                                    <button type="button" className={styles.iconButton} onClick={handleCancelAudio}>
-                                        <FaTrash />
-                                    </button>
+                                    <button type="button" className={styles.iconButton} onClick={handleCancelAudio}><FaTrash /></button>
                                     <audio controls src={URL.createObjectURL(recordedAudio)} className={styles.previewAudioPlayer}></audio>
-                                    <button type="button" className={styles.sendButton} onClick={handleSendAudio}>
-                                        <FaPaperPlane />
-                                    </button>
+                                    <button type="button" className={styles.sendButton} onClick={handleSendAudio}><FaPaperPlane /></button>
                                 </div>
                             ) : isRecording ? (
-                                // Səs yazılarkən bu görünür
                                 <div className={styles.recordingIndicator}>
-                                    <button type="button" className={`${styles.iconButton} ${styles.recording}`} onClick={handleMicButtonClick}>
-                                        <FaStop />
-                                    </button>
+                                    <button type="button" className={`${styles.iconButton} ${styles.recording}`} onClick={handleMicButtonClick}><FaStop /></button>
                                     <span>Səs yazılır... {formatDuration(recordingDuration)}</span>
                                 </div>
                             ) : (
-                                // Standart vəziyyət
                                 <form className={styles.textInputForm} onSubmit={handleSubmit}>
-                                    <button type="button" className={styles.iconButton} onClick={() => fileInputRef.current.click()}>
-                                        <FaPaperclip />
-                                    </button>
-                                     <button type="button" className={styles.iconButton} onClick={handleMicButtonClick}>
-                                        <FaMicrophone />
-                                    </button>
+                                    <button type="button" className={styles.iconButton} onClick={() => fileInputRef.current.click()}><FaPaperclip /></button>
+                                    <button type="button" className={styles.iconButton} onClick={handleMicButtonClick}><FaMicrophone /></button>
                                     <input
                                         type="text"
                                         className={styles.messageInput}
@@ -407,10 +450,7 @@ const ChatPage = () => {
                                         placeholder="Mesajınızı yazın..."
                                         disabled={uploadingFile}
                                     />
-                                   
-                                    <button type="submit" className={styles.sendButton} aria-label="Göndər" disabled={uploadingFile}>
-                                        <FaPaperPlane />
-                                    </button>
+                                    <button type="submit" className={styles.sendButton} aria-label="Göndər" disabled={uploadingFile}><FaPaperPlane /></button>
                                     <input type="file" ref={fileInputRef} style={{ display: 'none' }} accept="image/*" onChange={handleFileChange} />
                                 </form>
                             )}

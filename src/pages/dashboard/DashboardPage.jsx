@@ -8,10 +8,20 @@ import WeatherWidget from '../../components/weatherwidget/WeatherWidget';
 import './DashboardPage.css';
 
 // =======================================================
-// WIDGET KOMPONENTLƏRİ (Ana faylın içində)
+// YARDIMÇI FUNKSİYA: Universal Şəkil URL-i (ƏSAS HƏLL)
+// =======================================================
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http') || imagePath.startsWith('blob')) {
+        return imagePath;
+    }
+    return `http://localhost:5000${imagePath}`;
+};
+
+// =======================================================
+// WIDGET KOMPONENTLƏRİ (Düzəlişlərlə)
 // =======================================================
 
-// Bu günün planlanmış kombinini göstərən widget
 const TodaysOutfit = ({ outfits }) => {
     const today = new Date().toDateString();
     const todaysOutfit = outfits.find(o => o.isPlanned && new Date(o.plannedDate).toDateString() === today);
@@ -32,34 +42,33 @@ const TodaysOutfit = ({ outfits }) => {
             <h3>Bu Günün Kombini: {todaysOutfit.name}</h3>
             <div className="todays-outfit-images">
                 {todaysOutfit.items.map(item => (
-                    item && <img key={item._id} src={`http://localhost:5000${item.image}`} alt={item.name} />
+                    // DƏYİŞİKLİK: getImageUrl istifadə olunur
+                    item && <img key={item._id} src={getImageUrl(item.image)} alt={item.name} />
                 ))}
             </div>
         </div>
     );
 };
 
-
-// Wishlist-dən xatırlatma göstərən widget
 const WishlistReminder = ({ wishlist }) => {
     if (wishlist.length === 0) return null;
     const randomItem = wishlist[Math.floor(Math.random() * wishlist.length)];
 
     return (
-         <div className="dashboard-widget">
+        <div className="dashboard-widget">
             <h3>Arzu Siyahısından Xatırlatma</h3>
              <div className="wishlist-reminder-item">
-                 {randomItem.image && <img src={`http://localhost:5000${randomItem.image}`} alt={randomItem.name} />}
-                 <div className="wishlist-reminder-info">
-                    <p>{randomItem.name}</p>
-                    <Link to="/wishlist" className="widget-link">Siyahıya Bax</Link>
-                 </div>
+                {/* DƏYİŞİKLİK: getImageUrl istifadə olunur */}
+                {randomItem.image && <img src={getImageUrl(randomItem.image)} alt={randomItem.name} />}
+                <div className="wishlist-reminder-info">
+                   <p>{randomItem.name}</p>
+                   <Link to="/wishlist" className="widget-link">Siyahıya Bax</Link>
+                </div>
              </div>
         </div>
     );
 };
 
-// Ağıllı təklifi göstərən Modal Pəncərə
 const SuggestionModal = ({ isOpen, onClose, suggestion, onRegenerate, onPlan }) => {
     if (!isOpen) return null;
 
@@ -72,7 +81,8 @@ const SuggestionModal = ({ isOpen, onClose, suggestion, onRegenerate, onPlan }) 
                         <div className="suggestion-images-large">
                             {suggestion.map(item => (
                                 item && <div key={item._id} className="suggestion-item">
-                                    <img src={`http://localhost:5000${item.image}`} alt={item.name} />
+                                    {/* DƏYİŞİKLİK: getImageUrl istifadə olunur */}
+                                    <img src={getImageUrl(item.image)} alt={item.name} />
                                     <p>{item.name}</p>
                                 </div>
                             ))}
@@ -98,7 +108,6 @@ const SuggestionModal = ({ isOpen, onClose, suggestion, onRegenerate, onPlan }) 
     );
 };
 
-
 // =======================================================
 // ƏSAS DASHBOARD KOMPONENTİ
 // =======================================================
@@ -109,7 +118,6 @@ const DashboardPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     
-    // Ağıllı təklif üçün state-lər
     const [weatherData, setWeatherData] = useState(null);
     const [isSuggestionModalOpen, setSuggestionModalOpen] = useState(false);
     const [suggestedOutfit, setSuggestedOutfit] = useState([]);
@@ -119,9 +127,9 @@ const DashboardPage = () => {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) {
-                     setError("Zəhmət olmasa, sistemə daxil olun.");
-                     setLoading(false);
-                     return;
+                    setError("Zəhmət olmasa, sistemə daxil olun.");
+                    setLoading(false);
+                    return;
                 }
                 const config = { headers: { Authorization: `Bearer ${token}` } };
 
@@ -146,7 +154,6 @@ const DashboardPage = () => {
         fetchAllData();
     }, []);
 
-    // "Nə Geyinsəm?" düyməsinin məntiqi
     const handleGenerateSuggestion = () => {
         if (!weatherData || data.clothes.length < 2) {
             alert("Ağıllı təklif üçün kifayət qədər geyim və ya hava məlumatı yoxdur.");
@@ -191,7 +198,6 @@ const DashboardPage = () => {
         setSuggestionModalOpen(true);
     };
 
-    // Təklif olunan kombini planlayan funksiya
     const handlePlanSuggestedOutfit = async (suggestion) => {
         if (!suggestion || suggestion.length === 0) return;
         try {
@@ -211,7 +217,6 @@ const DashboardPage = () => {
             alert("Təklifi planlaşdırarkən xəta baş verdi.");
         }
     };
-
 
     if (loading) return <p className="page-status">Yüklənir...</p>;
     if (error) return <p className="page-status error">{error}</p>;

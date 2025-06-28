@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaPlus, FaEdit, FaTrash, FaExternalLinkAlt, FaMagic, FaShoppingBag } from 'react-icons/fa';
-import './WishlistPage.css'; // CSS faylını import edirik
-
-// =======================================================
-// YARDIMÇI FUNKSİYA VƏ SABİTLƏR
-// =======================================================
+import './WishlistPage.css'; 
 
 const getImageUrl = (imagePath) => {
     if (!imagePath) return '';
@@ -15,20 +11,14 @@ const getImageUrl = (imagePath) => {
     return `http://localhost:5000${imagePath}`;
 };
 
-// Kateqoriyalar (Qarderob səhifəsi ilə eyni)
 const CATEGORIES = [
-    'Köynək (T-shirt)', 'Köynək (Klassik)', 'Polo', 'Sweatshirt / Hudi', 
+    'Köynək (T-shirt)', 'Köynək (Klassik)', 'Polo', 'Sweatshirt / Hudi',
     'Sviter / Cemper', 'Gödəkçə / Palto', 'Pencək / Blazer', 'Şalvar / Cins', 
     'Şort', 'Ayaqqabı', 'Aksesuar', 'İdman Geyimi', 'Kostyum', 'Başqa'
 ];
 
-// =======================================================
-// 1. MODAL KOMPONENTİ (YENİLƏNMİŞ)
-// =======================================================
 const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
-    const initialFormData = {
-        name: '', category: '', price: '', productUrl: '', notes: ''
-    };
+    const initialFormData = { name: '', category: '', price: '', storeUrl: '', notes: '' };
     const [formData, setFormData] = useState(initialFormData);
     const [scrapeUrl, setScrapeUrl] = useState('');
     const [isScraping, setIsScraping] = useState(false);
@@ -44,13 +34,13 @@ const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
                 name: itemToEdit.name || '',
                 category: itemToEdit.category || '',
                 price: itemToEdit.price || '',
-                productUrl: itemToEdit.productUrl || '',
+                storeUrl: itemToEdit.storeUrl || '',
                 notes: itemToEdit.notes || ''
             });
             const imageUrl = getImageUrl(itemToEdit.image);
             setProcessedImageUrl(imageUrl);
             setPreview(imageUrl);
-            setScrapeUrl(itemToEdit.productUrl || '');
+            setScrapeUrl(itemToEdit.storeUrl || '');
         } else {
             setFormData(initialFormData);
             setPreview(null);
@@ -61,9 +51,7 @@ const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
         setMessage('');
     }, [itemToEdit]);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    const handleChange = (e) => { setFormData({ ...formData, [e.target.name]: e.target.value }); };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -76,10 +64,7 @@ const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
     };
 
     const handleRemoveBackground = async () => {
-        if (!imageFile) {
-            setMessage('Zəhmət olmasa, əvvəlcə yeni bir şəkil seçin.');
-            return;
-        }
+        if (!imageFile) { setMessage('Zəhmət olmasa, əvvəlcə yeni bir şəkil seçin.'); return; }
         setIsProcessing(true);
         setMessage('Fon təmizlənir, zəhmət olmasa gözləyin...');
         const uploadFormData = new FormData();
@@ -87,7 +72,7 @@ const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
         try {
             const token = localStorage.getItem('token');
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const res = await axios.post('/api/upload/remove-bg', uploadFormData, config);
+            const res = await axios.post('http://localhost:5000/api/upload/remove-bg', uploadFormData, config);
             setProcessedImageUrl(res.data.imageUrl);
             setMessage('Fon uğurla təmizləndi!');
         } catch (error) {
@@ -98,30 +83,23 @@ const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
     };
     
     const handleScrapeUrl = async () => {
-        if (!scrapeUrl) {
-            setMessage('Zəhmət olmasa, bir link daxil edin.');
-            return;
-        }
+        if (!scrapeUrl) { setMessage('Zəhmət olmasa, bir link daxil edin.'); return; }
         setIsScraping(true);
         setMessage('Məlumatlar çəkilir...');
         try {
             const token = localStorage.getItem('token');
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.post('/api/scrape/fetch-url', { productUrl: scrapeUrl }, config);
-
+            const { data } = await axios.post('http://localhost:5000/api/scrape/fetch-url', { productUrl: scrapeUrl }, config);
             if (data && data.name) {
                 setFormData(prevFormData => ({
-                    ...prevFormData,
-                    name: data.name,
-                    price: data.price || '',
-                    productUrl: data.productUrl || scrapeUrl,
+                    ...prevFormData, name: data.name, price: data.price || '', storeUrl: data.productUrl || scrapeUrl,
                 }));
                 setPreview(data.image || '');
                 setProcessedImageUrl(data.image || '');
                 setMessage('Məlumatlar uğurla çəkildi!');
             } else {
                 setMessage('Məlumat tapılmadı. Zəhmət olmasa, əl ilə daxil edin.');
-                setFormData(prevFormData => ({ ...prevFormData, productUrl: scrapeUrl }));
+                setFormData(prevFormData => ({ ...prevFormData, storeUrl: scrapeUrl }));
             }
         } catch (error) {
             setMessage(`Xəta: ${error.response?.data?.message || 'Məlumatları çəkmək mümkün olmadı.'}`);
@@ -132,14 +110,8 @@ const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!formData.name) {
-            setMessage('Məhsulun adını daxil etmək məcburidir.');
-            return;
-        }
-        if (!processedImageUrl) {
-            setMessage('Zəhmət olmasa, bir şəkil əlavə edin.');
-            return;
-        }
+        if (!formData.name) { setMessage('Məhsulun adını daxil etmək məcburidir.'); return; }
+        if (!processedImageUrl) { setMessage('Zəhmət olmasa, bir şəkil əlavə edin.'); return; }
         const finalData = { ...formData, image: processedImageUrl };
         onSave(finalData, itemToEdit?._id);
     };
@@ -152,36 +124,20 @@ const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
                     <div className="form-group scrape-section">
                         <label>Mağaza Linki (İstəyə Bağlı)</label>
                         <div className="scrape-input-group">
-                            <input 
-                                type="url" 
-                                placeholder="Məhsulun linkini bura yapışdırın..."
-                                value={scrapeUrl}
-                                onChange={(e) => setScrapeUrl(e.target.value)}
-                            />
-                            <button type="button" onClick={handleScrapeUrl} disabled={isScraping} className="scrape-btn" title="Linkdən məlumatları çək">
-                                {isScraping ? '...' : <FaMagic />}
-                            </button>
+                            <input type="url" placeholder="Məhsulun linkini bura yapışdırın..." value={scrapeUrl} onChange={(e) => setScrapeUrl(e.target.value)} />
+                            <button type="button" onClick={handleScrapeUrl} disabled={isScraping} className="scrape-btn" title="Linkdən məlumatları çək">{isScraping ? '...' : <FaMagic />}</button>
                         </div>
                     </div>
-
                     <div className="form-group">
                         <label>Məhsulun Adı</label>
                         <input type="text" name="name" value={formData.name} onChange={handleChange} required />
                     </div>
-                    
                     <div className="form-group">
                         <label>Şəkil</label>
-                        <div className="image-previews">
-                           {preview && <img src={getImageUrl(preview)} alt="Önbaxış" className="image-preview" />}
-                        </div>
+                        <div className="image-previews">{preview && <img src={getImageUrl(preview)} alt="Önbaxış" className="image-preview" />}</div>
                         <input type="file" onChange={handleImageChange} accept="image/*" />
-                        {imageFile && (
-                            <button type="button" className="btn-secondary" onClick={handleRemoveBackground} disabled={isProcessing}>
-                                {isProcessing ? 'Emal olunur...' : 'Fonunu Təmizlə'}
-                            </button>
-                        )}
+                        {imageFile && (<button type="button" className="btn-secondary" onClick={handleRemoveBackground} disabled={isProcessing}>{isProcessing ? 'Emal olunur...' : 'Fonunu Təmizlə'}</button>)}
                     </div>
-                    
                     <div className="form-group">
                         <label>Kateqoriya</label>
                         <select name="category" value={formData.category} onChange={handleChange}>
@@ -195,15 +151,13 @@ const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
                     </div>
                     <div className="form-group">
                         <label>Məhsulun Linki (URL)</label>
-                        <input type="url" name="productUrl" value={formData.productUrl} onChange={handleChange} />
+                        <input type="url" name="storeUrl" value={formData.storeUrl} onChange={handleChange} />
                     </div>
                     <div className="form-group">
                         <label>Qeydlər</label>
                         <textarea name="notes" value={formData.notes} onChange={handleChange} rows="3"></textarea>
                     </div>
-
                     {message && <p className="form-message">{message}</p>}
-
                     <div className="modal-actions">
                         <button type="button" className="btn btn-secondary" onClick={onClose}>Ləğv Et</button>
                         <button type="submit" className="btn btn-primary" disabled={isProcessing || isScraping}>Yadda Saxla</button>
@@ -214,9 +168,6 @@ const WishlistFormModal = ({ itemToEdit, onSave, onClose }) => {
     );
 };
 
-// =======================================================
-// 2. ANA SƏHİFƏ KOMPONENTİ
-// =======================================================
 const WishlistPage = () => {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -229,7 +180,7 @@ const WishlistPage = () => {
             setLoading(true);
             const token = localStorage.getItem('token');
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.get('/api/wishlist', config);
+            const { data } = await axios.get('http://localhost:5000/api/wishlist', config);
             setWishlistItems(data);
         } catch (err) {
             setError('Arzu siyahısını yükləmək mümkün olmadı.');
@@ -248,9 +199,9 @@ const WishlistPage = () => {
             const token = localStorage.getItem('token');
             const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }};
             if (itemId) {
-                await axios.put(`/api/wishlist/${itemId}`, itemData, config);
+                await axios.put(`http://localhost:5000/api/wishlist/${itemId}`, itemData, config);
             } else {
-                await axios.post('/api/wishlist', itemData, config);
+                await axios.post('http://localhost:5000/api/wishlist', itemData, config);
             }
             setIsModalOpen(false);
             setEditingItem(null);
@@ -267,7 +218,7 @@ const WishlistPage = () => {
                 setLoading(true);
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.delete(`/api/wishlist/${itemId}`, config);
+                await axios.delete(`http://localhost:5000/api/wishlist/${itemId}`, config);
                 await fetchData();
             } catch (err) {
                 alert('Arzu silinərkən xəta baş verdi.');
@@ -276,14 +227,13 @@ const WishlistPage = () => {
         }
     };
 
-    // YENİ FUNKSİYA: Qarderoba köçürmək üçün
     const handleMoveToWardrobe = async (itemId) => {
         if (window.confirm('Bu məhsulu qarderobunuza əlavə etmək istədiyinizə əminsiniz? Məhsul arzu siyahısından silinəcək.')) {
             try {
                 setLoading(true);
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.post(`/api/wishlist/${itemId}/move`, {}, config); // Boş obyekt göndəririk
+                await axios.post(`http://localhost:5000/api/wishlist/${itemId}/move`, {}, config);
                 await fetchData();
                 alert('Məhsul uğurla qarderoba əlavə edildi!');
             } catch (err) {
@@ -309,7 +259,6 @@ const WishlistPage = () => {
                     <FaPlus /> Yeni Arzu Əlavə Et
                 </button>
             </div>
-
             <div className="wishlist-grid">
                 {wishlistItems.length > 0 ? wishlistItems.map((item) => (
                     <div key={item._id} className="wishlist-card">
@@ -323,8 +272,8 @@ const WishlistPage = () => {
                             <button className="card-btn" onClick={() => handleMoveToWardrobe(item._id)} title="Qarderoba Əlavə Et">
                                 <FaShoppingBag />
                             </button>
-                            {item.productUrl && (
-                                <a href={item.productUrl} target="_blank" rel="noopener noreferrer" className="card-btn" title="Məhsula Bax">
+                            {item.storeUrl && (
+                                <a href={item.storeUrl} target="_blank" rel="noopener noreferrer" className="card-btn" title="Məhsula Bax">
                                     <FaExternalLinkAlt />
                                 </a>
                             )}
@@ -338,7 +287,6 @@ const WishlistPage = () => {
                     </div>
                 )}
             </div>
-            
             {isModalOpen && (
                 <WishlistFormModal
                     itemToEdit={editingItem}

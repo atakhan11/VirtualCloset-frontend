@@ -1,71 +1,173 @@
+/* === ÜMUMİ SƏHİFƏ === */
 .calendar-page-container {
     display: flex;
+    gap: 1.5rem;
+    padding: 1rem;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    height: calc(100vh - 80px); /* 80px header hündürlüyü üçün nəzərdə tutulub, öz proyektinizə görə dəyişin */
 }
 
-/* Sol Panel: Kombin Siyahısı */
+/* === SOL PANEL (Sidebar) === */
 .calendar-sidebar {
-    width: 25%;
-    max-width: 300px;
+    flex: 0 0 280px; /* Sabit en */
+    background: #f8f9fa;
+    border-radius: 12px;
     padding: 1.5rem;
-    background-color: #f8f9fa;
-    border-right: 1px solid #dee2e6;
+    border: 1px solid #dee2e6;
+    height: calc(100vh - 110px);
     display: flex;
     flex-direction: column;
 }
 
 .calendar-sidebar h3 {
     margin-top: 0;
-    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
 }
 
 .calendar-sidebar p {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: #6c757d;
-    margin-bottom: 1rem;
 }
 
 .unplanned-outfits-list {
     overflow-y: auto;
     flex-grow: 1;
+    margin-top: 1rem;
 }
 
 .unplanned-outfit-item {
-    padding: 12px 15px;
-    margin-bottom: 8px;
     background-color: #fff;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    cursor: grab;
     border: 1px solid #e9ecef;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: background-color 0.2s, box-shadow 0.2s;
 }
 
 .unplanned-outfit-item:hover {
     background-color: #e9ecef;
-    border-color: #ced4da;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.unplanned-outfit-item.selected {
-    background-color: #007bff;
-    color: white;
-    border-color: #0056b3;
-    font-weight: bold;
+.no-outfits-message {
+    text-align: center;
+    padding-top: 2rem;
 }
 
-/* Sağ Panel: Təqvim */
+/* === SAĞ PANEL (Təqvim) === */
 .calendar-main {
     flex-grow: 1;
-    padding: 1.5rem;
 }
 
-/* react-big-calendar üçün bəzi stil dəyişiklikləri */
+/* Təqvimdəki hadisələrin stili */
 .rbc-event {
-    background-color: #28a745 !important; /* Planlanmış kombinlərin rəngi */
-    border-radius: 4px !important;
+    background-color: #007bff;
+    border: none;
+    padding: 4px 8px;
 }
 
-.rbc-day-slot .rbc-event {
-    border: 1px solid #1e7e34 !important;
+.rbc-event-content-custom {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.rbc-event-image {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* === MODAL PƏNCƏRƏSİ === */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+.calendar-modal {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.calendar-modal h2 {
+    margin-top: 0;
+}
+
+.modal-outfit-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 1.5rem 0;
+}
+
+.modal-outfit-images img {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.7rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #aaa;
+    cursor: pointer;
 }
