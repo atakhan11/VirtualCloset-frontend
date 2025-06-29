@@ -1,20 +1,23 @@
-// src/components/Header/Header.jsx
-
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux'; // useSelector əlavə edildi
-import { logout, selectUser } from '../../redux/reducers/userSlice'; // selectUser əlavə edildi
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, selectUser } from '../../redux/reducers/userSlice';
 
 import styles from './Header.module.css';
-import logo from '../../assets/StyleFolio.png';
-import { FaBars, FaTimes, FaUserCircle } from 'react-icons/fa';
+import logo from '../../assets/StyleFolio.png'; // Logo yolunu yoxlayın
+import { FaBars, FaTimes } from 'react-icons/fa';
+
+// Universal şəkil URL-i funksiyası
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http')) return imagePath;
+    return `http://localhost:5000${imagePath}`;
+};
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    
-    // İstifadəçi məlumatını birbaşa Redux-dan alırıq
     const user = useSelector(selectUser);
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -23,15 +26,14 @@ const Header = () => {
     const handleLogout = () => {
         dispatch(logout());
         closeMobileMenu();
-        navigate('/login'); // Çıxışdan sonra login səhifəsinə yönləndir
+        navigate('/login');
     };
 
     return (
         <nav className={styles.navbar}>
             <div className={styles.navbarContainer}>
-                {/* DƏYİŞİKLİK: Loqonun linki artıq dinamikdir */}
                 <Link to={user ? "/dashboard" : "/"} className={styles.navbarLogo} onClick={closeMobileMenu}>
-                    <img src={logo} alt="StyleFolio Logo" />
+                    <img src={logo} alt="StyleFolio Logo" className={styles.logo} />
                 </Link>
 
                 <div className={styles.menuIcon} onClick={toggleMenu}>
@@ -41,94 +43,70 @@ const Header = () => {
                 <ul className={`${styles.navMenu} ${isMenuOpen ? styles.active : ''}`}>
                     {user ? (
                         <>
-                            {/* DƏYİŞİKLİK: Daxil olmuş istifadəçi üçün "Home" linki artıq yoxdur */}
+                            {/* === DAXİL OLMUŞ İSTİFADƏÇİ ÜÇÜN YENİ LİNKLƏR === */}
                             <li className={styles.navItem}>
-                                <Link to="/my-wardrobe" className={styles.navLinks} onClick={closeMobileMenu}>
-                                    My Wardrobe
-                                </Link>
+                                <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Ana Səhifə</NavLink>
                             </li>
                             <li className={styles.navItem}>
-                                <Link to="/outfit-planner" className={styles.navLinks} onClick={closeMobileMenu}>
-                                    Outfit Planner
-                                </Link>
+                                <NavLink to="/dashboard" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>İdarə Paneli</NavLink>
                             </li>
                             <li className={styles.navItem}>
-                                <Link to="/calendar" className={styles.navLinks} onClick={closeMobileMenu}>
-                                    Təqvim
-                                </Link>
+                                <NavLink to="/my-wardrobe" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Qarderobum</NavLink>
                             </li>
                             <li className={styles.navItem}>
-                                <Link to="/wishlist" className={styles.navLinks} onClick={closeMobileMenu}>
-                                    Wishlist
-                                </Link>
+                                <NavLink to="/outfit-planner" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Kombin Planlayıcı</NavLink>
                             </li>
                             <li className={styles.navItem}>
-                                <Link to="/chat" className={styles.navLinks} onClick={closeMobileMenu}>
-                                    Chat
-                                </Link>
+                                <NavLink to="/calendar" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Təqvim</NavLink>
                             </li>
-                            <li className={styles.navItem}>
-                                <Link to="/contact" className={styles.navLinks} onClick={closeMobileMenu}>
-                                    Contact
-                                </Link>
+                             <li className={styles.navItem}>
+                                <NavLink to="/wishlist" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Arzu Siyahım</NavLink>
                             </li>
-                            <li className={styles.navItem}>
-                <Link to="/donate" className={styles.navLinks} onClick={closeMobileMenu}>
-                    Dəstək Ol
-                </Link>
-            </li>
+                             <li className={styles.navItem}>
+                                <NavLink to="/chat" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Chat</NavLink>
+                            </li>
                         </>
                     ) : (
                         <>
-                            {/* Qeydiyyatsız istifadəçi üçün "Home" linki qalır */}
+                            {/* Qeydiyyatsız istifadəçi üçün linklər */}
                             <li className={styles.navItem}>
-                                <Link to="/" className={styles.navLinks} onClick={closeMobileMenu}>
-                                    Home
-                                </Link>
+                                <NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Ana Səhifə</NavLink>
                             </li>
                             <li className={styles.navItem}>
-                                <Link to="/features" className={styles.navLinks} onClick={closeMobileMenu}>
-                                    Features
-                                </Link>
+                                <NavLink to="/features" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Xüsusiyyətlər</NavLink>
                             </li>
                             <li className={styles.navItem}>
-                                <Link to="/about" className={styles.navLinks} onClick={closeMobileMenu}>
-                                    About
-                                </Link>
+                                <NavLink to="/about" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Haqqımızda</NavLink>
                             </li>
                             <li className={styles.navItem}>
-                                <Link to="/contact" className={styles.navLinks} onClick={closeMobileMenu}>
-                                    Contact
-                                </Link>
+                                <NavLink to="/contact" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Əlaqə</NavLink>
                             </li>
-                            <li className={styles.navItem}>
-                <Link to="/donate" className={styles.navLinks} onClick={closeMobileMenu}>
-                    Dəstək Ol
-                </Link>
-            </li>
                         </>
                     )}
+                    <li className={styles.navItem}>
+                        <NavLink to="/donate" className={({isActive}) => isActive ? styles.activeLink : styles.navLinks} onClick={closeMobileMenu}>Dəstək Ol</NavLink>
+                    </li>
                 </ul>
 
                 <div className={styles.navAuth}>
                     {user ? (
                         <div className={styles.navProfile}>
-                            <span>Welcome, {user.name}</span>
-                            <Link to="/profile" className={styles.profileIconLink} title="My Profile" onClick={closeMobileMenu}>
-                                <FaUserCircle className={styles.profileIcon} />
+                            <Link to="/profile" className={styles.profileLink} title="Profilim" onClick={closeMobileMenu}>
+                                <img 
+                                    src={user.avatar ? getImageUrl(user.avatar) : `https://ui-avatars.com/api/?name=${user.name}&background=random&color=fff`} 
+                                    alt="Avatar" 
+                                    className={styles.avatar} 
+                                />
+                                <span className={styles.profileName}>{user.name}</span>
                             </Link>
                             <button onClick={handleLogout} className={`${styles.btn} ${styles.btnSecondary}`}>
-                                Logout
+                                Çıxış
                             </button>
                         </div>
                     ) : (
                         <>
-                            <Link to="/login" className={`${styles.btn} ${styles.btnSecondary}`}>
-                                Login
-                            </Link>
-                            <Link to="/register" className={`${styles.btn} ${styles.btnPrimary}`}>
-                                Sign Up
-                            </Link>
+                            <Link to="/login" className={`${styles.btn} ${styles.btnSecondary}`}>Login</Link>
+                            <Link to="/register" className={`${styles.btn} ${styles.btnPrimary}`}>Sign Up</Link>
                         </>
                     )}
                 </div>

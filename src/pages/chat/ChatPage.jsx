@@ -1,33 +1,34 @@
-// src/pages/ChatPage/ChatPage.jsx
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../redux/reducers/userSlice';
+// DÜZƏLİŞ: selectUser-i düzgün yoldan import edirik
+import { selectUser } from '../../redux/reducers/userSlice'; 
 import axios from 'axios';
 
 // Firebase kitabxanaları
 import { initializeApp } from 'firebase/app';
 import { 
     getFirestore, collection, query, where, onSnapshot, 
-    addDoc, serverTimestamp, orderBy, getDocs, doc, updateDoc,
+    addDoc, serverTimestamp as firestoreServerTimestamp, orderBy, getDocs, doc, updateDoc,
 } from 'firebase/firestore';
-
-import { getDatabase, ref as dbRef, onValue,  } from "firebase/database";
-import { onDisconnect, set } from "firebase/database";
 import { 
-    getStorage, ref, uploadBytesResumable, getDownloadURL 
+    getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL 
 } from "firebase/storage";
+import { 
+    getDatabase, ref as dbRef, onValue, onDisconnect, set, serverTimestamp as rtdbServerTimestamp 
+} from "firebase/database";
 
+// Tarix formatlaması üçün kitabxana
+import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns';
+import { az } from 'date-fns/locale';
 
-
-// İkonlar (FaStop və FaTrash əlavə edildi)
 import styles from './ChatPage.module.css';
 import { 
     FaPaperPlane, FaPaperclip, FaMicrophone, 
-    FaThumbsUp, FaHeart, FaFire, FaLaugh, FaStop, FaTrash
+    FaThumbsUp, FaHeart, FaFire, FaLaugh, FaStop, FaTrash, FaSmile
 } from 'react-icons/fa';
 import { BsCheck, BsCheckAll } from 'react-icons/bs';
+import EmojiPicker from 'emoji-picker-react';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAJzMfYopaxLm-DX9L5QhUtMHgrgLnPhTo",
@@ -37,23 +38,39 @@ const firebaseConfig = {
     messagingSenderId: "267528552327",
     appId: "1:267528552327:web:6365c7bba25620c9179d22",
     measurementId: "G-4L9VBQRWW3",
-    databaseURL: "https://stylefolio-e67b1-default-rtdb.europe-west1.firebasedatabase.app/",
+    databaseURL: "https://stylefolio-e67b1-default-rtdb.europe-west1.firebasedatabase.app",
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const rtdb = getDatabase(app);
-// Səs yazma müddətini formatlayan köməkçi funksiya
+
 const formatDuration = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
+const formatLastSeen = (timestamp) => {
+    if (!timestamp) return 'bir müddət əvvəl';
+    const date = new Date(timestamp);
+    const now = new Date();
+    
+    const diffSeconds = (now.getTime() - date.getTime()) / 1000;
+    if (diffSeconds < 60) return 'indicə';
+
+    if (diffSeconds < 3600) {
+        return formatDistanceToNow(date, { addSuffix: true, locale: az });
+    }
+    if (isToday(date)) return `bu gün, ${format(date, 'HH:mm')}`;
+    if (isYesterday(date)) return `dünən, ${format(date, 'HH:mm')}`;
+    
+    return format(date, 'd MMM, HH:mm', { locale: az });
+};
+
 
 const ChatPage = () => {
-    // Mövcud State-lər
     const [users, setUsers] = useState([]);
     const [conversations, setConversations] = useState([]);
     const [selectedConversation, setSelectedConversation] = useState(null);
@@ -61,63 +78,69 @@ const ChatPage = () => {
     const [loading, setLoading] = useState(true);
     const [newMessage, setNewMessage] = useState('');
     const [uploadingFile, setUploadingFile] = useState(null);
-
-    // === SƏSLİ MESAJ ÜÇÜN YENİLƏNMİŞ STATE VƏ REF-lər ===
     const [isRecording, setIsRecording] = useState(false);
-    const [recordedAudio, setRecordedAudio] = useState(null); // Yazılmış səsi göndərmədən əvvəl saxlamaq üçün
-    const [recordingDuration, setRecordingDuration] = useState(0); // Səs yazma müddətinin saniyəsi
+    const [recordedAudio, setRecordedAudio] = useState(null);
+    const [recordingDuration, setRecordingDuration] = useState(0);
+    const [userStatuses, setUserStatuses] = useState({});
+    const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+    const typingTimeoutRef = useRef(null);
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
-    const recordingIntervalRef = useRef(null); // Taymer üçün
-
-     const [userStatuses, setUserStatuses] = useState({});
-
+    const recordingIntervalRef = useRef(null);
     const reduxUser = useSelector(selectUser);
     const messagesEndRef = useRef(null);
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const { conversationId } = useParams();
 
-
-
+    // DÜZƏLİŞ: Bütün 'reduxUser.id' istifadələri 'reduxUser._id' ilə əvəz edildi
+    const currentUserId = reduxUser?._id;
 
     useEffect(() => {
-        if (!reduxUser?.id) return;
-
-        const userStatusDatabaseRef = dbRef(rtdb, '/status/' + reduxUser.id);
+        if (!currentUserId) return;
+        const userStatusDatabaseRef = dbRef(rtdb, '/status/' + currentUserId);
         const connectedRef = dbRef(rtdb, '.info/connected');
-
         const unsubscribe = onValue(connectedRef, (snap) => {
             if (snap.val() === true) {
                 onDisconnect(userStatusDatabaseRef).set({
                     isOnline: false,
                     last_seen: rtdbServerTimestamp(),
                 }).catch((err) => console.error("onDisconnect quraşdırılarkən xəta:", err));
-
                 set(userStatusDatabaseRef, {
                     isOnline: true,
-                });
+                }).catch(err => console.error("Status təyin edilərkən xəta:", err));
             }
         });
-
         return () => unsubscribe();
-    }, [reduxUser?.id]);
+    }, [currentUserId]);
 
-    // YENİ: Bütün istifadəçilərin statuslarını izləyən useEffect
     useEffect(() => {
         const statusRef = dbRef(rtdb, '/status/');
         const unsubscribe = onValue(statusRef, (snapshot) => {
             const statuses = snapshot.val();
             setUserStatuses(statuses || {});
         });
-
         return () => unsubscribe();
     }, []);
+    
+    useEffect(() => {
+        if (!selectedConversation || !currentUserId) return;
+        const otherUserId = selectedConversation.participants.find(uid => uid !== currentUserId);
+        if (!otherUserId) return;
+        const typingRef = dbRef(rtdb, `typing/${selectedConversation.id}/${otherUserId}`);
+        const unsubscribe = onValue(typingRef, (snapshot) => {
+            setIsOtherUserTyping(snapshot.val() === true);
+        });
+        return () => {
+            unsubscribe();
+            const myTypingRef = dbRef(rtdb, `typing/${selectedConversation.id}/${currentUserId}`);
+            set(myTypingRef, null);
+        };
+    }, [selectedConversation, currentUserId]);
 
-
-
-    // ... (useEffect hook-ları burada dəyişməz qalır)
-     useEffect(() => {
+    useEffect(() => {
         if (reduxUser) {
             const fetchUsers = async () => {
                 try {
@@ -134,16 +157,15 @@ const ChatPage = () => {
     }, [reduxUser]);
 
     useEffect(() => {
-        if (!reduxUser || users.length === 0) return;
-        const q = query(collection(db, "chats"), where('participants', 'array-contains', reduxUser.id));
+        if (!currentUserId || users.length === 0) return;
+        const q = query(collection(db, "chats"), where('participants', 'array-contains', currentUserId));
         const unsubscribeConvos = onSnapshot(q, async (querySnapshot) => {
             const convosPromises = querySnapshot.docs.map(async (doc) => {
                 const convoData = doc.data();
-                const otherUserId = convoData.participants.find(uid => uid !== reduxUser.id);
+                const otherUserId = convoData.participants.find(uid => uid !== currentUserId);
                 const otherUser = users.find(u => u._id === otherUserId);
                 return { 
-                    id: doc.id, 
-                    ...convoData,
+                    id: doc.id, ...convoData,
                     otherUserName: otherUser?.name || 'Naməlum istifadəçi',
                     otherUserId: otherUserId
                 };
@@ -153,7 +175,7 @@ const ChatPage = () => {
             setLoading(false);
         });
         return () => unsubscribeConvos();
-    }, [reduxUser, users]);
+    }, [currentUserId, users]);
 
     useEffect(() => {
         if(conversationId && conversations.length > 0) {
@@ -169,81 +191,63 @@ const ChatPage = () => {
             setMessages([]);
             return;
         };
-
         const messagesQuery = query(collection(db, `chats/${selectedConversation.id}/messages`), orderBy('timestamp', 'asc'));
-        
         const unsubscribeMessages = onSnapshot(messagesQuery, (querySnapshot) => {
             const msgs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setMessages(msgs);
-            
             querySnapshot.docs.forEach(doc => {
                 const messageData = doc.data();
-                if (messageData.senderId !== reduxUser.id && messageData.status !== 'seen') {
+                if (messageData.senderId !== currentUserId && messageData.status !== 'seen') {
                     const messageRef = doc.ref;
                     updateDoc(messageRef, { status: 'seen' });
                 }
             });
         });
-
         return () => unsubscribeMessages();
-    }, [selectedConversation, reduxUser?.id]);
-
+    }, [selectedConversation, currentUserId]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
     const handleSelectUser = async (user) => {
-        if (!reduxUser) return;
-        const participants = [reduxUser.id, user._id].sort();
+        if (!currentUserId) return;
+        const participants = [currentUserId, user._id].sort();
         const q = query(collection(db, "chats"), where('participants', '==', participants));
         const querySnapshot = await getDocs(q);
-
         if (!querySnapshot.empty) {
             navigate(`/chat/${querySnapshot.docs[0].id}`);
         } else {
             const newConvoRef = await addDoc(collection(db, "chats"), {
                 participants: participants,
                 participantNames: [reduxUser.name, user.name].sort(),
-                createdAt: serverTimestamp()
+                createdAt: firestoreServerTimestamp()
             });
             navigate(`/chat/${newConvoRef.id}`);
         }
     };
     
     const sendMessage = async (content, type = 'text') => {
-        if (!selectedConversation || !reduxUser) return;
-
+        if (!selectedConversation || !currentUserId) return;
         await addDoc(collection(db, `chats/${selectedConversation.id}/messages`), {
-            content: content,
-            type: type,
-            senderId: reduxUser.id,
-            timestamp: serverTimestamp(),
-            status: 'sent',
-            reactions: {}
+            content: content, type: type, senderId: currentUserId,
+            timestamp: firestoreServerTimestamp(), status: 'sent', reactions: {}
         });
-        
-        if (type === 'text') {
-            setNewMessage('');
-        }
+        if (type === 'text') { setNewMessage(''); }
     };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (!file || !selectedConversation) return;
         setUploadingFile(file);
-        const storageRef = ref(storage, `chat_images/${selectedConversation.id}/${Date.now()}_${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-        uploadTask.on('state_changed', 
-            () => {}, 
-            (error) => { console.error("Fayl yükləmə xətası:", error); setUploadingFile(null); }, 
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    sendMessage(downloadURL, 'image');
-                    setUploadingFile(null);
-                });
-            }
-        );
+        const fileStorageRef = storageRef(storage, `chat_images/${selectedConversation.id}/${Date.now()}_${file.name}`);
+        const uploadTask = uploadBytesResumable(fileStorageRef, file);
+        uploadTask.on('state_changed', () => {}, (error) => { console.error("Fayl yükləmə xətası:", error); setUploadingFile(null); }, () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                sendMessage(downloadURL, 'image');
+                setUploadingFile(null);
+            });
+        });
     };
 
     const handleReaction = async (messageId, emoji) => {
@@ -253,32 +257,27 @@ const ChatPage = () => {
         if (!targetMessage) return;
         const currentReactions = targetMessage.reactions || {};
         const userListForEmoji = currentReactions[emoji] || [];
-        if (userListForEmoji.includes(reduxUser.id)) {
-            currentReactions[emoji] = userListForEmoji.filter(uid => uid !== reduxUser.id);
+        if (userListForEmoji.includes(currentUserId)) {
+            currentReactions[emoji] = userListForEmoji.filter(uid => uid !== currentUserId);
             if (currentReactions[emoji].length === 0) {
                 delete currentReactions[emoji];
             }
         } else {
-            currentReactions[emoji] = [...userListForEmoji, reduxUser.id];
+            currentReactions[emoji] = [...userListForEmoji, currentUserId];
         }
         await updateDoc(messageRef, { reactions: currentReactions });
     };
 
-    // === SƏSLİ MESAJ FUNKSİYALARI (YENİLƏNİB) ===
     const uploadAudio = (audioBlob) => {
         if (!selectedConversation || !audioBlob) return;
         const fileName = `audio/${selectedConversation.id}/${Date.now()}.webm`;
-        const storageRef = ref(storage, fileName);
-        const uploadTask = uploadBytesResumable(storageRef, audioBlob);
-        uploadTask.on('state_changed',
-            () => {},
-            (error) => console.error("Səs faylı yükləmə xətası:", error),
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    sendMessage(downloadURL, 'audio');
-                });
-            }
-        );
+        const audioStorageRef = storageRef(storage, fileName);
+        const uploadTask = uploadBytesResumable(audioStorageRef, audioBlob);
+        uploadTask.on('state_changed', () => {}, (error) => console.error("Səs faylı yükləmə xətası:", error), () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                sendMessage(downloadURL, 'audio');
+            });
+        });
     };
 
     const handleStartRecording = async () => {
@@ -290,7 +289,7 @@ const ChatPage = () => {
             recorder.ondataavailable = (event) => audioChunksRef.current.push(event.data);
             recorder.onstop = () => {
                 const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-                setRecordedAudio(audioBlob); // Səsi göndərmədən əvvəl state-də saxlayırıq
+                setRecordedAudio(audioBlob);
                 stream.getTracks().forEach(track => track.stop());
             };
             recorder.start();
@@ -332,7 +331,6 @@ const ChatPage = () => {
     const handleCancelAudio = () => {
         setRecordedAudio(null);
     };
-    // === SƏSLİ MESAJ FUNKSİYALARININ SONU ===
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -340,18 +338,38 @@ const ChatPage = () => {
     };
 
     const renderStatusIcon = (message) => {
-        if (message.senderId !== reduxUser.id) return null;
+        if (message.senderId !== currentUserId) return null;
         if (message.status === 'seen') return <BsCheckAll className={styles.iconSeen} />;
-        if (message.status === 'delivered') return <BsCheckAll />;
-        return <BsCheck />;
+        return <BsCheckAll />;
+    };
+
+    const updateTypingStatus = useCallback(() => {
+        if (!selectedConversation || !currentUserId) return;
+        const typingRef = dbRef(rtdb, `typing/${selectedConversation.id}/${currentUserId}`);
+        set(typingRef, true);
+        if (typingTimeoutRef.current) {
+            clearTimeout(typingTimeoutRef.current);
+        }
+        typingTimeoutRef.current = setTimeout(() => {
+            set(typingRef, null);
+        }, 2000);
+    }, [selectedConversation, currentUserId]);
+
+    const handleNewMessageChange = (e) => {
+        setNewMessage(e.target.value);
+        updateTypingStatus();
+    };
+
+    const onEmojiClick = (emojiObject) => {
+        setNewMessage(prevInput => prevInput + emojiObject.emoji);
+        setShowEmojiPicker(false);
     };
     
     if (loading) return <div className={styles.loadingScreen}>Yüklənir...</div>;
 
-   return (
+    return (
         <div className={styles.chatPageContainer}>
             <div className={styles.sidebar}>
-                 {/* Sidebar-da istifadəçilərin statusunu göstəririk */}
                  <div className={styles.userList}>
                      <h3>Yeni Söhbət</h3>
                      <ul>
@@ -381,22 +399,27 @@ const ChatPage = () => {
             </div>
 
             <div className={styles.mainChatArea}>
-                {/* Söhbət başlığında statusu göstəririk */}
                 {!selectedConversation ? (
                     <div className={styles.chatWindowPlaceholder}>Başlamaq üçün bir istifadəçi və ya söhbət seçin.</div>
                 ) : (
                     <>
                         <div className={styles.chatWindowHeader}>
-                            {selectedConversation.otherUserName}
-                            {userStatuses[selectedConversation.otherUserId]?.isOnline ? (
-                                <span className={styles.headerStatusOnline}>Aktivdir</span>
-                            ) : (
-                                <span className={styles.headerStatusOffline}>Aktiv deyil</span>
-                            )}
+                            <div className={styles.headerUserInfo}>
+                                <span className={styles.headerUserName}>{selectedConversation.otherUserName}</span>
+                                {isOtherUserTyping ? (
+                                    <span className={styles.typingIndicator}>Yazır...</span>
+                                ) : userStatuses[selectedConversation.otherUserId]?.isOnline ? (
+                                    <span className={styles.headerStatusOnline}>Aktivdir</span>
+                                ) : (
+                                    <span className={styles.headerStatusOffline}>
+                                        Son görülmə: {formatLastSeen(userStatuses[selectedConversation.otherUserId]?.last_seen)}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                         <div className={styles.messagesArea}>
                             {messages.map(msg => (
-                                <div key={msg.id} className={`${styles.messageWrapper} ${msg.senderId === reduxUser.id ? styles.sentWrapper : styles.receivedWrapper}`}>
+                                <div key={msg.id} className={`${styles.messageWrapper} ${msg.senderId === currentUserId ? styles.sentWrapper : styles.receivedWrapper}`}>
                                     <div className={styles.messageBubble}>
                                         {msg.type === 'image' && <img src={msg.content} alt="Söhbətdən şəkil" className={styles.chatImage} />}
                                         {msg.type === 'audio' && <audio controls src={msg.content} className={styles.chatAudio}></audio>}
@@ -427,6 +450,11 @@ const ChatPage = () => {
                         </div>
                         
                         <div className={styles.messageInputArea}>
+                            {showEmojiPicker && (
+                                <div className={styles.emojiPickerContainer}>
+                                    <EmojiPicker onEmojiClick={onEmojiClick} pickerStyle={{ width: '100%' }} />
+                                </div>
+                            )}
                             {recordedAudio ? (
                                 <div className={styles.audioPreview}>
                                     <button type="button" className={styles.iconButton} onClick={handleCancelAudio}><FaTrash /></button>
@@ -441,16 +469,18 @@ const ChatPage = () => {
                             ) : (
                                 <form className={styles.textInputForm} onSubmit={handleSubmit}>
                                     <button type="button" className={styles.iconButton} onClick={() => fileInputRef.current.click()}><FaPaperclip /></button>
-                                    <button type="button" className={styles.iconButton} onClick={handleMicButtonClick}><FaMicrophone /></button>
+                                    <button type="button" className={styles.iconButton} onClick={() => setShowEmojiPicker(!showEmojiPicker)}><FaSmile /></button>
                                     <input
                                         type="text"
                                         className={styles.messageInput}
                                         value={newMessage}
-                                        onChange={(e) => setNewMessage(e.target.value)}
+                                        onChange={handleNewMessageChange}
                                         placeholder="Mesajınızı yazın..."
                                         disabled={uploadingFile}
+                                        onFocus={() => setShowEmojiPicker(false)}
                                     />
-                                    <button type="submit" className={styles.sendButton} aria-label="Göndər" disabled={uploadingFile}><FaPaperPlane /></button>
+                                    <button type="button" className={styles.iconButton} onClick={handleMicButtonClick}><FaMicrophone /></button>
+                                    <button type="submit" className={styles.sendButton} aria-label="Göndər" disabled={!newMessage.trim() || uploadingFile}><FaPaperPlane /></button>
                                     <input type="file" ref={fileInputRef} style={{ display: 'none' }} accept="image/*" onChange={handleFileChange} />
                                 </form>
                             )}

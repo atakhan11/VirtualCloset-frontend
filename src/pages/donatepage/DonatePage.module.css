@@ -1,68 +1,60 @@
-/* src/pages/DonatePage/DonatePage.module.css */
-
+/* ===== ÜMUMİ DONATE SƏHİFƏSİ ===== */
 .donateContainer {
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
+    align-items: flex-start;
+    padding: 4rem 2rem;
     background-color: #f0f2f5;
-    min-height: 100%;
+    min-height: calc(100vh - 80px);
 }
 
 .donateBox {
     background-color: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    max-width: 500px;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     width: 100%;
+    max-width: 500px;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 .heartIcon {
-    font-size: 48px;
+    font-size: 3rem;
     color: #ff4d6d;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
 }
 
 .donateBox h2 {
-    font-size: 28px;
-    margin-bottom: 15px;
-    color: #1c1e21;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
 }
 
 .donateBox p {
-    font-size: 16px;
-    color: #606770;
-    line-height: 1.6;
-    margin-bottom: 30px;
-    max-width: 400px;
+    color: #6c757d;
+    margin-bottom: 2rem;
 }
 
+/* Məbləğ seçimi düymələri */
 .amountSelector {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .amountButton {
-    padding: 12px 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    padding: 0.8rem 1.2rem;
     border-radius: 8px;
-    border: 1px solid #ccd0d5;
-    background-color: #f5f6f7;
-    font-size: 16px;
-    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
 .amountButton:hover {
-    background-color: #e4e6eb;
+    background-color: #e9ecef;
 }
 
 .amountButton.selected {
@@ -71,150 +63,136 @@
     border-color: #007bff;
 }
 
+/* Xüsusi məbləğ inputu */
 .customAmount {
-    width: 100%;
-    margin-bottom: 30px;
-}
-
-.customAmount label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #606770;
-    font-weight: 500;
+    margin-bottom: 2rem;
 }
 
 .inputWrapper {
-    position: relative;
     display: flex;
     align-items: center;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 0.2rem 0.8rem;
+    max-width: 250px;
+    margin: 0 auto;
 }
 
 .inputWrapper input {
-    width: 100%;
-    padding: 12px 50px 12px 15px;
-    border: 1px solid #ccd0d5;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: 500;
-    text-align: center;
+    border: none;
     outline: none;
-    transition: border-color 0.2s;
-}
-
-.inputWrapper input:focus {
-    border-color: #007bff;
+    width: 100%;
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: 500;
+    background: transparent;
 }
 
 .inputWrapper span {
-    position: absolute;
-    right: 15px;
-    font-size: 16px;
     font-weight: 600;
-    color: #606770;
+    color: #6c757d;
 }
 
+
+/* === YENİ VƏ DÜZƏLDİLMİŞ STRIPE STİLLƏRİ === */
+
+.paymentForm {
+    margin-top: 2rem;
+    border-top: 1px solid #eee;
+    padding-top: 2rem;
+    width: 100%;
+}
+
+/* DÜZƏLİŞ: Stripe elementini saxlayan xüsusi div üçün stil */
+.cardElementWrapper {
+    border: 1px solid #ccd0d5;
+    padding: 14px 12px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.2s;
+}
+
+.cardElementWrapper:focus-within {
+    border-color: #007bff;
+}
+
+/* "İanə Et" düyməsi */
 .donateButton {
     width: 100%;
-    padding: 15px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
     border-radius: 8px;
     border: none;
-    background: linear-gradient(45deg, #007bff, #0056b3);
+    background-color: #007bff;
     color: white;
-    font-size: 18px;
-    font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.donateButton:hover {
+.donateButton:hover:not(:disabled) {
+    background-color: #0056b3;
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
 }
 
-.donateContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
-    background-color: #f0f2f5;
-    min-height: 100%;
+.donateButton:disabled {
+    background-color: #a0c7ff;
+    cursor: not-allowed;
 }
 
-.donateBox {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    max-width: 500px;
-    width: 100%;
+/* Xəta mesajları üçün sahə */
+.paymentMessage {
+    color: #dc3545;
+    font-size: 0.9rem;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    margin-top: 1rem;
 }
 
-.heartIcon { font-size: 48px; color: #ff4d6d; margin-bottom: 20px; }
-.donateBox h2 { font-size: 28px; margin-bottom: 15px; color: #1c1e21; }
-.donateBox p { font-size: 16px; color: #606770; line-height: 1.6; margin-bottom: 30px; max-width: 400px; }
-
-.amountSelector { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
-.amountButton {
-    padding: 12px 20px; border-radius: 8px; border: 1px solid #ccd0d5; background-color: #f5f6f7;
-    font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s ease-in-out;
+/* Yüklənmə spinner-i */
+.spinner,
+.spinner:before,
+.spinner:after {
+    border-radius: 50%;
 }
-.amountButton:hover { background-color: #e4e6eb; }
-.amountButton.selected { background-color: #007bff; color: white; border-color: #007bff; }
-
-.customAmount { width: 100%; margin-bottom: 30px; }
-.customAmount label { display: block; margin-bottom: 10px; font-size: 14px; color: #606770; font-weight: 500; }
-
-.inputWrapper { position: relative; display: flex; align-items: center; }
-.inputWrapper input {
-    width: 100%; padding: 12px 50px 12px 15px; border: 1px solid #ccd0d5;
-    border-radius: 8px; font-size: 18px; font-weight: 500; text-align: center;
-    outline: none; transition: border-color 0.2s;
+.spinner {
+    color: #ffffff;
+    font-size: 22px;
+    text-indent: -99999em;
+    margin: 0px auto;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    box-shadow: inset 0 0 0 2px;
+    transform: translateZ(0);
 }
-.inputWrapper input:focus { border-color: #007bff; }
-.inputWrapper span { position: absolute; right: 15px; font-size: 16px; font-weight: 600; color: #606770; }
-
-.donateButton {
-    width: 100%; padding: 15px; border-radius: 8px; border: none;
-    background: linear-gradient(45deg, #007bff, #0056b3); color: white;
-    font-size: 18px; font-weight: bold; cursor: pointer;
-    transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+.spinner:before,
+.spinner:after {
+    position: absolute;
+    content: '';
 }
-.donateButton:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4); }
-.donateButton:disabled { background: #a0cfff; cursor: not-allowed; }
-
-/* === MODAL PƏNCƏRƏ STİLLƏRİ === */
-.overlay {
-    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex; justify-content: center; align-items: center; z-index: 1000;
+.spinner:before {
+    width: 10.4px;
+    height: 20.4px;
+    background: #007bff;
+    border-radius: 20.4px 0 0 20.4px;
+    top: -0.2px;
+    left: -0.2px;
+    transform-origin: 10.4px 10.2px;
+    animation: loading 2s infinite ease 1.5s;
 }
-.modal {
-    background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 550px;
-    outline: none; position: relative; text-align: center;
+.spinner:after {
+    width: 10.4px;
+    height: 10.2px;
+    background: #007bff;
+    border-radius: 0 10.2px 10.2px 0;
+    top: -0.1px;
+    left: 10.2px;
+    transform-origin: 0px 10.2px;
+    animation: loading 2s infinite ease;
 }
-.closeModalButton {
-    position: absolute; top: 15px; right: 15px; background: none; border: none;
-    font-size: 24px; cursor: pointer; color: #aaa;
+
+@keyframes loading {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
-.modal h3 { font-size: 24px; margin-bottom: 15px; color: #1c1e21; }
-.modal p { font-size: 15px; color: #606770; margin-bottom: 25px; }
-
-.paymentMethods { display: flex; gap: 20px; text-align: left; margin-bottom: 30px; }
-.qrCodeSection, .cardInfoSection { flex: 1; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-.qrCodeSection h4, .cardInfoSection h4 { margin-bottom: 15px; }
-.qrCodeSection img { width: 100%; max-width: 180px; display: block; margin: 0 auto; }
-
-.cardDetails span { font-weight: 600; display: block; margin-top: 10px; }
-.cardDetails p { font-size: 16px; margin-bottom: 0; margin-top: 5px; color: #007bff; font-weight: 500; }
-
-.modalActionButton {
-    width: 100%; padding: 12px; border-radius: 8px; border: none; background-color: #007bff;
-    color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.2s;
-}
-.modalActionButton:hover { background-color: #0056b3; }

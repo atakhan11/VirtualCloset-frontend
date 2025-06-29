@@ -1,66 +1,124 @@
-// src/pages/DonatePage/DonatePage.jsx
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import axios from 'axios';
+import { FaHeart } from 'react-icons/fa';
 import styles from './DonatePage.module.css';
-import { FaHeart, FaTimes } from 'react-icons/fa';
-import Modal from 'react-modal';
 
-// === DƏYİŞİKLİK BURADADIR ===
-// 1. Öz QR kod şəklinizi assets qovluğundan import edirik.
-// Faylın adının "my-qr.jpg" olduğundan əmin olun.
-import qrCodeImage from '../../assets/myy-qr.jpg'; 
+const VITE_STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+if (!VITE_STRIPE_PUBLISHABLE_KEY) {
+    console.error("Stripe publishable key is not set in .env or .env.local file");
+}
+const stripePromise = loadStripe(VITE_STRIPE_PUBLISHABLE_KEY);
 
-// Modalın ana elementini təyin edirik (Accessibility üçün vacibdir)
-Modal.setAppElement('#root');
+const CheckoutForm = ({ amount }) => {
+    const stripe = useStripe();
+    const elements = useElements();
+    const [message, setMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!stripe || !elements) return;
+
+        setIsLoading(true);
+
+        const { error } = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+                return_url: `${window.location.origin}/donation-success`,
+            },
+        });
+
+        if (error) {
+            if (error.type === "card_error" || error.type === "validation_error") {
+                setMessage(error.message);
+            } else {
+                setMessage("Gözlənilməz bir xəta baş verdi.");
+            }
+        }
+        
+        setIsLoading(false);
+    };
+
+    return (
+        <form id="payment-form" onSubmit={handleSubmit} className={styles.paymentForm}>
+            <PaymentElement id="payment-element" />
+            <button disabled={isLoading || !stripe || !elements} id="submit" className={styles.donateButton}>
+                <span id="button-text">
+                    {isLoading ? <div className={styles.spinner}></div> : `${amount} AZN İanə Et`}
+                </span>
+            </button>
+            {message && <div id="payment-message" className={styles.paymentMessage}>{message}</div>}
+        </form>
+    );
+};
 
 const DonatePage = () => {
     const [amount, setAmount] = useState(10);
     const predefinedAmounts = [5, 10, 20, 50];
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [clientSecret, setClientSecret] = useState("");
 
-    const handleAmountChange = (e) => {
-        const value = e.target.value.replace(/[^0-9]/g, '');
-        setAmount(Number(value));
-    };
-
-    const handlePredefinedAmountClick = (predefinedAmount) => {
-        setAmount(predefinedAmount);
-    };
-
-    const handleDonate = () => {
-        if (amount <= 0) {
-            alert("Zəhmət olmasa, düzgün məbləğ daxil edin.");
-            return;
+    useEffect(() => {
+        const createPaymentIntent = async () => {
+            try {
+                // DƏYİŞİKLİK: Artıq token və xüsusi konfiqurasiya lazım deyil.
+                const { data } = await axios.post(
+                    'http://localhost:5000/api/payments/create-payment-intent',
+                    { amount } // Sadəcə məbləği göndəririk
+                );
+                setClientSecret(data.clientSecret);
+            } catch (error) {
+                console.error("PaymentIntent yaratmaq mümkün olmadı:", error);
+            }
+        };
+        if (amount > 0) {
+            createPaymentIntent();
         }
+    }, [amount]);
 
-        setIsLoading(true);
-
-        setTimeout(() => {
-            setIsLoading(false);
-            setIsModalOpen(true);
-        }, 1500);
+    const handleAmountChange = (newAmount) => {
+        setAmount(newAmount);
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
+    const appearance = { 
+        theme: 'stripe',
+        variables: {
+            colorPrimary: '#007bff',
+            colorBackground: '#ffffff',
+            colorText: '#30313d',
+            colorDanger: '#df1b41',
+            fontFamily: 'Ideal Sans, system-ui, sans-serif',
+            spacingUnit: '2px',
+            borderRadius: '8px',
+        }
     };
+    const options = { clientSecret, appearance };
+
+    if (!VITE_STRIPE_PUBLISHABLE_KEY) {
+        return (
+            <div className={styles.donateContainer}>
+                <div className={styles.donateBox}>
+                     <h2>Konfiqurasiya Xətası</h2>
+                     <p>Stripe açarı təyin edilməyib. Zəhmət olmasa, administratorla əlaqə saxlayın.</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.donateContainer}>
             <div className={styles.donateBox}>
                 <FaHeart className={styles.heartIcon} />
                 <h2>Layihəyə Dəstək Olun</h2>
-                <p>
-                    StyleFolio-nun inkişafına və yeni funksiyaların əlavə olunmasına kömək etdiyiniz üçün təşəkkür edirik!
-                </p>
-
+                <p>StyleFolio-nun inkişafına verdiyiniz töhfə üçün təşəkkür edirik!</p>
+                
                 <div className={styles.amountSelector}>
                     {predefinedAmounts.map((preAmount) => (
                         <button
                             key={preAmount}
                             className={`${styles.amountButton} ${amount === preAmount ? styles.selected : ''}`}
-                            onClick={() => handlePredefinedAmountClick(preAmount)}
+                            onClick={() => handleAmountChange(preAmount)}
                         >
                             {preAmount} AZN
                         </button>
@@ -68,58 +126,23 @@ const DonatePage = () => {
                 </div>
 
                 <div className={styles.customAmount}>
-                    <label htmlFor="custom-amount">Və ya öz məbləğinizi daxil edin:</label>
                     <div className={styles.inputWrapper}>
                         <input
-                            type="text"
-                            id="custom-amount"
+                            type="number"
                             value={amount}
-                            onChange={handleAmountChange}
+                            onChange={(e) => handleAmountChange(Number(e.target.value))}
                             placeholder="Məbləğ"
                         />
                         <span>AZN</span>
                     </div>
                 </div>
-
-                <button 
-                    className={styles.donateButton} 
-                    onClick={handleDonate}
-                    disabled={isLoading}
-                >
-                    {isLoading ? 'Yönləndirilir...' : (amount > 0 ? `${amount} AZN İanə Et` : 'İanə Et')}
-                </button>
+                
+                {clientSecret && (
+                    <Elements options={options} stripe={stripePromise}>
+                        <CheckoutForm amount={amount} />
+                    </Elements>
+                )}
             </div>
-
-            <Modal
-                isOpen={isModalOpen}
-                onRequestClose={closeModal}
-                className={styles.modal}
-                overlayClassName={styles.overlay}
-                contentLabel="Ödəniş Simulyasiyası"
-            >
-                <button onClick={closeModal} className={styles.closeModalButton}><FaTimes /></button>
-                <h3>Ödənişə Dəstək</h3>
-                <p>Layihəmizə dəstək olmaq üçün aşağıdakı üsullardan istifadə edə bilərsiniz. Bu, diplom layihəsi üçün bir simulyasiyadır.</p>
-                <div className={styles.paymentMethods}>
-                    <div className={styles.qrCodeSection}>
-                        <h4>QR Kodu Skan Edin</h4>
-                        {/* Artıq lokal şəkil faylını göstəririk */}
-                        <img src={qrCodeImage} alt="QR Kod" />
-                    </div>
-                    <div className={styles.cardInfoSection}>
-                        <h4>Və ya Karta Köçürmə Edin</h4>
-                        {/* === DƏYİŞİKLİK BURADADIR === */}
-                        {/* 2. Kart məlumatlarını şəkildəkinə uyğunlaşdırırıq */}
-                        <div className={styles.cardDetails}>
-                            <span>Kart Nömrəsi:</span>
-                            <p>4169 7388 8173 9068</p>
-                            <span>Ad, Soyad:</span>
-                            <p>Hacızadə Ataxan</p>
-                        </div>
-                    </div>
-                </div>
-                <button onClick={closeModal} className={styles.modalActionButton}>Başa Düşdüm</button>
-            </Modal>
         </div>
     );
 };

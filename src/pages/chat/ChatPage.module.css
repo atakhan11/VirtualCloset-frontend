@@ -1,14 +1,12 @@
-/* ===== ƏN SADƏ HƏLL YOLU BURADADIR ===== */
+/* ===== SİZİN MÖVCUD STİLLƏRİNİZ OLDUĞU KİMİ QALIR ===== */
 .chatPageContainer {
+    flex-grow: 2;
     display: flex;
-    /* DİQQƏT: Bu sətir ən vacibidir.
-      Sizin Header-inizin hündürlüyü 80px-dirsə, bu kodu dəyişməyin.
-      Əgər fərqlidirsə, 80px-i öz header-inizin hündürlüyü ilə əvəz edin.
-    */
-    height: calc(100vh - 80px);
+    height: calc(100vh - 80px); /* Header hündürlüyünü nəzərə alır */
     width: 100%;
     background-color: #f0f2f5;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
 }
 
 .sidebar {
@@ -63,16 +61,17 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Bu blokun özünün scroll olmasının qarşısını alır */
+     height: 100%; 
+    overflow: hidden;
+     height: 100%; 
+    min-height: 0;
 }
 
 .chatWindowHeader {
     padding: 15px 20px;
     background-color: #ffffff;
     border-bottom: 1px solid #d1d7db;
-    font-size: 18px;
-    font-weight: 600;
-    color: #050505;
+     flex-shrink: 0;
 }
 
 .chatWindowPlaceholder, .loadingScreen {
@@ -88,7 +87,7 @@
 .messagesArea {
     flex-grow: 1;
     padding: 20px;
-    overflow-y: auto; /* Yalnız bu blok scroll olacaq */
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -231,12 +230,13 @@
     padding: 10px 20px;
     background-color: #ffffff;
     border-top: 1px solid #d1d7db;
+    position: relative;
 }
 
 .textInputForm {
     display: flex;
     align-items: center;
-    flex-grow: 1; /* width: 100% əvəzinə bu istifadə olunur ki, boş yeri doldursun */
+    flex-grow: 1;
 }
 .iconButton {
     background: none;
@@ -262,6 +262,7 @@
     font-size: 15px;
     margin: 0 10px;
     outline: none;
+     flex-shrink: 0
 }
 .messageInput:disabled {
     background-color: #e4e6eb;
@@ -283,7 +284,6 @@
 .sendButton:disabled svg {
     color: #a0cfff;
 }
-
 
 .recording {
     background-color: #fa383e !important;
@@ -314,4 +314,149 @@
 .previewAudioPlayer {
     flex-grow: 1;
     height: 40px;
+}
+
+/* === YENİ STILLƏR: Aktivlik Statusu üçün === */
+
+/* Siyahıdakı adların yanındakı nöqtə */
+.statusIndicator {
+    height: 10px;
+    width: 10px;
+    background-color: #bbb; /* Offline rəngi */
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0; /* Sıxışmanın qarşısını alır */
+}
+
+.statusIndicator.online {
+    background-color: #28a745; /* Online rəngi (yaşıl) */
+}
+
+/* Siyahıdakı elementlərin düzülüşü üçün */
+.userList li, .conversationList li {
+    display: flex;
+    align-items: center;
+}
+
+/* Söhbət başlığı (Header) üçün */
+.chatWindowHeader {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.headerUserInfo {
+    display: flex;
+    flex-direction: column; /* Ad və statusu alt-alta yerləşdirir */
+    line-height: 1.2;
+}
+
+.headerUserName {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #050505;
+}
+
+.headerStatusOnline, .headerStatusOffline {
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+.headerStatusOnline {
+    color: #28a745; /* Yaşıl rəng */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.headerStatusOnline::before {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #28a745;
+}
+
+.headerStatusOffline {
+    color: #868e96; /* Boz rəng */
+}
+
+/* "Yazır..." indikatorunun stili */
+.typingIndicator {
+    font-size: 0.8rem;
+    color: #007bff; /* Mavi rəng */
+    font-style: italic;
+    margin-top: 2px;
+    height: 16px; /* Status yazısı ilə eyni hündürlüyü tutması üçün */
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* "Yazır..." üçün nəbz effekti animasiyası */
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+
+
+/* === YENİ STILLƏR: Mesaj Status İkonları (Quşlar) üçün === */
+
+/* Mesajın sağ altındakı məlumat bloku */
+.messageInfo {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #65676b;
+    margin-top: 5px;
+    padding: 0 5px;
+}
+
+/* Göndərilən mesajların məlumat bloku üçün xüsusi rəng */
+.sentWrapper .messageInfo {
+    color: #a0a0a0;
+}
+
+/* Göndərilən mesajların status ikonlarının ümumi stili */
+.messageInfo svg {
+    font-size: 16px; /* İkonların ölçüsü */
+    color: #a0a0a0; /* Standard rəng (göndərildi/çatdırıldı üçün boz) */
+}
+
+/* Oxunmuş mesajların ikonları üçün xüsusi rəng (mavi) */
+.iconSeen {
+    color: #4599ff !important; /* Mavi rəng və digər stilləri üstələməsi üçün !important */
+}
+
+
+.emojiPickerContainer {
+    position: absolute;
+    bottom: 100%; /* Input sahəsinin tam üstündə */
+    right: 20px; /* Sağ tərəfə yapışdırırıq */
+    z-index: 100;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Kitabxananın öz stillərini üstələmək üçün */
+.emojiPickerContainer aside {
+    border-radius: 16px !important;
+    border: none !important;
+    background-color: #f8f9fa; /* Arxa fon rəngi */
+}
+
+/* Emoji düyməsinin özü */
+.iconButton {
+    /* ... mövcud stillər ... */
+    position: relative;
+    z-index: 5;
 }

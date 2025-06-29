@@ -1,0 +1,351 @@
+.profileContainer {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+}
+
+.profileHeader {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+.avatarContainer {
+    position: relative;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #007bff;
+}
+
+.avatarEditButton {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #007bff;
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.avatarEditButton:hover {
+    background-color: #0056b3;
+}
+
+.userInfo h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.userInfo p {
+    margin: 0;
+    color: #6c757d;
+}
+
+.statsPanel {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.statItem {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.statItem svg {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 0.5rem;
+}
+
+.statItem span {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.statItem p {
+    margin: 0;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.formsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.profileForm {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.profileForm h3 {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.formGroup {
+    margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.formGroup input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.submitButton {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submitButton:hover {
+    background-color: #0056b3;
+}
+
+.message {
+    margin-top: 1rem;
+    text-align: center;
+    color: #28a745;
+    font-weight: 500;
+}
+
+/* Yüklənmə spinner-i */
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    .formsGrid {
+        grid-template-columns: 1fr;
+    }
+    .profileHeader {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #b90a0a;
+    transition: .4s;
+    border-radius: 26px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #2196F3;
+}
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Şifrə Gücü Göstəricisi */
+.strengthMeter {
+    width: 100%;
+    height: 10px;
+    background-color: #eee;
+    border-radius: 10px;
+    margin-top: 5px;
+    position: relative;
+}
+.strengthBar {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+.strengthText {
+    position: absolute;
+    right: 10px;
+    top: -20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Təhlükəli Zona */
+.dangerZone {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 2px solid #dc3545;
+    border-radius: 12px;
+    background-color: #f8d7da;
+}
+.dangerZone h3 {
+    margin-top: 0;
+    color: #721c24;
+}
+.dangerZone p {
+    color: #721c24;
+}
+.deleteButton {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.deleteButton:hover {
+    background-color: #c82333;
+}
+
+/* Hesabı Silmə Modalı */
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modalContent {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 450px;
+}
+.modalIcon {
+    font-size: 3rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+.modalInput {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-align: center;
+    margin: 1rem 0;
+}
+.modalActions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.modalCancelButton, .modalConfirmButton {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-weight: 600;
+    cursor: pointer;
+}
+.modalConfirmButton {
+    background-color: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+.modalConfirmButton:disabled {
+    background-color: #f1b0b7;
+    border-color: #f1b0b7;
+    cursor: not-allowed;
+}
+
+/* Responsivlik */
+@media (max-width: 768px) {
+    .formsGrid {
+        grid-template-columns: 1fr;
+    }
+    .profileHeader {
+        flex-direction: column;
+        text-align: center;
+    }
+    .themeSwitcher {
+        position: static;
+        margin-top: 1rem;
+    }
+}

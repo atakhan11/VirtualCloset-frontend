@@ -33,6 +33,7 @@ import ScrollToTop from '../components/scroll-to-top/ScrollToTop.jsx';
 import ChatPage from '../pages/chat/ChatPage.jsx';
 import DonatePage from '../pages/donatepage/DonatePage.jsx';
 import AboutPage from '../pages/about/AboutPage.jsx';
+import DonationSuccessPage from '../pages/donatesucces/DonationSuccessPage.jsx';
 
 
 const Router = () => {
@@ -53,6 +54,7 @@ const Router = () => {
           <Route path="/forgot-password" element={<ForgotPasswordPage/>} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
           <Route path='donate' element={<DonatePage />} />
+          <Route path="/donation-success" element={<DonationSuccessPage />} />
           {/* === ADİ İSTİFADƏÇİLƏR ÜÇÜN QORUNAN ROUTE-LAR === */}
           <Route path='' element={<PrivateRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
