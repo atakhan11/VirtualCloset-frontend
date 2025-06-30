@@ -44,30 +44,23 @@ const PasswordStrengthMeter = ({ password }) => {
 const ProfilePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const user = useSelector(selectUser); 
+    const reduxUser = useSelector(selectUser); 
     const token = useSelector((state) => state.user.token);
 
-    // Form məlumatları
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    // DƏYİŞİKLİK: State-lər birbaşa Redux-dan ilkin dəyər alır
+    const [name, setName] = useState(reduxUser?.name || '');
+    const [email, setEmail] = useState(reduxUser?.email || '');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [avatar, setAvatar] = useState(reduxUser?.avatar || '');
     
-    // Avatar
-    const [avatar, setAvatar] = useState('');
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = useRef(null);
-
-    // Statistika
     const [stats, setStats] = useState({ clothes: 0, outfits: 0, wishlist: 0 });
-    
-    // Mesajlar və Modal
     const [message, setMessage] = useState('');
     const [passwordMessage, setPasswordMessage] = useState('');
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deleteConfirmText, setDeleteConfirmText] = useState('');
-
-    // Mövzu (Theme)
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
     useEffect(() => {
@@ -79,13 +72,16 @@ const ProfilePage = () => {
         setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
     };
 
+    // DƏYİŞİKLİK: Bu useEffect artıq yalnız statistikanı çəkir və Redux-dan asılıdır
     useEffect(() => {
-        if (user) {
-            setName(user.name);
-            setEmail(user.email);
-            setAvatar(user.avatar);
+        if (reduxUser) {
+            setName(reduxUser.name);
+            setEmail(reduxUser.email);
+            setAvatar(reduxUser.avatar);
+        }
 
-            const fetchStats = async () => {
+        const fetchStats = async () => {
+            if (token) {
                 try {
                     const config = { headers: { Authorization: `Bearer ${token}` } };
                     const [clothesRes, outfitsRes, wishlistRes] = await Promise.all([
@@ -101,10 +97,10 @@ const ProfilePage = () => {
                 } catch (error) {
                     console.error("Statistika yüklənərkən xəta:", error);
                 }
-            };
-            if (token) fetchStats();
-        }
-    }, [user, token]);
+            }
+        };
+        fetchStats();
+    }, [reduxUser, token]);
 
     const handleAvatarUpload = async (e) => {
         const file = e.target.files[0];
@@ -116,7 +112,6 @@ const ProfilePage = () => {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const { data: uploadData } = await axios.post('http://localhost:5000/api/upload/remove-bg', formData, config);
             await handleUpdateProfile({ avatar: uploadData.imageUrl });
-            setAvatar(uploadData.imageUrl);
         } catch (error) {
             setMessage('Şəkil yüklənərkən xəta baş verdi.');
         } finally {
@@ -128,10 +123,13 @@ const ProfilePage = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const { data } = await axios.put('http://localhost:5000/api/users/profile', updateData, config);
+            
             const { token: newToken, ...userData } = data;
+
             dispatch(setAuth({ user: userData, token: newToken })); 
             localStorage.setItem('user', JSON.stringify(userData));
             localStorage.setItem('token', newToken);
+
             setMessage('Profil uğurla yeniləndi!');
             setTimeout(() => setMessage(''), 3000);
         } catch (error) {
@@ -172,7 +170,7 @@ const ProfilePage = () => {
         }
     };
 
-    if (!user) return <div>Yüklənir...</div>;
+    if (!reduxUser) return <div>Yüklənir...</div>;
 
     return (
         <div className={styles.profileContainer}>
@@ -248,7 +246,6 @@ const ProfilePage = () => {
                         <label>Yeni Şifrə</label>
                         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Yeni şifrəni daxil edin" />
                     </div>
-                    {/* Şifrə gücü göstəricisi burada istifadə olunur */}
                     <PasswordStrengthMeter password={password} />
                     <div className={styles.formGroup} style={{ marginTop: '1.5rem' }}>
                         <label>Yeni Şifrə (Təkrar)</label>

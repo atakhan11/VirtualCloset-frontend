@@ -460,3 +460,63 @@
     position: relative;
     z-index: 5;
 }
+
+
+.sidebarAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 12px;
+    object-fit: cover;
+    flex-shrink: 0; /* Konteyner daralanda avatarın ölçüsünün dəyişməsinin qarşısını alır */
+
+    img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+}
+
+/* Söhbət başlığı üçün avatar */
+.headerAvatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+/* === LAYOUT DÜZƏLİŞLƏRİ === */
+
+/* Kenar siyahıdakı elementləri avatara görə düzənləyirik */
+.userList li, .conversationList li {
+    display: flex;
+    align-items: center;
+    position: relative; /* Status indikatoru üçün vacibdir */
+    padding: 10px 15px;
+    /* Digər stillər (cursor, border-radius, transition) olduğu kimi qala bilər */
+}
+
+/* Söhbət başlığını avatara görə düzənləyirik */
+.chatWindowHeader {
+    display: flex;
+    align-items: center;
+    /* Digər stillər (padding, border, background) olduğu kimi qala bilər */
+}
+
+/* Status indikatorunun yerini avatara görə yeniləyirik */
+.statusIndicator {
+    position: absolute;
+    bottom: 10px;
+    left: 42px; /* Avatarın eni (40px) + bir az məsafə */
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--background-color, #fff); /* Temaya uyğun arxa fon */
+    background-color: #888; /* Offline statusu */
+}
+
+.statusIndicator.online {
+    background-color: #28a745; /* Online statusu */
+}

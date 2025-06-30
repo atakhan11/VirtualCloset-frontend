@@ -46,6 +46,14 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const rtdb = getDatabase(app);
 
+
+const getImageUrl = (imagePath) => {
+    if (!imagePath) return '';
+    if (imagePath.startsWith('http')) return imagePath;
+    return `http://localhost:5000${imagePath}`;
+};
+
+
 const formatDuration = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -156,35 +164,72 @@ const ChatPage = () => {
         }
     }, [reduxUser]);
 
-    useEffect(() => {
-        if (!currentUserId || users.length === 0) return;
-        const q = query(collection(db, "chats"), where('participants', 'array-contains', currentUserId));
-        const unsubscribeConvos = onSnapshot(q, async (querySnapshot) => {
-            const convosPromises = querySnapshot.docs.map(async (doc) => {
-                const convoData = doc.data();
-                const otherUserId = convoData.participants.find(uid => uid !== currentUserId);
-                const otherUser = users.find(u => u._id === otherUserId);
-                return { 
-                    id: doc.id, ...convoData,
-                    otherUserName: otherUser?.name || 'Naməlum istifadəçi',
-                    otherUserId: otherUserId
-                };
-            });
-            const convos = await Promise.all(convosPromises);
-            setConversations(convos);
-            setLoading(false);
-        });
-        return () => unsubscribeConvos();
-    }, [currentUserId, users]);
+// Yuxarıdakı blokun yerinə BU BLOKU ƏLAVƏ EDİN
+useEffect(() => {
+    // Əgər istifadəçi daxil olmayıbsa, yükləməni dayandırırıq.
+    if (!currentUserId) {
+        setLoading(false);
+        return;
+    }
 
-    useEffect(() => {
-        if(conversationId && conversations.length > 0) {
-            const selected = conversations.find(c => c.id === conversationId);
+    // `users` massivinin boş olmasından asılı olmadan söhbətləri axtarırıq.
+    const q = query(collection(db, "chats"), where('participants', 'array-contains', currentUserId));
+
+    const unsubscribeConvos = onSnapshot(q, async (querySnapshot) => {
+        // `users` massivi hələ yüklənməyibsə, adlar müvəqqəti olaraq fərqli göstəriləcək.
+        // `users` yükləndikdən sonra bu blok onsuz da yenidən işə düşəcək və adlar yenilənəcək.
+        const convosPromises = querySnapshot.docs.map(async (doc) => {
+            const convoData = doc.data();
+            const otherUserId = convoData.participants.find(uid => uid !== currentUserId);
+            const otherUser = users.find(u => u._id === otherUserId);
+            return {
+                id: doc.id,
+                ...convoData,
+                otherUserName: otherUser?.name || 'Naməlum istifadəçi', // Ad hələ məlum deyilsə...
+                otherUserAvatar: otherUser?.avatar,
+                otherUserId: otherUserId
+            };
+        });
+
+        const convos = await Promise.all(convosPromises);
+        setConversations(convos);
+        
+        // Əsas düzəliş: Firestore-dan cavab gələn kimi (istər boş, istər dolu) yükləməni dayandırırıq.
+        setLoading(false);
+
+    }, (error) => {
+        // Xəta baş verərsə də yükləməni dayandırmaq vacibdir.
+        console.error("Söhbətləri yükləyərkən xəta:", error);
+        setLoading(false);
+    });
+
+    // Komponentdən çıxdıqda listener-i ləğv edirik.
+    return () => unsubscribeConvos();
+
+}, [currentUserId, users]); // `users` massivini asılılıqda saxlayırıq ki, adlar gələndə siyahı yenilənsin.
+
+// Yuxarıdakı blokun yerinə BU BLOKU ƏLAVƏ EDİN
+useEffect(() => {
+    // Əgər URL-də söhbət ID-si varsa...
+    if (conversationId) {
+        // Həmin söhbəti lokal `conversations` siyahımızda axtarırıq
+        const selected = conversations.find(c => c.id === conversationId);
+
+        // Əgər siyahıda tapdıqsa, onu aktiv söhbət kimi seçirik.
+        // Bu, mövcud söhbətlərə klikləmə və ya birbaşa URL ilə daxil olma hallarını təmin edir.
+        if (selected) {
             setSelectedConversation(selected);
-        } else {
-            setSelectedConversation(null);
         }
-    }, [conversationId, conversations]);
+        // ƏGƏR TAPMADIAQSA, HEÇ NƏ ETMİRİK!
+        // `else { setSelectedConversation(null) }` hissəsini qəsdən silirik.
+        // Bu, `handleSelectUser` funksiyasının manual olaraq təyin etdiyi state-i qoruyur
+        // və `onSnapshot`-un siyahını yeniləməsini gözləyir.
+
+    } else {
+        // Əgər URL-də heç bir ID yoxdursa, deməli heç bir söhbət seçilməməlidir.
+        setSelectedConversation(null);
+    }
+}, [conversationId, conversations]);
 
     useEffect(() => {
         if (!selectedConversation) {
@@ -210,22 +255,56 @@ const ChatPage = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const handleSelectUser = async (user) => {
-        if (!currentUserId) return;
-        const participants = [currentUserId, user._id].sort();
-        const q = query(collection(db, "chats"), where('participants', '==', participants));
+// Köhnə handleSelectUser funksiyasını silib bunu yerləşdirin
+
+const handleSelectUser = async (user) => {
+    // Funksiya başlanğıcı eyni qalır
+    if (!currentUserId) return;
+
+    const participants = [currentUserId, user._id].sort();
+    const q = query(collection(db, "chats"), where('participants', '==', participants));
+    
+    try {
+        setLoading(true); // Proses başlayanda yüklənmə ekranı göstərək
         const querySnapshot = await getDocs(q);
+
         if (!querySnapshot.empty) {
-            navigate(`/chat/${querySnapshot.docs[0].id}`);
+            // Əgər söhbət artıq mövcuddursa, sadəcə həmin səhifəyə keçid edirik.
+            // Bu hissə düzgün işləyir, çünki söhbət onsuz da `conversations` siyahısındadır.
+            const existingConvoId = querySnapshot.docs[0].id;
+            navigate(`/chat/${existingConvoId}`);
         } else {
-            const newConvoRef = await addDoc(collection(db, "chats"), {
+            // Söhbət mövcud deyilsə, yenisini yaradırıq.
+            const newConvoData = {
                 participants: participants,
                 participantNames: [reduxUser.name, user.name].sort(),
                 createdAt: firestoreServerTimestamp()
-            });
+            };
+            const newConvoRef = await addDoc(collection(db, "chats"), newConvoData);
+
+            // ----- ƏSAS DÜZƏLİŞ BURADADIR -----
+            // Firestore listener-ini gözləmədən, yeni söhbət obyektini manual olaraq yaradırıq.
+            const newSelectedConvoObject = {
+                id: newConvoRef.id,
+                participants: newConvoData.participants,
+                otherUserName: user.name, // Kliklənən istifadəçinin adı
+                otherUserId: user._id,    // və ID-si
+                createdAt: { toDate: () => new Date() } // Müvəqqəti lokal tarix
+            };
+
+            // Yaradılan obyekti dərhal "seçilmiş söhbət" state-inə mənimsədirik.
+            setSelectedConversation(newSelectedConvoObject);
+
+            // Və bundan sonra URL-i dəyişirik.
             navigate(`/chat/${newConvoRef.id}`);
         }
-    };
+    } catch (error) {
+        console.error("Söhbətə keçid zamanı xəta:", error);
+        // Xəta baş verərsə istifadəçiyə məlumat vermək olar
+    } finally {
+        setLoading(false); // Proses bitdikdən sonra yüklənməni dayandırırıq
+    }
+};
     
     const sendMessage = async (content, type = 'text') => {
         if (!selectedConversation || !currentUserId) return;
@@ -374,7 +453,13 @@ const ChatPage = () => {
                      <h3>Yeni Söhbət</h3>
                      <ul>
                          {users.map(user => (
+
                              <li key={user._id} onClick={() => handleSelectUser(user)}>
+                             <img 
+                    src={user.avatar ? getImageUrl(user.avatar) : `https://ui-avatars.com/api/?name=${user.name}&background=0D8ABC&color=fff`} 
+                    alt={user.name}
+                    className={styles.sidebarAvatar}
+                />
                                  <span className={`${styles.statusIndicator} ${userStatuses[user._id]?.isOnline ? styles.online : ''}`}></span>
                                  {user.name}
                              </li>
@@ -389,7 +474,11 @@ const ChatPage = () => {
                                  key={convo.id} 
                                  className={convo.id === selectedConversation?.id ? styles.selected : ''}
                                  onClick={() => navigate(`/chat/${convo.id}`)}
-                             >
+                             > <img 
+                    src={convo.otherUserAvatar ? getImageUrl(convo.otherUserAvatar) : `https://ui-avatars.com/api/?name=${convo.otherUserName}&background=0D8ABC&color=fff`} 
+                    alt={convo.otherUserName}
+                    className={styles.sidebarAvatar}
+                />
                                  <span className={`${styles.statusIndicator} ${userStatuses[convo.otherUserId]?.isOnline ? styles.online : ''}`}></span>
                                  {convo.otherUserName}
                              </li>
@@ -404,6 +493,11 @@ const ChatPage = () => {
                 ) : (
                     <>
                         <div className={styles.chatWindowHeader}>
+                        <img 
+        src={selectedConversation.otherUserAvatar ? getImageUrl(selectedConversation.otherUserAvatar) : `https://ui-avatars.com/api/?name=${selectedConversation.otherUserName}&background=0D8ABC&color=fff`} 
+        alt={selectedConversation.otherUserName}
+        className={styles.headerAvatar}
+    />
                             <div className={styles.headerUserInfo}>
                                 <span className={styles.headerUserName}>{selectedConversation.otherUserName}</span>
                                 {isOtherUserTyping ? (
