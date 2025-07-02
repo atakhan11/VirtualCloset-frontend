@@ -36,12 +36,13 @@ const ResetPasswordPage = () => {
             // Backend-də yaratdığımız /resetpassword/:token endpoint-inə sorğu göndəririk
             const config = { headers: { 'Content-Type': 'application/json' } };
             const { data } = await axios.put(
-                `/api/users/resetpassword/${token}`,
+                `http://localhost:5000/api/users/resetpassword/${token}`,
                 { password },
                 config
             );
 
             setMessage(data.message); // Uğur mesajını göstəririk
+             setLoading(false); 
             
             // Uğurlu olduqdan sonra 3 saniyə gözləyib login səhifəsinə yönləndiririk
             setTimeout(() => {

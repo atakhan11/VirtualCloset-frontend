@@ -54,6 +54,7 @@ const AllClothesScreen = () => {
     const [clothes, setClothes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
     
     // === Redaktə Modal üçün State-lər ===
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -69,8 +70,9 @@ const AllClothesScreen = () => {
             }
             const config = { headers: { Authorization: `Bearer ${token}` } };
             try {
-                const { data } = await axios.get('http://localhost:5000/api/clothes/all', config); 
+                const { data } = await axios.get(`http://localhost:5000/api/clothes/all?search=${searchTerm}`, config); 
                 setClothes(data);
+                setError('');
             } catch (err) {
                 setError('Geyimləri yükləmək mümkün olmadı.');
                 console.error("Bütün geyimləri yükləyərkən xəta:", err);
@@ -79,7 +81,12 @@ const AllClothesScreen = () => {
             }
         };
         fetchAllClothes();
-    }, []);
+           const delayDebounceFn = setTimeout(() => {
+            fetchAllClothes();
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchTerm]);
 
     const handleDeleteCloth = async (clothId) => {
         if(window.confirm('Bu geyimi silməyə əminsinizmi?')) {
@@ -121,31 +128,49 @@ const AllClothesScreen = () => {
         }
     };
 
-    if (loading) return <p>Yüklənir...</p>;
-    if (error) return <p style={{ color: 'red' }}>{error}</p>;
+
 
     return (
         <div className="all-clothes-page">
-            <h1>Bütün Geyimlər ({clothes.length} ədəd)</h1>
+            <h1>Bütün Geyimlər</h1>
+
+            {/* YENİ: Axtarış İnputu */}
+            <div className="search-container" style={{ marginBottom: '20px' }}>
+                <input
+                    type="text"
+                    placeholder="Ad və ya kateqoriya ilə axtar..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input" // Eyni stili istifadə edə bilərsiniz
+                />
+            </div>
+
+            {/* Render məntiqini burada idarə edirik */}
             <div className="clothes-grid">
-                {clothes.length > 0 ? clothes.map((cloth) => (
-                    <div key={cloth._id} className="cloth-card">
-                        <img src={`http://localhost:5000${cloth.image}`} alt={cloth.name} />
-                        <h4>{cloth.name}</h4>
-                        <p>Kateqoriya: {cloth.category}</p>
-                        <p>Sahibi: {cloth.user ? cloth.user.name : 'Naməlum'}</p>
-                        <div className='action-buttons'>
-                            {/* DÜYMƏYƏ ONCLICK ƏLAVƏ EDİLDİ */}
-                            <button className="edit-btn" onClick={() => openEditModal(cloth)}>Redaktə Et</button>
-                            <button className="delete-btn" onClick={() => handleDeleteCloth(cloth._id)}>Sil</button>
+                {loading ? (
+                    <p>Yüklənir...</p>
+                ) : error ? (
+                    <p style={{ color: 'red' }}>{error}</p>
+                ) : clothes.length > 0 ? (
+                    clothes.map((cloth) => (
+                        <div key={cloth._id} className="cloth-card">
+                            {/* DİQQƏT: Şəkil URL-nin düzgün olduğundan əmin olun (localhost olmadan) */}
+                            <img src={cloth.image} alt={cloth.name} />
+                            <h4>{cloth.name}</h4>
+                            <p>Kateqoriya: {cloth.category}</p>
+                            <p>Sahibi: {cloth.user ? cloth.user.name : 'Naməlum'}</p>
+                            <div className='action-buttons'>
+                                <button className="edit-btn" onClick={() => openEditModal(cloth)}>Redaktə Et</button>
+                                <button className="delete-btn" onClick={() => handleDeleteCloth(cloth._id)}>Sil</button>
+                            </div>
                         </div>
-                    </div>
-                )) : (
+                    ))
+                ) : (
                     <p>Heç bir geyim tapılmadı.</p>
                 )}
             </div>
 
-            {/* MODAL PƏNCƏRƏSİNİN RENDER OLUNMASI */}
+            {/* Modal olduğu kimi qalır */}
             {isEditModalOpen && (
                 <EditClothModal
                     cloth={currentClothToEdit}

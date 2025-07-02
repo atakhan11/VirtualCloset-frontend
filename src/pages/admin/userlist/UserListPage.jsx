@@ -63,9 +63,11 @@ const UserListPage = () => {
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const fetchUsers = async () => {
+            setLoading(true);
             // Tokeni brauzerin yaddaşından götürürük
             const token = localStorage.getItem('token');
             if (!token) {
@@ -82,7 +84,7 @@ const UserListPage = () => {
             };
 
             try {
-                const { data } = await axios.get('http://localhost:5000/api/admin/users', config);
+                const { data } = await axios.get(`http://localhost:5000/api/admin/users?search=${searchTerm}`, config);
                 setUsers(data);
             } catch (err) {
                 setError('Məlumatları yükləmək mümkün olmadı. Admin icazəniz olduğundan əmin olun.');
@@ -93,7 +95,12 @@ const UserListPage = () => {
         };
 
         fetchUsers();
-    }, []); // Bu effekt yalnız bir dəfə, komponent yüklənəndə işə düşür
+             const delayDebounceFn = setTimeout(() => {
+            fetchUsers();
+        }, 300); // 300ms gözlə və sorğunu göndər
+
+        return () => clearTimeout(delayDebounceFn); // cleanup
+    }, [searchTerm]); // Bu effekt yalnız bir dəfə, komponent yüklənəndə işə düşür
 
     const handleDelete = async (userId) => {
         if (window.confirm('Bu istifadəçini silməyə əminsinizmi?')) {
@@ -136,12 +143,21 @@ const UserListPage = () => {
         setIsModalOpen(true);
     };
 
-    if (loading) return <p>Yüklənir...</p>;
-    if (error) return <p style={{ color: 'red' }}>{error}</p>;
+ 
 
     return (
         <div className='user-list-page'>
             <h1>İstifadəçilər</h1>
+            <div className="search-container">
+                <input
+                    type="text"
+                    placeholder="Ad və ya email ilə axtar..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                />
+            </div>
+            
             <table className='styled-table'>
                 <thead>
                     <tr>
@@ -153,20 +169,31 @@ const UserListPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.length > 0 ? users.map(user => (
-                        <tr key={user._id}>
-                            <td>{user._id}</td>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
-                            <td>{user.role === 'admin' ? 'Bəli' : 'Xeyr'}</td>
-                            <td className='action-buttons'>
-                                <button className="edit-btn" onClick={() => openEditModal(user)}>Redaktə Et</button>
-                                <button className="delete-btn" onClick={() => handleDelete(user._id)}>Sil</button>
-                            </td>
-                        </tr>
-                    )) : (
+                    {/* BÜTÜN MƏNTİQ BURADA CƏMLƏNMƏLİDİR */}
+                    {loading ? (
                         <tr>
-                            <td colSpan="5">Heç bir istifadəçi tapılmadı.</td>
+                            <td colSpan="5" style={{ textAlign: 'center' }}>Yüklənir...</td>
+                        </tr>
+                    ) : error ? (
+                        <tr>
+                            <td colSpan="5" style={{ textAlign: 'center', color: 'red' }}>{error}</td>
+                        </tr>
+                    ) : users.length > 0 ? (
+                        users.map(user => (
+                            <tr key={user._id}>
+                                <td>{user._id}</td>
+                                <td>{user.name}</td>
+                                <td>{user.email}</td>
+                                <td>{user.role === 'admin' ? 'Bəli' : 'Xeyr'}</td>
+                                <td className='action-buttons'>
+                                    <button className="edit-btn" onClick={() => openEditModal(user)}>Redaktə Et</button>
+                                    <button className="delete-btn" onClick={() => handleDelete(user._id)}>Sil</button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="5" style={{ textAlign: 'center' }}>Heç bir istifadəçi tapılmadı.</td>
                         </tr>
                     )}
                 </tbody>

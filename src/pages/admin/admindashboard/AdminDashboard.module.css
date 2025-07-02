@@ -87,3 +87,65 @@
 .navIcon {
     font-size: 2.5rem;
 }
+
+/* ... mövcud stilləriniz ... */
+
+.chartsRow {
+  display: flex;
+  flex-wrap: wrap; /* Ekran kiçik olduqda alt-alta düşsün */
+  gap: 1.5rem;       /* Qrafiklər arasında boşluq */
+  margin-top: 3rem;
+}
+
+/* chartContainer stilini bir qədər təkmilləşdirək */
+.chartContainer {
+  flex: 1; /* Hər iki qrafikə bərabər yer ver */
+  min-width: 300px; /* Kiçik ekranlarda minimum en */
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* ... mövcud stillər ... */
+
+.activitySection {
+  margin-top: 2rem;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.activityFeed {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activityItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.activityItem:last-child {
+  border-bottom: none;
+}
+
+.activityText {
+  color: #333;
+}
+
+.activityText strong {
+  color: #007bff;
+}
+
+.activityTime {
+  font-size: 0.85rem;
+  color: #6c757d;
+  flex-shrink: 0; /* Zamanın qısalmasının qarşısını alır */
+  margin-left: 1rem;
+}

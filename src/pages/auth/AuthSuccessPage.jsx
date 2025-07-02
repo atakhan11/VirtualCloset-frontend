@@ -3,8 +3,8 @@
 import React, { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setAuth } from '../../redux/reducers/userSlice.js'; 
-import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
+import { setAuth } from '../../redux/reducers/userSlice.js'; // Öz Redux action-unuzun yolu
 
 const AuthSuccessPage = () => {
     const [searchParams] = useSearchParams();
@@ -14,30 +14,48 @@ const AuthSuccessPage = () => {
     useEffect(() => {
         const token = searchParams.get('token');
 
+        const fetchUser = async (authToken) => {
+            try {
+                // 1. Token ilə qorunan /profile endpoint-inə sorğu göndəririk
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                };
+                // Proxy-niz varsa, /api/users/profile, yoxdursa tam ünvan yazılmalıdır
+                const { data } = await axios.get('http://localhost:5000/api/users/profile', config);
+
+                // 2. Gələn istifadəçi məlumatları (data) və token ilə Redux-u yeniləyirik
+                dispatch(setAuth({ user: data, token: authToken }));
+                
+                // Məlumatları localStorage-ə də yazaq ki, səhifə yenilənəndə itməsin
+                localStorage.setItem('user', JSON.stringify(data));
+                localStorage.setItem('token', authToken);
+
+                // 3. Proses uğurlu olduqda, istifadəçini profil səhifəsinə yönləndiririk
+                navigate('/profile');
+
+            } catch (error) {
+                console.error("Google ilə giriş zamanı istifadəçi məlumatları alına bilmədi:", error);
+                navigate('/login');
+            }
+        };
+
         if (token) {
-            // 1. Tokeni localStorage-a yazırıq
-            localStorage.setItem('token', token);
-            
-            // 2. Tokenin içindən user məlumatlarını çıxarırıq
-            const decodedUser = jwtDecode(token);
-            
-            // 3. User məlumatlarını da localStorage-a yazırıq
-            // Backend-də tokeni yaradarkən payload-a { user: {...} } qoyduğumuzu fərz edirik
-            localStorage.setItem('user', JSON.stringify(decodedUser.user));
-
-            // 4. Redux state-ini yeniləyirik
-            dispatch(setAuth({ user: decodedUser.user, token }));
-
-            // 5. İstifadəçini ana səhifəyə yönləndiririk
-            navigate('/');
+            fetchUser(token);
         } else {
-            // Token yoxdursa, bir problem var, login səhifəsinə qayıdırıq
             navigate('/login');
         }
     }, [searchParams, navigate, dispatch]);
 
-    // Bu səhifə çox sürətli işlədiyi üçün istifadəçi adətən bu mətni görməyəcək
-    return <div>Authenticating, please wait...</div>;
+
+    // Bu səhifənin heç bir vizual görüntüsü olmayacaq, sadəcə "Yönləndirilir..." yazısı göstərəcək.
+    return (
+        <div style={{ textAlign: 'center', marginTop: '50px', fontFamily: 'sans-serif' }}>
+            <h2>Giriş yoxlanılır, zəhmət olmasa gözləyin...</h2>
+            <p>Yönləndirilirsiniz...</p>
+        </div>
+    );
 };
 
 export default AuthSuccessPage;
