@@ -1,23 +1,14 @@
 /* === QLOBAL STİLLƏR VƏ DƏYİŞƏNLƏR === */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
-:root {
-    --primary-color: #6a11cb; /* Bənövşəyi */
-    --secondary-color: #2575fc; /* Mavi */
-    --dark-color: #1a1a2e; /* Tünd fon */
-    --light-color: #ffffff; /* Ağ */
-    --gray-color: #e4e4e7; /* Açıq boz */
-    --text-color: #333; /* Mətn rəngi */
-    --text-light: #f4f4f4; /* Açıq mətn */
-    --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    --border-radius: 12px;
-}
+/* HomePage.css (YENİLƏNMİŞ VƏ TƏK SİSTEMƏ UYĞUNLAŞDIRILMIŞ VERSİYA) */
+
+/* Köhnə :root bloku buradan silindi */
 
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
-    background-color: #f9f9f9;
-    color: var(--text-color);
+    /* Bu stillər artıq qlobal index.css-də olduğu üçün buradan silinə bilər */
 }
 
 .home-container {
@@ -31,7 +22,7 @@ body {
 
 .section-title span {
     font-size: 1rem;
-    color: var(--primary-color);
+    color: var(--primary-color); /* Dəyişdirildi */
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -41,7 +32,7 @@ body {
     font-size: 2.5rem;
     font-weight: 700;
     margin-top: 0.5rem;
-    color: var(--dark-color);
+    color: var(--text-primary); /* Dəyişdirildi */
 }
 
 /* === ƏSAS QARŞILAMA BÖLMƏSİ (HERO) === */
@@ -50,8 +41,9 @@ body {
     align-items: center;
     justify-content: center;
     padding: 6rem 2rem;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    color: var(--light-color);
+    /* Dəyişdirildi: Brend rənglərindən gradient yaradırıq */
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color)); 
+    color: var(--primary-text-color); /* Dəyişdirildi */
     min-height: 90vh;
 }
 
@@ -86,36 +78,34 @@ body {
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
-    border: 2px solid transparent;
+    border: 2px solid var(--primary-text-color); /* Dəyişdirildi */
 }
 
 .cta-button-primary {
-    background-color: var(--light-color);
+    background-color: var(--primary-text-color); /* Dəyişdirildi */
     color: var(--primary-color);
 }
 
 .cta-button-primary:hover {
     background-color: transparent;
-    color: var(--light-color);
-    border-color: var(--light-color);
+    color: var(--primary-text-color); /* Dəyişdirildi */
     transform: translateY(-3px);
 }
 
 .cta-button-secondary {
     background-color: transparent;
-    color: var(--light-color);
-    border-color: var(--light-color);
+    color: var(--primary-text-color); /* Dəyişdirildi */
 }
 
 .cta-button-secondary:hover {
-    background-color: var(--light-color);
+    background-color: var(--primary-text-color); /* Dəyişdirildi */
     color: var(--primary-color);
     transform: translateY(-3px);
 }
 
 .hero-image-enhanced img {
     max-width: 500px;
-    border-radius: var(--border-radius);
+    border-radius: 12px; /* Dəyişdirildi */
     box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
     animation: fadeIn 1.5s ease-out;
 }
@@ -124,6 +114,7 @@ body {
 /* === XÜSUSİYYƏTLƏR BÖLMƏSİ === */
 .features-section-enhanced {
     padding: 6rem 2rem;
+    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
 }
 
 .features-grid-enhanced {
@@ -133,17 +124,17 @@ body {
 }
 
 .feature-card-enhanced {
-    background: var(--light-color);
+    background: var(--surface-color); /* Dəyişdirildi */
     padding: 2.5rem 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
+    border-radius: 12px; /* Dəyişdirildi */
+    box-shadow: 0 10px 20px var(--shadow-color); /* Dəyişdirildi */
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card-enhanced:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 15px 30px var(--shadow-color); /* Dəyişdirildi */
 }
 
 .feature-icon-enhanced {
@@ -156,19 +147,19 @@ body {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1rem;
-    color: var(--dark-color);
+    color: var(--text-primary); /* Dəyişdirildi */
 }
 
 .feature-card-enhanced p {
     font-size: 1rem;
     line-height: 1.6;
-    color: #666;
+    color: var(--text-secondary); /* Dəyişdirildi */
 }
 
 /* === İLHAM BÖLMƏSİ === */
 .inspiration-section {
     padding: 6rem 2rem;
-    background-color: #f0f2f5;
+    background-color: var(--surface-color); /* Dəyişdirildi */
 }
 
 .inspiration-grid {
@@ -181,8 +172,8 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
+    border-radius: 12px; /* Dəyişdirildi */
+    box-shadow: 0 10px 20px var(--shadow-color); /* Dəyişdirildi */
     transition: transform 0.3s ease;
 }
 
@@ -193,6 +184,7 @@ body {
 /* === RƏYLƏR BÖLMƏSİ === */
 .testimonials-section-enhanced {
     padding: 6rem 2rem;
+    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
 }
 
 .testimonials-grid-enhanced {
@@ -204,10 +196,10 @@ body {
 }
 
 .testimonial-card-enhanced {
-    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-    color: var(--light-color);
+    background: linear-gradient(45deg, var(--primary-hover-color), var(--primary-color)); /* Dəyişdirildi */
+    color: var(--primary-text-color); /* Dəyişdirildi */
     padding: 2.5rem;
-    border-radius: var(--border-radius);
+    border-radius: 12px; /* Dəyişdirildi */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -218,7 +210,7 @@ body {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    border: 3px solid var(--light-color);
+    border: 3px solid var(--primary-text-color); /* Dəyişdirildi */
     margin-bottom: 1.5rem;
 }
 
@@ -240,8 +232,8 @@ body {
 .final-cta-section-enhanced {
     text-align: center;
     padding: 6rem 2rem;
-    background-color: var(--dark-color);
-    color: var(--light-color);
+    background-color: var(--text-primary); /* Dəyişdirildi */
+    color: var(--background-color); /* Dəyişdirildi */
 }
 
 .final-cta-section-enhanced h2 {
@@ -256,8 +248,8 @@ body {
 }
 
 .cta-button-final {
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    color: var(--light-color);
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color)); /* Dəyişdirildi */
+    color: var(--primary-text-color); /* Dəyişdirildi */
     padding: 1.2rem 2.5rem;
     border-radius: 50px;
     text-decoration: none;
@@ -271,8 +263,12 @@ body {
 
 .cta-button-final:hover {
     transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 10px 20px rgba(106, 17, 203, 0.4);
+    box-shadow: 0 10px 20px var(--primary-color); /* Dəyişdirildi, amma şəffaflıq əlavə etmək daha yaxşı olar */
 }
+
+/* Animasiyalar (dəyişiklik yoxdur) */
+@keyframes slideInFromLeft { /*...*/ }
+@keyframes fadeIn { /*...*/ }
 
 /* === ANİMASİYALAR === */
 @keyframes fadeIn {

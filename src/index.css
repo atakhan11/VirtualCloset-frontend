@@ -1,161 +1,86 @@
-/* === TÜND MÖVZU (DARK MODE) ÜÇÜN QLOBAL STİLLƏR (YEKUN VERSİYA) === */
+/* src/index.css (YENİLƏNMİŞ VƏ TƏKMİLLƏŞDİRİLMİŞ VERSİYA) */
 
-/* body.dark - body teqində "dark" klassı olduqda bu stillər aktivləşir */
-
-/* --- 1. ÜMUMİ VƏ ƏSAS ELEMENTLƏR --- */
-body.dark {
-    background-color: #1c1c1e; /* Daha tünd fon */
-    color: #f5f5f7;
-    scrollbar-color: #444 #1c1c1e;
+/* --- 1. TEMA RƏNG DƏYİŞƏNLƏRİ --- */
+:root {
+  /* İşıqlı rejim üçün standart rənglər */
+  --background-color: #f8f9fa; /* Əsas arxa fon */
+  --surface-color: #ffffff;    /* Kartlar, modallar, navbar kimi elementlərin fonu */
+  --surface-secondary-color: #f8f9fa; /* Bir az fərqli fon (məs: chat-da mesajlar) */
+  --text-primary: #212529;      /* Əsas qara mətn */
+  --text-secondary: #6c757d;    /* İkinci dərəcəli boz mətn */
+  --border-color: #e9ecef;      /* Ayırıcı xətlərin rəngi */
+  --shadow-color: rgba(0, 0, 0, 0.08); /* Kölgə rəngi */
+  --primary-color: #007bff;      /* Əsas brend rəngi (göy) */
+  --primary-hover-color: #0056b3;
+  --primary-text-color: #ffffff; /* Brend rəngli düymələrin üstündəki mətn */
+   --footer-background-color: #212529;
+  --footer-text-primary: #ffffff;
+  --footer-text-secondary: #adb5bd;
+  --footer-border-color: #343a40;
+  --navbar-background: transparent;
+  --success-color: #28a745; /* Yaşıl rəng (online statusu üçün) */
+  --danger-color: #dc3545;  /* Qırmızı rəng (səs yazma və s. üçün) */
+--success-hover-color: #218838; /* Yaşıl düymənin hover rəngi */
+  --primary-accent-background: #e7f5ff; /* Açıq mavi fon (ikonlar üçün) */
+   --success-background-color: #d1e7dd; 
+   --warning-color: #fcc419; /* Sarı rəng (redaktə ikonu üçün) */
+  --primary-focus-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Mavi fokus kölgəsi */
 }
 
-/* Bütün linklər */
-body.dark a {
-    color: #58a6ff;
+[data-theme='dark'] {
+  /* Qaranlıq rejim aktiv olduqda bu rənglər istifadə olunacaq */
+  --background-color: #121212;
+  --surface-color: #1e1e1e;
+  --surface-secondary-color: #121212;
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --border-color: #333333;
+  --shadow-color: rgba(255, 255, 255, 0.05);
+  --primary-color: #58a6ff;
+  --primary-hover-color: #3e97ff;
+  --primary-text-color: #1e1e1e;
+  --footer-background-color: #161618; /* Bir az daha fərqli tünd rəng */
+  --footer-text-primary: var(--text-primary); /* Qlobal açıq rəngli mətn */
+  --footer-text-secondary: var(--text-secondary); /* Qlobal ikinci dərəcəli mətn */
+  --footer-border-color: var(--border-color); /* Qlobal sərhəd xətti rəngi */
+   --navbar-background: var(--surface-color);
+    --success-color: #34c759; /* Daha parlaq yaşıl */
+  --danger-color: #ff453a;   /* Daha parlaq qırmızı */
+   --success-hover-color: #34c759; /* Qaranlıq rejimdə daha parlaq yaşıl */
+  --primary-accent-background: rgba(88, 166, 255, 0.1); /* Qaranlıq rejimdə tünd mavi fon */
+  --danger-background-color: #f8d7da; /* Xəta mesajları üçün açıq qırmızı fon */
+   --danger-background-color: rgba(255, 69, 58, 0.15); /* Qaranlıq rejimdə tünd qırmızı fon */
+     --success-background-color: rgba(52, 199, 89, 0.15);
+      --warning-color: #ffd43b; /* Qaranlıq rejimdə daha parlaq sarı */
+  --primary-focus-shadow: 0 0 0 0.2rem rgba(88, 166, 255, 0.25);
 }
 
-/* Bütün başlıqlar */
-body.dark h1, body.dark h2, body.dark h3, body.dark h4 {
-    color: #f5f5f7;
+/* --- 2. QLOBAL ELEMENTLƏRƏ TƏTBİQ ETMƏK --- */
+body {
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- 2. NAVİQASİYA (HEADER) --- */
-/* DİQQƏT: ".navbar-container" yerinə öz Navbar komponentinizin klass adını yazın */
-body.dark .navbar-container { 
-    background-color: #2c2c2e !important;
-    border-bottom-color: #3a3a3c !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
-}
-body.dark .navbar-container a,
-body.dark .navbar-container span {
-    color: #f5f5f7 !important;
-}
-body.dark .navbar-container .logout-btn {
-    background-color: #3a3a3c !important;
-    color: #f5f5f7 !important;
-}
-body.dark .navbar-container .logout-btn:hover {
-    background-color: #48484a !important;
+/* Bütün input, select, textarea və button-lar üçün baza stillər */
+input, textarea, select, button {
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px;
+  font-family: inherit; /* body-dən gələn şrifti istifadə etsin */
 }
 
-
-/* --- 3. DASHBOARD SƏHİFƏSİ --- */
-body.dark .dashboard-container {
-    background-color: #1c1c1e;
-}
-body.dark .dashboard-greeting h1 { color: #fff; }
-body.dark .dashboard-greeting p { color: #a1a1a6; }
-body.dark .action-card,
-body.dark .dashboard-widget {
-    background-color: #2c2c2e;
-    border: 1px solid #3a3a3c;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-body.dark .action-card span,
-body.dark .dashboard-widget h3 {
-    color: #f5f5f7;
-}
-body.dark .widget-link { color: #58a6ff; }
-
-
-/* --- 4. MƏNİM QARDEROBUM, ARZU SİYAHISI, KOMBİNLƏR (KARTLAR) --- */
-body.dark .wardrobe-container, 
-body.dark .wishlist-container,
-body.dark .outfits-grid {
-    background-color: transparent;
-}
-body.dark .cloth-card,
-body.dark .wishlist-card,
-body.dark .outfit-card {
-    background-color: #2c2c2e;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    border: 1px solid #3a3a3c;
-}
-body.dark .cloth-card h4, body.dark .wishlist-card h4, body.dark .outfit-card h4 { color: #f5f5f7; }
-body.dark .category-tag, body.dark .brand-tag, body.dark .season-tag, body.dark .price-tag { color: #a1a1a6; }
-body.dark .card-footer {
-    background-color: #3a3a3c;
-    border-top-color: #48484a;
-}
-body.dark .card-btn { color: #a1a1a6; }
-body.dark .card-btn:hover { background-color: #48484a; color: #fff; }
-
-
-/* --- 5. KOMBİN PLANLAYICI --- */
-body.dark .planner-container { background-color: #1c1c1e; }
-body.dark .all-clothes-panel,
-body.dark .outfit-builder-panel,
-body.dark .saved-outfits-section {
-    background-color: #2c2c2e;
-    border-color: #3a3a3c;
-}
-body.dark .outfit-drop-zone { border-color: #48484a; }
-body.dark .outfit-drop-zone p { color: #a1a1a6; }
-body.dark .outfit-name-input {
-    background-color: #3a3a3c;
-    color: #f5f5f7;
-    border-color: #4e4f50;
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid var(--primary-color);
+  border-color: transparent;
 }
 
-
-/* --- 6. TƏQVİM SƏHİFƏSİ --- */
-body.dark .calendar-page-container { background-color: #1c1c1e; }
-body.dark .calendar-sidebar { background: #2c2c2e; border-color: #3a3a3c; }
-body.dark .unplanned-outfit-item { background-color: #3a3a3c; border-color: #4e4f50; }
-body.dark .unplanned-outfit-item:hover { background-color: #4e4f50; }
-body.dark .rbc-calendar { background-color: #2c2c2e; }
-body.dark .rbc-toolbar { border-bottom-color: #3a3a3c; }
-body.dark .rbc-toolbar button { color: #f5f5f7; }
-body.dark .rbc-header, body.dark .rbc-month-view, body.dark .rbc-time-view, body.dark .rbc-day-bg, body.dark .rbc-month-row { border-color: #3a3a3c; }
-body.dark .rbc-off-range-bg { background: #1c1c1e; }
-body.dark .rbc-today { background-color: #3a3a3c; }
-
-
-/* --- 7. CHAT SƏHİFƏSİ --- */
-body.dark .chatPageContainer { background-color: #1c1c1e; }
-body.dark .sidebar,
-body.dark .mainChatArea,
-body.dark .chatWindowHeader,
-body.dark .messageInputArea {
-    background-color: #2c2c2e;
-    border-color: #3a3a3c;
+button {
+  cursor: pointer;
+  background-color: var(--primary-color);
+  color: var(--primary-text-color);
+  border: none;
+  font-weight: 600;
 }
-body.dark .sidebar, body.dark .chatWindowHeader, body.dark .messageInput, body.dark .receivedWrapper .messageBubble { color: #f5f5f7; }
-body.dark .sidebar li:hover { background-color: #3a3a3c; }
-body.dark .conversationList .selected { background-color: #007bff; color: white; }
-body.dark .messagesArea { background-color: #1c1c1e; }
-body.dark .messageInput { background-color: #3a3a3c; }
-body.dark .receivedWrapper .messageBubble { background-color: #3a3a3c; }
-
-
-/* --- 8. PROFİL, DONATE, CONTACT (ÜMUMİ KONTEYNERLƏR) --- */
-body.dark .profileContainer,
-body.dark .donateContainer,
-body.dark .contact-container {
-    background-color: #1c1c1e;
-}
-body.dark .profileHeader, body.dark .statItem, body.dark .profileForm,
-body.dark .donateBox,
-body.dark .contact-form-wrapper, body.dark .contact-info-wrapper {
-    background-color: #2c2c2e;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    border: 1px solid #3a3a3c;
-}
-body.dark .dangerZone { background-color: #4b1f24; border-color: #dc3545; }
-body.dark .dangerZone h3, body.dark .dangerZone p { color: #f8d7da; }
-
-
-/* --- 9. MODAL PƏNCƏRƏLƏRİ (ÜMUMİ) --- */
-body.dark .modal-content {
-    background-color: #2c2c2e;
-    color: #f5f5f7;
-}
-body.dark .modal-content h2, body.dark .modal-content h3, body.dark .modal-content h4 { color: #f5f5f7; }
-body.dark .modal-content p, body.dark .modal-content label { color: #a1a1a6; }
-body.dark .modal-content input, body.dark .modal-content select, body.dark .modal-content textarea {
-    background-color: #3a3a3c;
-    border-color: #4e4f50;
-    color: #f5f5f7;
-}
-body.dark .close-modal-btn { color: #a1a1a6; }
-

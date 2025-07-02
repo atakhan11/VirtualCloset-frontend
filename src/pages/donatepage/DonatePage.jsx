@@ -1,9 +1,12 @@
+// src/pages/DonatePage.jsx (TAM VƏ DÜZGÜN VERSİYA)
+
 import React, { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import axios from 'axios';
 import { FaHeart } from 'react-icons/fa';
 import styles from './DonatePage.module.css';
+import { useTheme } from '../../context/ThemeContext'; // Qlobal temadan istifadə edirik
 
 const VITE_STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 if (!VITE_STRIPE_PUBLISHABLE_KEY) {
@@ -11,6 +14,7 @@ if (!VITE_STRIPE_PUBLISHABLE_KEY) {
 }
 const stripePromise = loadStripe(VITE_STRIPE_PUBLISHABLE_KEY);
 
+// CheckoutForm komponenti sadələşir, artıq tema haqqında heç nə bilmir
 const CheckoutForm = ({ amount }) => {
     const stripe = useStripe();
     const elements = useElements();
@@ -20,7 +24,6 @@ const CheckoutForm = ({ amount }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!stripe || !elements) return;
-
         setIsLoading(true);
 
         const { error } = await stripe.confirmPayment({
@@ -31,11 +34,7 @@ const CheckoutForm = ({ amount }) => {
         });
 
         if (error) {
-            if (error.type === "card_error" || error.type === "validation_error") {
-                setMessage(error.message);
-            } else {
-                setMessage("Gözlənilməz bir xəta baş verdi.");
-            }
+            setMessage(error.message || "Gözlənilməz bir xəta baş verdi.");
         }
         
         setIsLoading(false);
@@ -54,39 +53,35 @@ const CheckoutForm = ({ amount }) => {
     );
 };
 
+
 const DonatePage = () => {
     const [amount, setAmount] = useState(10);
     const predefinedAmounts = [5, 10, 20, 50];
     const [clientSecret, setClientSecret] = useState("");
+    const { theme } = useTheme(); // Temanı qlobal context-dən götürürük
 
     useEffect(() => {
         const createPaymentIntent = async () => {
             try {
-                // DƏYİŞİKLİK: Artıq token və xüsusi konfiqurasiya lazım deyil.
                 const { data } = await axios.post(
                     'http://localhost:5000/api/payments/create-payment-intent',
-                    { amount } // Sadəcə məbləği göndəririk
+                    { amount }
                 );
                 setClientSecret(data.clientSecret);
             } catch (error) {
                 console.error("PaymentIntent yaratmaq mümkün olmadı:", error);
             }
         };
-        if (amount > 0) {
-            createPaymentIntent();
-        }
+        if (amount > 0) createPaymentIntent();
     }, [amount]);
 
-    const handleAmountChange = (newAmount) => {
-        setAmount(newAmount);
-    };
-
-    const appearance = { 
+    // === ƏSAS DÜZƏLİŞ: appearance və options burada təyin edilir ===
+    const appearance = {
         theme: 'stripe',
         variables: {
-            colorPrimary: '#007bff',
-            colorBackground: '#ffffff',
-            colorText: '#30313d',
+            colorPrimary: theme === 'light' ? '#007bff' : '#58a6ff',
+            colorBackground: theme === 'light' ? '#ffffff' : '#1e1e1e',
+            colorText: theme === 'light' ? '#30313d' : '#e0e0e0',
             colorDanger: '#df1b41',
             fontFamily: 'Ideal Sans, system-ui, sans-serif',
             spacingUnit: '2px',
@@ -99,8 +94,8 @@ const DonatePage = () => {
         return (
             <div className={styles.donateContainer}>
                 <div className={styles.donateBox}>
-                     <h2>Konfiqurasiya Xətası</h2>
-                     <p>Stripe açarı təyin edilməyib. Zəhmət olmasa, administratorla əlaqə saxlayın.</p>
+                    <h2>Konfiqurasiya Xətası</h2>
+                    <p>Stripe açarı təyin edilməyib.</p>
                 </div>
             </div>
         );
@@ -118,7 +113,7 @@ const DonatePage = () => {
                         <button
                             key={preAmount}
                             className={`${styles.amountButton} ${amount === preAmount ? styles.selected : ''}`}
-                            onClick={() => handleAmountChange(preAmount)}
+                            onClick={() => setAmount(preAmount)}
                         >
                             {preAmount} AZN
                         </button>
@@ -130,7 +125,7 @@ const DonatePage = () => {
                         <input
                             type="number"
                             value={amount}
-                            onChange={(e) => handleAmountChange(Number(e.target.value))}
+                            onChange={(e) => setAmount(Number(e.target.value))}
                             placeholder="Məbləğ"
                         />
                         <span>AZN</span>

@@ -171,3 +171,92 @@
     color: #aaa;
     cursor: pointer;
 }
+
+
+
+
+/* ========================================================= */
+/* === Təqvim Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
+/* ========================================================= */
+
+/* --- ÜMUMİ ELEMENTLƏR --- */
+[data-theme='dark'] .calendar-sidebar {
+    background: var(--surface-color);
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .calendar-sidebar h3 {
+    color: var(--text-primary);
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme='dark'] .calendar-sidebar p,
+[data-theme='dark'] .close-modal-btn {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .unplanned-outfit-item {
+    background-color: var(--surface-secondary-color);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .unplanned-outfit-item:hover {
+    background-color: var(--border-color);
+}
+
+/* --- TƏQVİM KİTABXANASI (RBC) --- */
+[data-theme='dark'] .rbc-calendar {
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+}
+[data-theme='dark'] .rbc-toolbar {
+    border-bottom: 1px solid var(--border-color);
+}
+[data-theme='dark'] .rbc-toolbar button {
+    color: var(--text-primary);
+}
+[data-theme='dark'] .rbc-header,
+[data-theme='dark'] .rbc-month-view,
+[data-theme='dark'] .rbc-time-view,
+[data-theme='dark'] .rbc-day-bg,
+[data-theme='dark'] .rbc-month-row {
+    border-color: var(--border-color);
+}
+[data-theme='dark'] .rbc-off-range-bg {
+    background: var(--surface-secondary-color);
+    opacity: 0.5;
+}
+[data-theme='dark'] .rbc-today {
+    background-color: var(--surface-secondary-color);
+}
+[data-theme='dark'] .rbc-event {
+    background-color: var(--primary-color);
+}
+
+/* --- MODAL PƏNCƏRƏSİ --- */
+[data-theme='dark'] .calendar-modal {
+    background-color: var(--surface-color);
+    box-shadow: 0 5px 15px var(--shadow-color);
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .modal-outfit-images img {
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .btn-secondary {
+    background-color: var(--text-secondary);
+    color: var(--surface-color);
+}
+[data-theme='dark'] .btn-secondary:hover {
+    background-color: var(--text-primary);
+}
+
+[data-theme='dark'] .btn-danger {
+    background-color: var(--danger-color);
+    color: var(--primary-text-color);
+}
+[data-theme='dark'] .btn-danger:hover {
+    filter: brightness(1.2);
+}

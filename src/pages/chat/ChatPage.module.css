@@ -4,7 +4,7 @@
     display: flex;
     height: calc(100vh - 80px); /* Header hündürlüyünü nəzərə alır */
     width: 100%;
-    background-color: #f0f2f5;
+    background-color: var(--background-color);;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     overflow: hidden;
 }
@@ -12,8 +12,8 @@
 .sidebar {
     width: 300px;
     min-width: 250px;
-    background-color: #ffffff;
-    border-right: 1px solid #d1d7db;
+    background-color: var(--surface-color);
+    border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -519,4 +519,173 @@
 
 .statusIndicator.online {
     background-color: #28a745; /* Online statusu */
+}
+
+
+
+
+
+
+/* ============================================== */
+/* === QARANLIQ REJİM ÜÇÜN ƏLAVƏ STİLLƏR === */
+/* Bu blok yalnız qaranlıq rejim aktiv olduqda işə düşür */
+/* ============================================== */
+
+/* --- ÜMUMİ KONTEYNER VƏ KENAR PANEL (SIDEBAR) --- */
+[data-theme='dark'] .chatPageContainer {
+    background-color: var(--background-color);
+}
+
+[data-theme='dark'] .sidebar {
+    background-color: var(--surface-color);
+    border-right-color: var(--border-color);
+}
+
+[data-theme='dark'] .userList h3, 
+[data-theme='dark'] .conversationList h3 {
+    color: var(--text-primary);
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme='dark'] .userList li, 
+[data-theme='dark'] .conversationList li {
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .userList li:hover, 
+[data-theme='dark'] .conversationList li:hover {
+    background-color: var(--surface-secondary-color);
+}
+
+[data-theme='dark'] .conversationList .selected {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+}
+[data-theme='dark'] .conversationList .selected:hover {
+    background-color: var(--primary-hover-color);
+}
+
+
+/* --- ƏSAS ÇAT PƏNCƏRƏSİ --- */
+[data-theme='dark'] .chatWindowHeader {
+    background-color: var(--surface-color);
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme='dark'] .chatWindowPlaceholder,
+[data-theme='dark'] .loadingScreen {
+    color: var(--text-secondary);
+}
+
+/* --- MESAJ SAHƏSİ VƏ BALONLARI --- */
+[data-theme='dark'] .messagesArea {
+    background-color: var(--surface-secondary-color);
+}
+
+[data-theme='dark'] .sentWrapper .messageBubble {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+}
+
+[data-theme='dark'] .receivedWrapper .messageBubble {
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .messageInfo {
+    color: var(--text-secondary);
+}
+
+/* --- REAKSİYA ELEMENTLƏRİ --- */
+[data-theme='dark'] .reactionPicker {
+    background-color: var(--surface-color);
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .reactionPicker svg {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .reactionsContainer {
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+}
+
+
+/* --- MESAJ GÖNDƏRMƏ PANELİ --- */
+[data-theme='dark'] .messageInputArea {
+    background-color: var(--surface-color);
+    border-top-color: var(--border-color);
+}
+
+[data-theme='dark'] .iconButton {
+    color: var(--primary-color);
+}
+
+[data-theme='dark'] .iconButton:hover {
+    background-color: var(--surface-secondary-color);
+}
+
+[data-theme='dark'] .messageInput {
+    background-color: var(--surface-secondary-color);
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .sendButton svg {
+    color: var(--primary-color);
+}
+
+[data-theme='dark'] .sendButton:disabled svg {
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+
+/* --- STATUS GÖSTƏRİCİLƏRİ --- */
+[data-theme='dark'] .headerUserName {
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .headerStatusOnline {
+    color: var(--success-color);
+}
+[data-theme='dark'] .headerStatusOnline::before {
+    background-color: var(--success-color);
+}
+
+[data-theme='dark'] .headerStatusOffline {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .typingIndicator {
+    color: var(--primary-color);
+}
+
+[data-theme='dark'] .statusIndicator {
+    border-color: var(--surface-color);
+    background-color: var(--text-secondary);
+}
+
+[data-theme='dark'] .statusIndicator.online {
+    background-color: var(--success-color);
+}
+
+/* --- MESAJ STATUSU ("QUŞLAR") --- */
+[data-theme='dark'] .sentWrapper .messageInfo {
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+[data-theme='dark'] .messageInfo svg {
+    color: inherit;
+}
+
+[data-theme='dark'] .iconSeen {
+    color: var(--primary-color) !important;
+}
+
+/* --- EMOJI PƏNCƏRƏSİ --- */
+[data-theme='dark'] .emojiPickerContainer aside {
+    background-color: var(--surface-color) !important;
+    border: 1px solid var(--border-color) !important;
 }

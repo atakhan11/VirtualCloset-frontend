@@ -265,3 +265,75 @@
 .btn-secondary:hover {
     background-color: #5a6268;
 }
+
+
+
+
+/* ========================================================= */
+/* === Arzu Siyahısı Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
+/* ========================================================= */
+
+[data-theme='dark'] .wishlist-header {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme='dark'] .wishlist-header h1,
+[data-theme='dark'] .wishlist-card h4,
+[data-theme='dark'] .card-btn:hover,
+[data-theme='dark'] .modal-content h2,
+[data-theme='dark'] .form-group label {
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .wishlist-card,
+[data-theme='dark'] .modal-content {
+    background-color: var(--surface-color);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+[data-theme='dark'] .wishlist-card .category-tag,
+[data-theme='dark'] .card-footer,
+[data-theme='dark'] .scrape-section {
+    background-color: var(--surface-secondary-color);
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .card-footer {
+    border-top-color: var(--border-color);
+}
+
+[data-theme='dark'] .card-btn {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .card-btn:hover {
+    background-color: var(--border-color);
+}
+
+[data-theme='dark'] .card-btn.danger:hover {
+    color: var(--danger-color);
+}
+
+[data-theme='dark'] .image-preview {
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .form-hint {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .form-message {
+    color: var(--primary-color);
+}
+
+[data-theme='dark'] .scrape-btn {
+    border-color: var(--border-color);
+    background-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .btn-secondary,
+[data-theme='dark'] .btn-secondary:hover {
+    background-color: var(--text-secondary);
+    color: var(--surface-color);
+}

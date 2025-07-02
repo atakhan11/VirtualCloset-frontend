@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import styles from '../signup/SignUp.module.css';
+import styles from '../password/PasswordReset.module.css';
 
 const ResetPasswordPage = () => {
     const [password, setPassword] = useState('');
@@ -57,7 +57,7 @@ const ResetPasswordPage = () => {
     };
 
     return (
-        <div className={styles.signupContainer}>
+        <div className={styles.container}>
             <div className={styles.formWrapper}>
                 <h2 className={styles.formTitle}>Yeni Şifrə Təyin Et</h2>
                 

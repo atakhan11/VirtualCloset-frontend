@@ -349,3 +349,119 @@ input:checked + .slider:before {
         margin-top: 1rem;
     }
 }
+
+
+
+
+/* ======================================================= */
+/* === Profil Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
+/* ======================================================= */
+
+[data-theme='dark'] .profileContainer,
+[data-theme='dark'] .profileHeader,
+[data-theme='dark'] .statItem,
+[data-theme='dark'] .profileForm,
+[data-theme='dark'] .modalContent {
+    background-color: var(--surface-color);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .profileContainer {
+    background-color: var(--background-color);
+}
+
+[data-theme='dark'] .avatar {
+    border-color: var(--primary-color);
+}
+
+[data-theme='dark'] .avatarEditButton {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+    border-color: var(--surface-color); /* Dəyişdirildi */
+}
+[data-theme='dark'] .avatarEditButton:hover {
+    background-color: var(--primary-hover-color);
+}
+
+[data-theme='dark'] .userInfo h1,
+[data-theme='dark'] .statItem span,
+[data-theme='dark'] .profileForm h3 {
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .userInfo p,
+[data-theme='dark'] .statItem p,
+[data-theme='dark'] .formGroup label {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .statItem svg {
+    color: var(--primary-color);
+}
+
+[data-theme='dark'] .profileForm h3 {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme='dark'] .formGroup input,
+[data-theme='dark'] .modalInput {
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .submitButton,
+[data-theme='dark'] .deleteButton,
+[data-theme='dark'] .modalConfirmButton {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+}
+
+[data-theme='dark'] .submitButton:hover {
+    background-color: var(--primary-hover-color);
+}
+
+[data-theme='dark'] .message {
+    color: var(--success-color);
+}
+
+/* Switch stilləri */
+[data-theme='dark'] .slider {
+    background-color: var(--text-secondary);
+}
+[data-theme='dark'] .slider:before {
+    background-color: var(--surface-color);
+}
+[data-theme='dark'] input:checked + .slider {
+    background-color: var(--success-color);
+}
+
+/* Şifrə gücü */
+[data-theme='dark'] .strengthMeter {
+    background-color: var(--border-color);
+}
+
+/* Təhlükəli Zona */
+[data-theme='dark'] .dangerZone {
+    border-color: var(--danger-color);
+    background-color: var(--danger-background-color);
+}
+[data-theme='dark'] .dangerZone h3,
+[data-theme='dark'] .dangerZone p {
+    color: var(--danger-color);
+}
+[data-theme='dark'] .deleteButton {
+    background-color: var(--danger-color);
+}
+[data-theme='dark'] .deleteButton:hover {
+    filter: brightness(1.2);
+}
+
+/* Modal */
+[data-theme='dark'] .modalIcon {
+    color: var(--danger-color);
+}
+[data-theme='dark'] .modalCancelButton {
+    background: var(--surface-secondary-color);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}

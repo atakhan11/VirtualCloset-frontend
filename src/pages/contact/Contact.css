@@ -1,32 +1,31 @@
-/* === CONTACT SƏHİFƏSİ STİLLƏRİ === */
+/* ContactPage.css (YENİLƏNMİŞ VƏ TEMA UYUMLU VERSİYA) */
+
 .contact-container {
-    color: var(--text-color);
+    color: var(--text-primary); /* Dəyişdirildi */
     padding: 2rem 4rem;
-    background-color: #f9f9f9; /* Səhifə üçün açıq fon */
+    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
 }
 
-/* === Səhifə başlığı === */
 .contact-header {
     text-align: center;
     padding: 3rem 0;
-    border-bottom: 1px solid var(--gray-color);
+    border-bottom: 1px solid var(--border-color); /* Dəyişdirildi */
     margin-bottom: 3rem;
 }
 
 .contact-header h1 {
     font-size: 3rem;
     font-weight: 700;
-    color: var(--dark-color);
+    color: var(--text-primary); /* Dəyişdirildi */
 }
 
 .contact-header p {
     font-size: 1.1rem;
-    color: #666;
+    color: var(--text-secondary); /* Dəyişdirildi */
     max-width: 600px;
     margin: 0.5rem auto 0;
 }
 
-/* === Əsas məzmun (form və info) === */
 .contact-main-content {
     display: flex;
     gap: 4rem;
@@ -36,10 +35,10 @@
 
 .contact-form-wrapper,
 .contact-info-wrapper {
-    background-color: var(--light-color);
+    background-color: var(--surface-color); /* Dəyişdirildi */
     padding: 2.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
+    border-radius: 8px; /* Dəyişdirildi */
+    box-shadow: 0 5px 15px var(--shadow-color); /* Dəyişdirildi */
     flex: 1;
 }
 
@@ -48,13 +47,12 @@
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 2rem;
-    color: var(--dark-color);
+    color: var(--text-primary); /* Dəyişdirildi */
     border-bottom: 2px solid var(--primary-color);
     padding-bottom: 0.5rem;
     display: inline-block;
 }
 
-/* === Əlaqə Formu === */
 .contact-form .form-group {
     margin-bottom: 1.5rem;
 }
@@ -63,15 +61,16 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #555;
+    color: var(--text-secondary); /* Dəyişdirildi */
 }
 
+/* Input və textarea qlobal stilləri onsuz da alır, bu sadəcə təsdiq üçündür */
 .contact-form input,
 .contact-form textarea {
     width: 100%;
     padding: 0.8rem 1rem;
-    border: 1px solid var(--gray-color);
-    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color); /* Dəyişdirildi */
+    border-radius: 8px; /* Dəyişdirildi */
     font-size: 1rem;
     transition: border-color 0.3s ease;
 }
@@ -84,7 +83,7 @@
 
 .cta-button {
     background-color: var(--primary-color);
-    color: var(--light-color);
+    color: var(--primary-text-color); /* Dəyişdirildi */
     padding: 0.8rem 2rem;
     border-radius: 50px;
     border: none;
@@ -95,14 +94,14 @@
 }
 
 .cta-button:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-hover-color); /* Dəyişdirildi */
     transform: translateY(-3px);
 }
 
-/* === Əlaqə Məlumatları === */
 .contact-info-intro {
     line-height: 1.7;
     margin-bottom: 2rem;
+    color: var(--text-secondary); /* Dəyişdirildi */
 }
 
 .contact-details-list {
@@ -116,22 +115,28 @@
     align-items: center;
     font-size: 1.1rem;
     margin-bottom: 1.5rem;
+    color: var(--text-primary); /* Dəyişdirildi */
 }
 
 .contact-icon {
     font-size: 1.5rem;
     color: var(--primary-color);
     margin-right: 1.5rem;
-    width: 25px; /* İkonların eyni hizada durması üçün */
+    width: 25px;
 }
 
 .contact-map {
     margin-top: 2rem;
 }
 
-.status-message {
-    margin-top: 1rem;
-    font-weight: 500;
+/* Media query-lərdə dəyişiklik yoxdur, olduğu kimi qalır */
+@media (max-width: 992px) {
+    .contact-main-content {
+        flex-direction: column;
+    }
+}
+@media (max-width: 768px) {
+    /* ... */
 }
 
 /* === RESPONSİVLİK === */

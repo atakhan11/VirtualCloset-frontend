@@ -66,3 +66,31 @@
 .page-status.error {
     color: #dc3545;
 }
+
+
+
+/* ============================================================= */
+/* === Kombin Detal Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
+/* ============================================================= */
+
+[data-theme='dark'] .back-link {
+    color: var(--primary-color);
+}
+
+[data-theme='dark'] .outfit-detail-container h1,
+[data-theme='dark'] .cloth-info h4 {
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .cloth-card-detail {
+    background: var(--surface-color);
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+[data-theme='dark'] .cloth-info p {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .page-status.error {
+    color: var(--danger-color);
+}

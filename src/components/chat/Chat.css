@@ -4,7 +4,6 @@
     bottom: 2rem;
     right: 2rem;
     z-index: 1000;
-    /* Bu, içindəki elementlərin bir-birinə görə mövqelənməsinə imkan verir */
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -15,17 +14,18 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(45deg, #007bff, #0056b3);
-    color: white;
+    /* Dəyişdirildi: Brend rənglərini dəyişənlərdən götürür */
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color));
+    color: var(--primary-text-color); 
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.8rem;
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    /* Dəyişdirildi: Kölgə rəngi dəyişəndən gəlir */
+    box-shadow: 0 4px 15px var(--shadow-color);
     transition: all 0.3s ease;
-    /* Düymənin pəncərənin üstündə qalmasını təmin edirik */
     z-index: 1001; 
 }
 
@@ -33,30 +33,28 @@
     transform: scale(1.1) rotate(10deg);
 }
 
-/* Çat Pəncərəsi (Əsas Dəyişikliklər Burada) */
+/* Çat Pəncərəsi */
 .chat-window {
     width: 370px;
     height: 500px;
-    margin-bottom: 1rem; /* Düymə ilə pəncərə arasına məsafə qoyur */
-    background-color: #fff;
+    margin-bottom: 1rem;
+    background-color: var(--surface-color); /* Dəyişdirildi */
     border-radius: 15px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 25px var(--shadow-color); /* Dəyişdirildi */
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transform-origin: bottom right; /* Animasiyanın başlanğıc nöqtəsi */
-    
-    /* DÜZƏLİŞ: Animasiya və ilkin vəziyyət burada təyin olunur */
-    transition: transform 0.3s ease-out, opacity 0.2s ease-out, visibility 0.3s;
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out, opacity 0.2s ease-out, visibility 0.3s, background-color 0.3s ease; /* Dəyişdirildi */
 }
 
-/* DÜZƏLİŞ: Pəncərəni gizlədən və göstərən siniflər */
+/* Pəncərəni gizlədən və göstərən siniflər (dəyişiklik yoxdur) */
 .chat-window.closed {
     opacity: 0;
     transform: scale(0.9) translateY(20px);
-    visibility: hidden; /* Tamamilə gizlədir və kliklənməz edir */
+    visibility: hidden;
     pointer-events: none;
-    height: 0; /* Hündürlüyü sıfırlayaraq yer tutmasının qarşısını alır */
+    height: 0;
     margin-bottom: 0;
 }
 
@@ -69,16 +67,17 @@
 
 /* Pəncərənin başlığı */
 .chat-header {
-    background-color: #f8f9fa;
+    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
     padding: 1rem;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--border-color); /* Dəyişdirildi */
     text-align: center;
-    flex-shrink: 0; /* Başlığın kiçilməməsini təmin edir */
+    flex-shrink: 0;
 }
 
 .chat-header h3 {
     margin: 0;
     font-size: 1.1rem;
+    color: var(--text-primary); /* Dəyişdirildi */
 }
 
 .chat-messages {
@@ -88,39 +87,64 @@
 
 .message-bubble {
     padding: 10px 15px; border-radius: 20px; max-width: 80%; line-height: 1.5;
-    word-wrap: break-word; /* Uzun sözlərin qırılması üçün */
+    word-wrap: break-word;
 }
 
 .message-bubble.user {
-    background-color: #007bff; color: white;
+    background-color: var(--primary-color); /* Dəyişdirildi */
+    color: var(--primary-text-color); /* Dəyişdirildi */
     align-self: flex-end; border-bottom-right-radius: 5px;
 }
+
 .message-bubble.ai {
-    background-color: #f1f3f5; color: #212529;
+    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
+    color: var(--text-primary); /* Dəyişdirildi */
     align-self: flex-start; border-bottom-left-radius: 5px;
 }
 
 .chat-input-area {
-    display: flex; padding: 1rem; border-top: 1px solid #e9ecef;
-    flex-shrink: 0; /* Input sahəsinin kiçilməməsini təmin edir */
+    display: flex;
+    padding: 1rem;
+    border-top: 1px solid var(--border-color); /* Dəyişdirildi */
+    flex-shrink: 0;
+    /* Dəyişdirildi: Qlobal input stilinə uyğunlaşdırırıq */
+    background-color: var(--surface-color); 
 }
 
+/* Inputun özü artıq qlobal index.css-dən stil alır, amma spesifik dəyişikliklər edə bilərik */
 .chat-input-area input {
-    flex-grow: 1; border: 1px solid #ced4da; border-radius: 20px;
-    padding: 10px 15px; font-size: 1rem; margin-right: 10px;
+    flex-grow: 1;
+    border-radius: 20px;
+    margin-right: 10px;
+    /* Dəyişdirildi: Qlobal input stilinə əsaslanır */
+    background-color: var(--surface-secondary-color);
+    border-color: var(--border-color);
 }
-.chat-input-area input:focus { outline: none; border-color: #80bdff; }
+.chat-input-area input:focus {
+    /* Fokus stili qlobal olaraq təyin edilib, əlavə dəyişikliyə ehtiyac yoxdur */
+    border-color: var(--primary-color);
+    outline: none;
+}
 
+/* Göndərmə düyməsi qlobal button stilinə əsaslanır */
 .chat-input-area button {
-    background-color: #007bff; color: white; border: none; border-radius: 50%;
-    width: 45px; height: 45px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 1.2rem;
+    flex-shrink: 0;
 }
 
-.chat-input-area button:disabled { background-color: #adb5bd; }
+.chat-input-area button:disabled {
+    background-color: var(--text-secondary); /* Dəyişdirildi */
+    opacity: 0.6;
+}
 
+/* Yüklənmə animasiyası */
 .loading span {
     display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-    background-color: #adb5bd; margin: 0 2px;
+    background-color: var(--text-secondary); /* Dəyişdirildi */
+    margin: 0 2px;
     animation: bounce 1.4s infinite ease-in-out both;
 }
 

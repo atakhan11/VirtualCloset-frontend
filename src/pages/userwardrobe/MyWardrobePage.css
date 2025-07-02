@@ -304,3 +304,74 @@
         grid-template-columns: 1fr; 
     }
 }
+
+
+
+/* ============================================================== */
+/* === "Qarderobum" Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
+/* ============================================================== */
+
+[data-theme='dark'] .wardrobe-container,
+[data-theme='dark'] .notes-text {
+    background-color: var(--background-color);
+}
+
+[data-theme='dark'] .wardrobe-header {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme='dark'] .wardrobe-header h1,
+[data-theme='dark'] .card-content h4 {
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .filter-controls,
+[data-theme='dark'] .cloth-card,
+[data-theme='dark'] .empty-wardrobe,
+[data-theme='dark'] .modal-content {
+    background-color: var(--surface-color);
+    border-color: var(--border-color);
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+[data-theme='dark'] .search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: var(--primary-focus-shadow);
+}
+
+[data-theme='dark'] .filter-select {
+    background-color: var(--surface-color);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .category-tag {
+    background-color: var(--primary-accent-background);
+    color: var(--primary-color);
+}
+
+[data-theme='dark'] .brand-tag,
+[data-theme='dark'] .season-tag,
+[data-theme='dark'] .colors-container {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .color-swatch {
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .notes-text {
+    color: var(--text-secondary);
+    border-left-color: var(--border-color);
+}
+
+[data-theme='dark'] .action-buttons {
+    border-top-color: var(--border-color);
+}
+
+[data-theme='dark'] .icon-btn:hover {
+    background-color: var(--surface-secondary-color);
+}
+
+[data-theme='dark'] .edit-btn { color: var(--warning-color); }
+[data-theme='dark'] .delete-btn { color: var(--danger-color); }

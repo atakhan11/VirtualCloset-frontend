@@ -217,3 +217,62 @@
     text-decoration: none;
     color: inherit;
 }
+
+
+
+/* ========================================================== */
+/* === Kombin Planlayıcı üçün QARANLIQ REJİM ƏLAVƏSİ === */
+/* ========================================================== */
+
+[data-theme='dark'] .planner-container h1,
+[data-theme='dark'] .all-clothes-panel h3,
+[data-theme='dark'] .outfit-builder-panel h3,
+[data-theme='dark'] .saved-outfits-section h2,
+[data-theme='dark'] .outfit-card h4 {
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .all-clothes-panel {
+    background: var(--surface-color);
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .all-clothes-panel h3 {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme='dark'] .cloth-item-small:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--shadow-color);
+}
+
+[data-theme='dark'] .outfit-builder-panel,
+[data-theme='dark'] .outfit-card {
+    background: var(--surface-color);
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+[data-theme='dark'] .outfit-drop-zone {
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .outfit-drop-zone p {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .save-outfit-btn {
+    background-color: var(--success-color);
+    color: var(--primary-text-color);
+}
+
+[data-theme='dark'] .saved-outfits-section h2 {
+    border-top-color: var(--border-color);
+}
+
+[data-theme='dark'] .outfit-card-images img {
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .delete-outfit-btn {
+    color: var(--danger-color);
+}

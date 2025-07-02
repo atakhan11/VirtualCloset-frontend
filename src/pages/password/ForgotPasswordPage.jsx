@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import styles from '../signup/Signup.module.css'; // Login/Signup stillərini təkrar istifadə edirik
+import styles from '../password/PasswordReset.module.css';
 
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState('');
@@ -27,7 +27,7 @@ const ForgotPasswordPage = () => {
     };
 
     return (
-        <div className={styles.signupContainer}>
+        <div className={styles.container}>
             <div className={styles.formWrapper}>
                 <h2 className={styles.formTitle}>Şifrəni Unutdum</h2>
                 <p style={{ textAlign: 'center', marginBottom: '20px', color: '#666' }}>

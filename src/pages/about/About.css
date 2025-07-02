@@ -1,11 +1,13 @@
+/* AboutPage.css (YENİLƏNMİŞ VƏ TEMA UYUMLU VERSİYA) */
+
 /* === QLOBAL ABOUT STİLLƏRİ === */
 .about-container {
-    color: var(--text-color);
+    color: var(--text-primary); /* Dəyişdirildi */
 }
 
 .section-subtitle {
     font-size: 1rem;
-    color: var(--primary-color);
+    color: var(--primary-color); /* Dəyişdirildi */
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -15,15 +17,14 @@
 .about-hero {
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat;
     background-size: cover;
-    /* Dəyişiklik burada: 'center center' əvəzinə 'center 25%' istifadə edirik */
-    /* Bu, şəkli şaquli olaraq 25% yuxarıdan başlamağa məcbur edir */
     background-position: center 15%;
     height: 80vh;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    color: var(--light-color);
+    /* Dəyişdirildi: Şəklin üzərindəki mətn həmişə ağ qalmalıdır */
+    color: #ffffff; 
 }
 
 .about-hero-content h1 {
@@ -44,7 +45,7 @@
     align-items: center;
     gap: 4rem;
     padding: 6rem 4rem;
-    background-color: var(--light-color);
+    background-color: var(--surface-color); /* Dəyişdirildi */
 }
 
 .mission-content {
@@ -56,12 +57,13 @@
     font-weight: 700;
     margin-top: 0.5rem;
     margin-bottom: 1.5rem;
-    color: var(--dark-color);
+    color: var(--text-primary); /* Dəyişdirildi */
 }
 
 .mission-content p {
     font-size: 1.1rem;
     line-height: 1.8;
+    color: var(--text-secondary); /* Dəyişdirildi */
 }
 
 .mission-image {
@@ -70,15 +72,15 @@
 
 .mission-image img {
     width: 100%;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
+    border-radius: 8px; /* Dəyişdirildi */
+    box-shadow: 0 10px 25px var(--shadow-color); /* Dəyişdirildi */
 }
 
 
 /* === DƏYƏRLƏR BÖLMƏSİ === */
 .values-section {
     padding: 6rem 2rem;
-    background-color: #f9f9f9;
+    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
 }
 
 .values-grid {
@@ -90,36 +92,36 @@
 }
 
 .value-card {
-    background-color: var(--light-color);
+    background-color: var(--surface-color); /* Dəyişdirildi */
     padding: 2.5rem 2rem;
-    border-radius: var(--border-radius);
+    border-radius: 8px; /* Dəyişdirildi */
     text-align: center;
-    border: 1px solid var(--gray-color);
+    border: 1px solid var(--border-color); /* Dəyişdirildi */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .value-card:hover {
     transform: translateY(-10px);
-    box-shadow: var(--shadow);
+    box-shadow: 0 15px 30px var(--shadow-color); /* Dəyişdirildi */
 }
 
 .value-icon {
     font-size: 3rem;
-    color: var(--secondary-color);
+    color: var(--primary-color); /* Dəyişdirildi */
     margin-bottom: 1.5rem;
 }
 
 .value-card h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
-    color: var(--dark-color);
+    color: var(--text-primary); /* Dəyişdirildi */
 }
 
 
 /* === KOMANDA (YARADICI) BÖLMƏSİ === */
 .team-section {
     padding: 6rem 2rem;
-    background-color: var(--light-color);
+    background-color: var(--surface-color); /* Dəyişdirildi */
 }
 
 .team-member-card {
@@ -133,7 +135,7 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 5px solid var(--primary-color);
+    border: 5px solid var(--primary-color); /* Dəyişdirildi */
     margin-bottom: 1.5rem;
     object-fit: cover;
 }
@@ -142,10 +144,11 @@
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
+    color: var(--text-primary); /* Dəyişdirildi */
 }
 
 .team-member-card span {
-    color: var(--secondary-color);
+    color: var(--primary-color); /* Dəyişdirildi */
     font-weight: 600;
 }
 
@@ -153,7 +156,7 @@
     font-size: 1.1rem;
     line-height: 1.7;
     margin-top: 1.5rem;
-    color: #555;
+    color: var(--text-secondary); /* Dəyişdirildi */
 }
 
 
@@ -161,8 +164,9 @@
 .about-final-cta {
     text-align: center;
     padding: 5rem 2rem;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-    color: var(--light-color);
+    /* Dəyişdirildi: Brend rənglərindən gradient yaradırıq */
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color));
+    color: var(--primary-text-color); /* Dəyişdirildi */
 }
 .about-final-cta h2 {
     font-size: 2.5rem;
@@ -170,7 +174,8 @@
 }
 
 .cta-button-primary-about {
-    background-color: var(--light-color);
+    /* Dəyişdirildi: Bu, "tərs" düymədir */
+    background-color: var(--primary-text-color);
     color: var(--primary-color);
     padding: 1rem 2.5rem;
     border-radius: 50px;
@@ -183,7 +188,16 @@
 }
 .cta-button-primary-about:hover {
     transform: translateY(-5px) scale(1.05);
-    background-color: #f0f0f0;
+    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
+}
+
+/* === RESPONSİVLİK === */
+@media (max-width: 992px) {
+    /* ... dəyişiklik yoxdur ... */
+}
+
+@media (max-width: 768px) {
+    /* ... dəyişiklik yoxdur ... */
 }
 
 /* === RESPONSİVLİK === */

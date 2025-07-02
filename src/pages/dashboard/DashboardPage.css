@@ -221,3 +221,69 @@
 .close-modal-btn:hover {
     color: #495057;
 }
+
+
+
+
+
+/* ======================================================= */
+/* === Dashboard Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
+/* ======================================================= */
+
+[data-theme='dark'] .dashboard-greeting h1,
+[data-theme='dark'] .action-card,
+[data-theme='dark'] .wishlist-reminder-item p,
+[data-theme='dark'] .suggestion-item p,
+[data-theme='dark'] .close-modal-btn:hover {
+    color: var(--text-primary);
+}
+
+[data-theme='dark'] .dashboard-greeting p,
+[data-theme='dark'] .empty-widget p,
+[data-theme='dark'] .widget-link,
+[data-theme='dark'] .empty-suggestion,
+[data-theme='dark'] .close-modal-btn {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .action-card,
+[data-theme='dark'] .dashboard-widget,
+[data-theme='dark'] .modal-content.suggestion-modal {
+    background: var(--surface-color);
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+[data-theme='dark'] .action-card:hover {
+    box-shadow: 0 8px 25px var(--shadow-color);
+    color: var(--primary-color);
+}
+
+[data-theme='dark'] .action-card svg {
+    color: var(--primary-color);
+}
+
+[data-theme='dark'] .dashboard-widget h3 {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme='dark'] .widget-link {
+    background-color: var(--surface-secondary-color);
+}
+
+[data-theme='dark'] .widget-link:hover {
+    background-color: var(--border-color);
+}
+
+[data-theme='dark'] .page-status.error {
+    color: var(--danger-color);
+}
+
+[data-theme='dark'] .suggestion-button {
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color));
+    color: var(--primary-text-color);
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+[data-theme='dark'] .suggestion-button:hover {
+    box-shadow: 0 7px 25px var(--shadow-color);
+}

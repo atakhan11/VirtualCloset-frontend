@@ -4,15 +4,15 @@
     justify-content: center;
     align-items: flex-start;
     padding: 4rem 2rem;
-    background-color: #f0f2f5;
+    background-color: var(--background-color);;
     min-height: calc(100vh - 80px);
 }
 
 .donateBox {
-    background-color: #ffffff;
+    background-color: var(--surface-color);
     padding: 2.5rem;
     border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 30px var(--shadow-color);
     width: 100%;
     max-width: 500px;
     text-align: center;
@@ -43,7 +43,8 @@
 }
 
 .amountButton {
-    background-color: #f8f9fa;
+    background-color: var(--surface-secondary-color); 
+    color: var(--text-secondary); 
     border: 1px solid #dee2e6;
     color: #495057;
     padding: 0.8rem 1.2rem;
@@ -58,8 +59,8 @@
 }
 
 .amountButton.selected {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--primary-color); 
+    color: var(--primary-text-color);
     border-color: #007bff;
 }
 
@@ -195,4 +196,49 @@
 @keyframes loading {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+
+/* ======================================================= */
+/* === "Donate" Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
+/* ======================================================= */
+
+[data-theme='dark'] .donateContainer {
+    background-color: var(--background-color);
+}
+
+[data-theme='dark'] .donateBox {
+    background-color: var(--surface-color);
+    box-shadow: 0 8px 30px var(--shadow-color);
+}
+
+[data-theme='dark'] .heartIcon {
+    color: var(--danger-color);
+}
+
+[data-theme='dark'] .donateBox p,
+[data-theme='dark'] .inputWrapper span {
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .amountButton {
+    background-color: var(--surface-secondary-color);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme='dark'] .amountButton:hover {
+    background-color: var(--border-color);
+}
+
+[data-theme='dark'] .amountButton.selected {
+    border-color: var(--primary-color);
+}
+
+[data-theme='dark'] .inputWrapper {
+    border-color: var(--border-color);
+}
+
+[data-theme='dark'] .paymentForm {
+    border-top-color: var(--border-color);
 }
