@@ -3,7 +3,6 @@ import { useLocation, Link } from 'react-router-dom';
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import styles from './DonationSuccessPage.module.css';
 
-// Stripe-dan gələn statusu anlamaq üçün köməkçi funksiya
 const useQuery = () => {
     return new URLSearchParams(useLocation().search);
 };
@@ -18,11 +17,11 @@ const DonationSuccessPage = () => {
         setStatus(paymentStatus);
 
         if (paymentStatus === 'succeeded') {
-            setMessage('Dəstəyiniz üçün təşəkkür edirik! İanəniz uğurla qəbul edildi.');
+            setMessage('Thank you for your support! Your donation was successfully received.');
         } else if (paymentStatus === 'processing') {
-            setMessage('Ödənişiniz emal olunur. Tezliklə statusu yeniləyəcəyik.');
+            setMessage('Your payment is being processed. We will update the status shortly.');
         } else {
-            setMessage('Ödəniş zamanı xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin və ya bizimlə əlaqə saxlayın.');
+            setMessage('An error occurred during payment. Please try again or contact us.');
         }
     }, [query]);
 
@@ -41,11 +40,11 @@ const DonationSuccessPage = () => {
                     <FaExclamationTriangle className={`${styles.icon} ${styles.error}`} />
                 )}
                 <h1 className={isSuccess ? styles.successText : styles.errorText}>
-                    {isSuccess ? 'Təşəkkür Edirik!' : 'Xəta Baş Verdi'}
+                    {isSuccess ? 'Thank You!' : 'An Error Occurred'}
                 </h1>
                 <p>{message}</p>
                 <Link to="/" className={styles.homeButton}>
-                    Ana Səhifəyə Qayıt
+                    Return to Home Page
                 </Link>
             </div>
         </div>

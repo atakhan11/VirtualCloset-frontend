@@ -12,8 +12,6 @@ const ResetPasswordPage = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // URL-dən tokeni götürmək üçün useParams hook-undan istifadə edirik
-    // Məsələn: /reset-password/ABC123XYZ -> token = "ABC123XYZ"
     const { token } = useParams();
     
     const navigate = useNavigate();
@@ -24,16 +22,15 @@ const ResetPasswordPage = () => {
         setError('');
 
         if (password !== confirmPassword) {
-            return setError('Şifrələr üst-üstə düşmür!');
+            return setError('Passwords do not match!');
         }
         if (password.length < 6) {
-            return setError('Şifrə ən azı 6 simvoldan ibarət olmalıdır.');
+            return setError('Password must be at least 6 characters long.');
         }
 
         setLoading(true);
 
         try {
-            // Backend-də yaratdığımız /resetpassword/:token endpoint-inə sorğu göndəririk
             const config = { headers: { 'Content-Type': 'application/json' } };
             const { data } = await axios.put(
                 `http://localhost:5000/api/users/resetpassword/${token}`,
@@ -41,16 +38,15 @@ const ResetPasswordPage = () => {
                 config
             );
 
-            setMessage(data.message); // Uğur mesajını göstəririk
-             setLoading(false); 
+            setMessage(data.message);
+            setLoading(false); 
             
-            // Uğurlu olduqdan sonra 3 saniyə gözləyib login səhifəsinə yönləndiririk
             setTimeout(() => {
                 navigate('/login');
             }, 3000);
 
         } catch (err) {
-            const errorMessage = err.response?.data?.message || 'Xəta baş verdi. Token yanlış və ya vaxtı keçmiş ola bilər.';
+            const errorMessage = err.response?.data?.message || 'An error occurred. The token might be invalid or expired.';
             setError(errorMessage);
             setLoading(false);
         }
@@ -59,14 +55,14 @@ const ResetPasswordPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.formWrapper}>
-                <h2 className={styles.formTitle}>Yeni Şifrə Təyin Et</h2>
+                <h2 className={styles.formTitle}>Set New Password</h2>
                 
                 {message && <p className={styles.successMessage}>{message}</p>}
                 {error && <p className={styles.errorMessage}>{error}</p>}
 
                 <form onSubmit={handleSubmit}>
                     <div className={styles.formGroup}>
-                        <label htmlFor="password" className={styles.label}>Yeni Şifrə</label>
+                        <label htmlFor="password" className={styles.label}>New Password</label>
                         <input
                             type="password"
                             id="password"
@@ -74,11 +70,11 @@ const ResetPasswordPage = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            placeholder="Yeni şifrənizi daxil edin"
+                            placeholder="Enter your new password"
                         />
                     </div>
                     <div className={styles.formGroup}>
-                        <label htmlFor="confirmPassword" className={styles.label}>Yeni Şifrəni Təsdiqləyin</label>
+                        <label htmlFor="confirmPassword" className={styles.label}>Confirm New Password</label>
                         <input
                             type="password"
                             id="confirmPassword"
@@ -86,16 +82,16 @@ const ResetPasswordPage = () => {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
-                            placeholder="Yeni şifrəni təkrar daxil edin"
+                            placeholder="Re-enter your new password"
                         />
                     </div>
                     <button type="submit" className={styles.button} disabled={loading || message}>
-                        {loading ? 'Yenilənir...' : 'Şifrəni Yenilə'}
+                        {loading ? 'Updating...' : 'Reset Password'}
                     </button>
                     {message && (
-                         <p className={styles.switchLink}>
-                            <Link to="/login">Daxil ol</Link>
-                        </p>
+                            <p className={styles.switchLink}>
+                                <Link to="/login">Login</Link>
+                            </p>
                     )}
                 </form>
             </div>

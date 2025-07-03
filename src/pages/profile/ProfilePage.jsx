@@ -4,16 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { setAuth, selectUser, logout } from '../../redux/reducers/userSlice'; 
 import axios from 'axios';
 import styles from './ProfilePage.module.css';
-import { FaUser, FaLock, FaCamera, FaBoxOpen, FaTshirt, FaHeart, FaSun, FaMoon, FaExclamationTriangle } from 'react-icons/fa';
+import { FaUser, FaLock, FaCamera, FaBoxOpen, FaTshirt, FaHeart, FaExclamationTriangle } from 'react-icons/fa';
 
-// Universal şəkil URL-i funksiyası
 const getImageUrl = (imagePath) => {
     if (!imagePath) return '';
     if (imagePath.startsWith('http')) return imagePath;
     return `http://localhost:5000${imagePath}`;
 };
 
-// Şifrə gücünü yoxlayan komponent
 const PasswordStrengthMeter = ({ password }) => {
     const getStrength = (pass) => {
         let score = 0;
@@ -27,7 +25,7 @@ const PasswordStrengthMeter = ({ password }) => {
     };
 
     const strength = getStrength(password);
-    const strengthLabels = ['Çox Zəif', 'Zəif', 'Orta', 'Yaxşı', 'Güclü'];
+    const strengthLabels = ['Very Weak', 'Weak', 'Medium', 'Good', 'Strong'];
     const strengthColors = ['#dc3545', '#fd7e14', '#ffc107', '#20c997', '#28a745'];
 
     return (
@@ -40,14 +38,12 @@ const PasswordStrengthMeter = ({ password }) => {
     );
 };
 
-// Ana Profil Səhifəsi
 const ProfilePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const reduxUser = useSelector(selectUser); 
     const token = useSelector((state) => state.user.token);
 
-    // DƏYİŞİKLİK: State-lər birbaşa Redux-dan ilkin dəyər alır
     const [name, setName] = useState(reduxUser?.name || '');
     const [email, setEmail] = useState(reduxUser?.email || '');
     const [password, setPassword] = useState('');
@@ -61,18 +57,7 @@ const ProfilePage = () => {
     const [passwordMessage, setPasswordMessage] = useState('');
     const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deleteConfirmText, setDeleteConfirmText] = useState('');
-    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
-    useEffect(() => {
-        document.body.className = theme;
-        localStorage.setItem('theme', theme);
-    }, [theme]);
-
-    const toggleTheme = () => {
-        setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
-    };
-
-    // DƏYİŞİKLİK: Bu useEffect artıq yalnız statistikanı çəkir və Redux-dan asılıdır
     useEffect(() => {
         if (reduxUser) {
             setName(reduxUser.name);
@@ -95,7 +80,7 @@ const ProfilePage = () => {
                         wishlist: wishlistRes.data.length,
                     });
                 } catch (error) {
-                    console.error("Statistika yüklənərkən xəta:", error);
+                    console.error("Error loading stats:", error);
                 }
             }
         };
@@ -113,7 +98,7 @@ const ProfilePage = () => {
             const { data: uploadData } = await axios.post('http://localhost:5000/api/upload/remove-bg', formData, config);
             await handleUpdateProfile({ avatar: uploadData.imageUrl });
         } catch (error) {
-            setMessage('Şəkil yüklənərkən xəta baş verdi.');
+            setMessage('Error uploading image.');
         } finally {
             setIsUploading(false);
         }
@@ -130,10 +115,10 @@ const ProfilePage = () => {
             localStorage.setItem('user', JSON.stringify(userData));
             localStorage.setItem('token', newToken);
 
-            setMessage('Profil uğurla yeniləndi!');
+            setMessage('Profile updated successfully!');
             setTimeout(() => setMessage(''), 3000);
         } catch (error) {
-            setMessage(error.response?.data?.message || 'Server xətası');
+            setMessage(error.response?.data?.message || 'Server error');
         }
     };
 
@@ -145,19 +130,19 @@ const ProfilePage = () => {
     const handlePasswordSubmit = (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
-            setPasswordMessage('Şifrələr uyğun gəlmir!');
+            setPasswordMessage('Passwords do not match!');
             return;
         }
         handleUpdateProfile({ password });
-        setPasswordMessage('Şifrə uğurla dəyişdirildi!');
+        setPasswordMessage('Password changed successfully!');
         setPassword('');
         setConfirmPassword('');
         setTimeout(() => setPasswordMessage(''), 3000);
     };
 
     const handleDeleteAccount = async () => {
-        if (deleteConfirmText !== 'sil') {
-            alert('Təsdiq üçün "sil" sözünü düzgün daxil edin.');
+        if (deleteConfirmText !== 'delete') {
+            alert('Please type "delete" correctly to confirm.');
             return;
         }
         try {
@@ -166,11 +151,11 @@ const ProfilePage = () => {
             dispatch(logout());
             navigate('/login');
         } catch (error) {
-            alert('Hesab silinərkən xəta baş verdi.');
+            alert('An error occurred while deleting the account.');
         }
     };
 
-    if (!reduxUser) return <div>Yüklənir...</div>;
+    if (!reduxUser) return <div>Loading...</div>;
 
     return (
         <div className={styles.profileContainer}>
@@ -178,7 +163,7 @@ const ProfilePage = () => {
                 <div className={styles.avatarContainer}>
                     <img 
                         src={avatar ? getImageUrl(avatar) : `https://ui-avatars.com/api/?name=${name}&background=0D8ABC&color=fff&size=128`} 
-                        alt="Profil şəkli" 
+                        alt="Profile picture" 
                         className={styles.avatar}
                     />
                     <button className={styles.avatarEditButton} onClick={() => fileInputRef.current.click()}>
@@ -197,77 +182,69 @@ const ProfilePage = () => {
                     <h1>{name}</h1>
                     <p>{email}</p>
                 </div>
-                <div className={styles.themeSwitcher}>
-                    <FaSun />
-                    <label className={styles.switch}>
-                        <input type="checkbox" onChange={toggleTheme} checked={theme === 'dark'} />
-                        <span className={styles.slider}></span>
-                    </label>
-                    <FaMoon />
-                </div>
             </div>
 
             <div className={styles.statsPanel}>
                 <div className={styles.statItem}>
                     <FaTshirt />
                     <span>{stats.clothes}</span>
-                    <p>Geyim</p>
+                    <p>Clothes</p>
                 </div>
                 <div className={styles.statItem}>
                     <FaBoxOpen />
                     <span>{stats.outfits}</span>
-                    <p>Kombin</p>
+                    <p>Outfits</p>
                 </div>
                 <div className={styles.statItem}>
                     <FaHeart />
                     <span>{stats.wishlist}</span>
-                    <p>Arzu</p>
+                    <p>Wishlist</p>
                 </div>
             </div>
 
             <div className={styles.formsGrid}>
                 <form onSubmit={handleInfoSubmit} className={styles.profileForm}>
-                    <h3><FaUser /> Məlumatları Yenilə</h3>
+                    <h3><FaUser /> Update Information</h3>
                     <div className={styles.formGroup}>
-                        <label>Ad</label>
+                        <label>Name</label>
                         <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
                     </div>
                     <div className={styles.formGroup}>
                         <label>Email</label>
                         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                     </div>
-                    <button type="submit" className={styles.submitButton}>Yenilə</button>
+                    <button type="submit" className={styles.submitButton}>Update</button>
                     {message && <p className={styles.message}>{message}</p>}
                 </form>
 
                 <form onSubmit={handlePasswordSubmit} className={styles.profileForm}>
-                    <h3><FaLock /> Şifrəni Dəyiş</h3>
+                    <h3><FaLock /> Change Password</h3>
                     <div className={styles.formGroup}>
-                        <label>Yeni Şifrə</label>
-                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Yeni şifrəni daxil edin" />
+                        <label>New Password</label>
+                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter new password" />
                     </div>
                     <PasswordStrengthMeter password={password} />
                     <div className={styles.formGroup} style={{ marginTop: '1.5rem' }}>
-                        <label>Yeni Şifrə (Təkrar)</label>
-                        <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Yeni şifrəni təsdiqləyin" />
+                        <label>Confirm New Password</label>
+                        <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm new password" />
                     </div>
-                    <button type="submit" className={styles.submitButton}>Şifrəni Dəyiş</button>
+                    <button type="submit" className={styles.submitButton}>Change Password</button>
                     {passwordMessage && <p className={styles.message}>{passwordMessage}</p>}
                 </form>
             </div>
 
             <div className={styles.dangerZone}>
-                <h3>Təhlükəli Zona</h3>
-                <p>Bu əməliyyat geri qaytarıla bilməz. Hesabınızı sildikdən sonra bütün məlumatlarınız itəcək.</p>
-                <button onClick={() => setDeleteModalOpen(true)} className={styles.deleteButton}>Hesabı Sil</button>
+                <h3>Danger Zone</h3>
+                <p>This operation cannot be undone. All your data will be lost after deleting your account.</p>
+                <button onClick={() => setDeleteModalOpen(true)} className={styles.deleteButton}>Delete Account</button>
             </div>
 
             {isDeleteModalOpen && (
                 <div className={styles.modalBackdrop}>
                     <div className={styles.modalContent}>
                         <FaExclamationTriangle className={styles.modalIcon} />
-                        <h2>Hesabı Silməyə Əminsiniz?</h2>
-                        <p>Bu əməliyyatı təsdiqləmək üçün aşağıdakı sahəyə "<b>sil</b>" yazın.</p>
+                        <h2>Are you sure you want to delete your account?</h2>
+                        <p>To confirm this operation, type "<b>delete</b>" in the field below.</p>
                         <input 
                             type="text" 
                             className={styles.modalInput}
@@ -275,9 +252,9 @@ const ProfilePage = () => {
                             onChange={(e) => setDeleteConfirmText(e.target.value)}
                         />
                         <div className={styles.modalActions}>
-                            <button onClick={() => setDeleteModalOpen(false)} className={styles.modalCancelButton}>Ləğv Et</button>
-                            <button onClick={handleDeleteAccount} className={styles.modalConfirmButton} disabled={deleteConfirmText !== 'sil'}>
-                                Təsdiq Edirəm, Hesabı Sil
+                            <button onClick={() => setDeleteModalOpen(false)} className={styles.modalCancelButton}>Cancel</button>
+                            <button onClick={handleDeleteAccount} className={styles.modalConfirmButton} disabled={deleteConfirmText !== 'delete'}>
+                                Confirm, Delete Account
                             </button>
                         </div>
                     </div>

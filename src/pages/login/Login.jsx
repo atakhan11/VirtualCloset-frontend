@@ -3,12 +3,11 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginUser } from '../../redux/reducers/userSlice'; // userSlice-dan loginUser-i import edirik
+import { loginUser } from '../../redux/reducers/userSlice'; 
 import { unwrapResult } from '@reduxjs/toolkit';
-import styles from './Login.module.css'; // Qeydiyyat səhifəsinin stillərini təkrar istifadə edirik
+import styles from './Login.module.css'; 
 
 const LoginPage = () => {
-    // Login üçün yalnız email və password lazımdır
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -21,22 +20,20 @@ const LoginPage = () => {
         setError(null);
 
         try {
-            // Dispatch-ə login məlumatlarını ötürürük
             const actionResult = await dispatch(loginUser({ email, password }));
             unwrapResult(actionResult);
 
-            // Uğurlu girişdən sonra istifadəçini qarderob səhifəsinə yönləndiririk
             navigate('/');
 
         } catch (err) {
-            setError(err.message || 'Giriş uğursuz oldu. Email və ya şifrə yanlışdır.');
+            setError(err.message || 'Login failed. Email or password is incorrect.');
         }
     };
 
     return (
-        <div className={styles.signupContainer}> {/* Eyni class adlarını istifadə edirik */}
+        <div className={styles.signupContainer}> 
             <div className={styles.formWrapper}>
-                <h2 className={styles.formTitle}>Daxil Ol</h2>
+                <h2 className={styles.formTitle}>Login</h2>
                 {error && <p className={styles.errorMessage}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className={styles.formGroup}>
@@ -51,7 +48,7 @@ const LoginPage = () => {
                         />
                     </div>
                     <div className={styles.formGroup}>
-                        <label htmlFor="password" className={styles.label}>Şifrə</label>
+                        <label htmlFor="password" className={styles.label}>Password</label>
                         <input
                             type="password"
                             id="password"
@@ -62,16 +59,15 @@ const LoginPage = () => {
                         />
                     </div>
                     <Link to="/forgot-password" className={styles.forgotPasswordLink}>
-                        Şifrəni Unutdum
+                        Forgot Password
                     </Link>
-                    <button type="submit" className={styles.button}>Daxil Ol</button>
+                    <button type="submit" className={styles.button}>Login</button>
                     <p className={styles.switchLink}>
-                        Hesabınız yoxdur? <Link to="/register">Qeydiyyatdan keçin</Link>
+                        Don't have an account? <Link to="/register">Sign Up</Link>
                     </p>
                 </form>
                 <div className={styles.orDivider}>OR</div>
 <a href="http://localhost:5000/api/users/auth/google" className={styles.socialBtn}>
-    {/* Google ikonunu public qovluğuna qoyub birbaşa çağıra bilərsiniz */}
     <img src="https://image.similarpng.com/file/similarpng/very-thumbnail/2020/06/Logo-google-icon-PNG.png" alt="Google" /> 
     Continue with Google
 </a>

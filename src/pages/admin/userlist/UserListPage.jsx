@@ -2,23 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserListPage.css';
 
-
-// Redaktə pəncərəsi (modal) üçün köməkçi komponent
 const EditUserModal = ({ user, onClose, onSave }) => {
-    // Bu komponent istifadəçidən alınan ilkin datanı state-ə götürür
     const [userData, setUserData] = useState({ 
         name: user.name, 
         email: user.email, 
         role: user.role 
     });
 
-    // Formdakı hər hansı bir input dəyişdikdə state-i yeniləyir
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserData(prevState => ({ ...prevState, [name]: value }));
     };
 
-    // Form submit olunduqda ana komponentdəki onSave funksiyasını çağırır
     const handleSubmit = (e) => {
         e.preventDefault();
         onSave(user._id, userData);
@@ -27,10 +22,10 @@ const EditUserModal = ({ user, onClose, onSave }) => {
     return (
         <div className="modal-backdrop">
             <div className="modal-content">
-                <h2>İstifadəçini Redaktə Et</h2>
+                <h2>Edit User</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label>Ad</label>
+                        <label>Name</label>
                         <input type="text" name="name" value={userData.name} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
@@ -38,15 +33,15 @@ const EditUserModal = ({ user, onClose, onSave }) => {
                         <input type="email" name="email" value={userData.email} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
-                        <label>Rol</label>
+                        <label>Role</label>
                         <select name="role" value={userData.role} onChange={handleChange}>
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
                         </select>
                     </div>
                     <div className="modal-actions">
-                        <button type="submit" className="btn-primary">Yadda Saxla</button>
-                        <button type="button" onClick={onClose}>Ləğv Et</button>
+                        <button type="submit" className="btn-primary">Save</button>
+                        <button type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
             </div>
@@ -54,8 +49,6 @@ const EditUserModal = ({ user, onClose, onSave }) => {
     );
 };
 
-
-// Ana komponent
 const UserListPage = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -63,20 +56,18 @@ const UserListPage = () => {
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
-     const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         const fetchUsers = async () => {
             setLoading(true);
-            // Tokeni brauzerin yaddaşından götürürük
             const token = localStorage.getItem('token');
             if (!token) {
-                setError("Autentifikasiya tokeni tapılmadı. Zəhmət olmasa, yenidən daxil olun.");
+                setError("Authentication token not found. Please log in again.");
                 setLoading(false);
                 return;
             }
 
-            // Hər qorunan sorğu üçün tokeni başlıqda göndərmək üçün konfiqurasiya
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -87,23 +78,22 @@ const UserListPage = () => {
                 const { data } = await axios.get(`http://localhost:5000/api/admin/users?search=${searchTerm}`, config);
                 setUsers(data);
             } catch (err) {
-                setError('Məlumatları yükləmək mümkün olmadı. Admin icazəniz olduğundan əmin olun.');
-                console.error("İstifadəçiləri yükləyərkən xəta:", err);
+                setError('Failed to load data. Make sure you have admin permissions.');
+                console.error("Error loading users:", err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchUsers();
-             const delayDebounceFn = setTimeout(() => {
+        const delayDebounceFn = setTimeout(() => {
             fetchUsers();
-        }, 300); // 300ms gözlə və sorğunu göndər
+        }, 300);
 
-        return () => clearTimeout(delayDebounceFn); // cleanup
-    }, [searchTerm]); // Bu effekt yalnız bir dəfə, komponent yüklənəndə işə düşür
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchTerm]);
 
     const handleDelete = async (userId) => {
-        if (window.confirm('Bu istifadəçini silməyə əminsinizmi?')) {
+        if (window.confirm('Are you sure you want to delete this user?')) {
             try {
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -111,11 +101,11 @@ const UserListPage = () => {
                 await axios.delete(`http://localhost:5000/api/users/${userId}`, config);
                 
                 setUsers(users.filter(user => user._id !== userId))
-                alert('İstifadəçi uğurla silindi.');
+                alert('User deleted successfully.');
             } catch (err) {
-                const errorMessage = err.response?.data?.message || 'Server xətası';
-                console.error("İstifadəçini silərkən xəta baş verdi:", err);
-                alert(`Xəta: ${errorMessage}`);
+                const errorMessage = err.response?.data?.message || 'Server error';
+                console.error("Error deleting user:", err);
+                alert(`Error: ${errorMessage}`);
             }
         }
     };
@@ -130,11 +120,11 @@ const UserListPage = () => {
             setUsers(users.map(user => user._id === userId ? updatedUser : user));
             setIsModalOpen(false);
             setCurrentUser(null);
-            alert('İstifadəçi məlumatları yeniləndi.');
+            alert('User information updated successfully.');
         } catch (err) {
-            const errorMessage = err.response?.data?.message || 'Server xətası';
-            console.error("İstifadəçini yeniləyərkən xəta baş verdi:", err);
-            alert(`Xəta: ${errorMessage}`);
+            const errorMessage = err.response?.data?.message || 'Server error';
+            console.error("Error updating user:", err);
+            alert(`Error: ${errorMessage}`);
         }
     };
 
@@ -143,15 +133,13 @@ const UserListPage = () => {
         setIsModalOpen(true);
     };
 
- 
-
     return (
         <div className='user-list-page'>
-            <h1>İstifadəçilər</h1>
+            <h1>Users</h1>
             <div className="search-container">
                 <input
                     type="text"
-                    placeholder="Ad və ya email ilə axtar..."
+                    placeholder="Search by name or email..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="search-input"
@@ -162,17 +150,16 @@ const UserListPage = () => {
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>AD</th>
+                        <th>NAME</th>
                         <th>EMAIL</th>
-                        <th>ADMİN?</th>
-                        <th>ƏMƏLİYYATLAR</th>
+                        <th>ADMIN?</th>
+                        <th>ACTIONS</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {/* BÜTÜN MƏNTİQ BURADA CƏMLƏNMƏLİDİR */}
                     {loading ? (
                         <tr>
-                            <td colSpan="5" style={{ textAlign: 'center' }}>Yüklənir...</td>
+                            <td colSpan="5" style={{ textAlign: 'center' }}>Loading...</td>
                         </tr>
                     ) : error ? (
                         <tr>
@@ -184,16 +171,16 @@ const UserListPage = () => {
                                 <td>{user._id}</td>
                                 <td>{user.name}</td>
                                 <td>{user.email}</td>
-                                <td>{user.role === 'admin' ? 'Bəli' : 'Xeyr'}</td>
+                                <td>{user.role === 'admin' ? 'Yes' : 'No'}</td>
                                 <td className='action-buttons'>
-                                    <button className="edit-btn" onClick={() => openEditModal(user)}>Redaktə Et</button>
-                                    <button className="delete-btn" onClick={() => handleDelete(user._id)}>Sil</button>
+                                    <button className="edit-btn" onClick={() => openEditModal(user)}>Edit</button>
+                                    <button className="delete-btn" onClick={() => handleDelete(user._id)}>Delete</button>
                                 </td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="5" style={{ textAlign: 'center' }}>Heç bir istifadəçi tapılmadı.</td>
+                            <td colSpan="5" style={{ textAlign: 'center' }}>No users found.</td>
                         </tr>
                     )}
                 </tbody>

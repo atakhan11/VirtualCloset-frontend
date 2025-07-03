@@ -6,10 +6,6 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import './OutfitPlannerPage.css';
 
-// =======================================================
-// YARDIMÇI FUNKSİYA VƏ SABİTLƏR
-// =======================================================
-
 const getImageUrl = (imagePath) => {
     if (!imagePath) return '';
     if (imagePath.startsWith('http') || imagePath.startsWith('blob')) {
@@ -18,18 +14,14 @@ const getImageUrl = (imagePath) => {
     return `http://localhost:5000${imagePath}`;
 };
 
-// Drag-and-drop üçün element tipini təyin edirik
 const ItemTypes = {
     CLOTH: 'cloth',
 };
 
-// =======================================================
-// 1. SÜRÜKLƏNƏ BİLƏN GEYİM KOMPONENTİ (YENİLƏNMİŞ)
-// =======================================================
 const DraggableCloth = ({ cloth }) => {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: ItemTypes.CLOTH,
-        item: { cloth }, // Sürüklənən zaman ötürüləcək məlumat
+        item: { cloth }, 
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         }),
@@ -39,21 +31,13 @@ const DraggableCloth = ({ cloth }) => {
         <div
             ref={drag}
             className="cloth-item-small"
-            style={{ opacity: isDragging ? 0.5 : 1 }} // Sürüklənərkən şəffaf olur
+            style={{ opacity: isDragging ? 0.5 : 1 }} 
         >
             <img src={getImageUrl(cloth.image)} alt={cloth.name} />
-            {/* === DƏYİŞİKLİK: Aşağıdakı "add-overlay" div-i tamamilə silindi === */}
-            {/* <div className="add-overlay">
-                <FaPlus />
-            </div> 
-            */}
         </div>
     );
 };
 
-// =======================================================
-// 2. ƏSAS SƏHİFƏ KOMPONENTİ
-// =======================================================
 const OutfitPlannerPage = () => {
     const [allClothes, setAllClothes] = useState([]);
     const [allOutfits, setAllOutfits] = useState([]);
@@ -74,7 +58,7 @@ const OutfitPlannerPage = () => {
             setAllClothes(clothesRes.data);
             setAllOutfits(outfitsRes.data);
         } catch (err) {
-            setError('Məlumatları yükləmək mümkün olmadı.');
+            setError('Failed to load data.');
         } finally {
             setLoading(false);
         }
@@ -84,7 +68,6 @@ const OutfitPlannerPage = () => {
         fetchData();
     }, []);
 
-    // Geyimi kombine əlavə edən funksiya (indi drop handler tərəfindən çağrılır)
     const addToOutfit = (cloth) => {
         if (!currentOutfitItems.find(item => item._id === cloth._id)) {
             setCurrentOutfitItems(prev => [...prev, cloth]);
@@ -97,10 +80,10 @@ const OutfitPlannerPage = () => {
 
     const handleSaveOutfit = async () => {
         if (!outfitName.trim()) {
-            return alert('Zəhmət olmasa, kombinə bir ad verin.');
+            return alert('Please give the outfit a name.');
         }
         if (currentOutfitItems.length < 2) {
-            return alert('Kombin yaratmaq üçün ən azı 2 geyim seçin.');
+            return alert('Select at least 2 clothing items to create an outfit.');
         }
         try {
             const token = localStorage.getItem('token');
@@ -110,47 +93,45 @@ const OutfitPlannerPage = () => {
                 items: currentOutfitItems.map(item => item._id)
             };
             await axios.post('http://localhost:5000/api/outfits', outfitData, config);
-            alert('Kombin uğurla yaradıldı!');
+            alert('Outfit created successfully!');
             setOutfitName('');
             setCurrentOutfitItems([]);
             await fetchData();
         } catch (err) {
-            alert('Kombin yaradılarkən xəta baş verdi.');
+            alert('An error occurred while creating the outfit.');
         }
     };
     
     const handleDeleteOutfit = async (outfitId) => {
-        if (window.confirm('Bu kombini silməyə əminsinizmi?')) {
+        if (window.confirm('Are you sure you want to delete this outfit?')) {
             try {
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
                 await axios.delete(`http://localhost:5000/api/outfits/${outfitId}`, config);
                 await fetchData();
             } catch (err) {
-                alert('Kombin silinərkən xəta baş verdi.');
+                alert('An error occurred while deleting the outfit.');
             }
         }
     };
 
-    // Drop Zone (geyimlərin atılacağı sahə) üçün hook
     const [{ isOver }, drop] = useDrop(() => ({
         accept: ItemTypes.CLOTH,
-        drop: (item) => addToOutfit(item.cloth), // Geyim atılanda addToOutfit funksiyasını çağırır
+        drop: (item) => addToOutfit(item.cloth), 
         collect: (monitor) => ({
             isOver: !!monitor.isOver(),
         }),
     }));
 
-    if (loading) return <p>Yüklənir...</p>;
+    if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
     return (
         <div className="planner-container">
-            <h1>Kombin Planlayıcı</h1>
+            <h1>Outfit Planner</h1>
             <div className="planner-layout">
-                {/* Sol Panel: Sürüklənə bilən geyimlər */}
                 <div className="all-clothes-panel">
-                    <h3>Qarderobunuzdakı Geyimlər</h3>
+                    <h3>Clothes in Your Wardrobe</h3>
                     <div className="clothes-list">
                         {allClothes.map(cloth => (
                             <DraggableCloth key={cloth._id} cloth={cloth} />
@@ -158,14 +139,13 @@ const OutfitPlannerPage = () => {
                     </div>
                 </div>
 
-                {/* Sağ Panel: Kombin Qurucu (Drop Zone) */}
                 <div className="outfit-builder-panel">
-                    <h3>Yeni Kombin Hazırla</h3>
+                    <h3>Create New Outfit</h3>
                     <div className="outfit-builder-content">
                         <div 
                             ref={drop} 
                             className="outfit-drop-zone"
-                            style={{ backgroundColor: isOver ? '#e0ffe0' : 'transparent' }} // Üzərinə gələndə rəngi dəyişir
+                            style={{ backgroundColor: isOver ? '#e0ffe0' : 'transparent' }} 
                         >
                             {currentOutfitItems.length > 0 ? (
                                 currentOutfitItems.map(item => (
@@ -175,26 +155,25 @@ const OutfitPlannerPage = () => {
                                     </div>
                                 ))
                             ) : (
-                                <p>Geyimləri buraya sürüşdürün</p>
+                                <p>Drag clothes here</p>
                             )}
                         </div>
                         <div className="outfit-actions">
                             <input 
                                 type="text"
-                                placeholder="Kombinə ad verin..."
+                                placeholder="Name your outfit..."
                                 value={outfitName}
                                 onChange={(e) => setOutfitName(e.target.value)}
                                 className="outfit-name-input"
                             />
-                            <button onClick={handleSaveOutfit} className="save-outfit-btn">Yadda Saxla</button>
+                            <button onClick={handleSaveOutfit} className="save-outfit-btn">Save Outfit</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Mövcud Kombinlərin Siyahısı */}
             <div className="saved-outfits-section">
-                <h2>Yaratdığınız Kombinlər</h2>
+                <h2>Your Created Outfits</h2>
                 {allOutfits.length > 0 ? (
                     <div className="outfits-grid">
                         {allOutfits.map(outfit => (
@@ -212,14 +191,13 @@ const OutfitPlannerPage = () => {
                         ))}
                     </div>
                 ) : (
-                    <p>Hələ heç bir kombin yaratmamısınız.</p>
+                    <p>You haven't created any outfits yet.</p>
                 )}
             </div>
         </div>
     );
 };
 
-// Əsas komponenti DndProvider ilə əhatə edirik
 const OutfitPlannerWithDnd = () => (
     <DndProvider backend={HTML5Backend}>
         <OutfitPlannerPage />

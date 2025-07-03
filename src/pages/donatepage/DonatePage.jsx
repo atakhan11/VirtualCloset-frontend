@@ -6,7 +6,7 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import axios from 'axios';
 import { FaHeart } from 'react-icons/fa';
 import styles from './DonatePage.module.css';
-import { useTheme } from '../../context/ThemeContext'; // Qlobal temadan istifadə edirik
+import { useTheme } from '../../context/ThemeContext'; 
 
 const VITE_STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 if (!VITE_STRIPE_PUBLISHABLE_KEY) {
@@ -14,7 +14,6 @@ if (!VITE_STRIPE_PUBLISHABLE_KEY) {
 }
 const stripePromise = loadStripe(VITE_STRIPE_PUBLISHABLE_KEY);
 
-// CheckoutForm komponenti sadələşir, artıq tema haqqında heç nə bilmir
 const CheckoutForm = ({ amount }) => {
     const stripe = useStripe();
     const elements = useElements();
@@ -34,7 +33,7 @@ const CheckoutForm = ({ amount }) => {
         });
 
         if (error) {
-            setMessage(error.message || "Gözlənilməz bir xəta baş verdi.");
+            setMessage(error.message || "An unexpected error occurred.");
         }
         
         setIsLoading(false);
@@ -45,7 +44,7 @@ const CheckoutForm = ({ amount }) => {
             <PaymentElement id="payment-element" />
             <button disabled={isLoading || !stripe || !elements} id="submit" className={styles.donateButton}>
                 <span id="button-text">
-                    {isLoading ? <div className={styles.spinner}></div> : `${amount} AZN İanə Et`}
+                    {isLoading ? <div className={styles.spinner}></div> : `Donate ${amount} AZN`}
                 </span>
             </button>
             {message && <div id="payment-message" className={styles.paymentMessage}>{message}</div>}
@@ -58,7 +57,7 @@ const DonatePage = () => {
     const [amount, setAmount] = useState(10);
     const predefinedAmounts = [5, 10, 20, 50];
     const [clientSecret, setClientSecret] = useState("");
-    const { theme } = useTheme(); // Temanı qlobal context-dən götürürük
+    const { theme } = useTheme(); 
 
     useEffect(() => {
         const createPaymentIntent = async () => {
@@ -69,13 +68,12 @@ const DonatePage = () => {
                 );
                 setClientSecret(data.clientSecret);
             } catch (error) {
-                console.error("PaymentIntent yaratmaq mümkün olmadı:", error);
+                console.error("Failed to create PaymentIntent:", error);
             }
         };
         if (amount > 0) createPaymentIntent();
     }, [amount]);
 
-    // === ƏSAS DÜZƏLİŞ: appearance və options burada təyin edilir ===
     const appearance = {
         theme: 'stripe',
         variables: {
@@ -94,8 +92,8 @@ const DonatePage = () => {
         return (
             <div className={styles.donateContainer}>
                 <div className={styles.donateBox}>
-                    <h2>Konfiqurasiya Xətası</h2>
-                    <p>Stripe açarı təyin edilməyib.</p>
+                    <h2>Configuration Error</h2>
+                    <p>Stripe publishable key is not set.</p>
                 </div>
             </div>
         );
@@ -105,8 +103,8 @@ const DonatePage = () => {
         <div className={styles.donateContainer}>
             <div className={styles.donateBox}>
                 <FaHeart className={styles.heartIcon} />
-                <h2>Layihəyə Dəstək Olun</h2>
-                <p>StyleFolio-nun inkişafına verdiyiniz töhfə üçün təşəkkür edirik!</p>
+                <h2>Support the Project</h2>
+                <p>Thank you for your contribution to the development of StyleFolio!</p>
                 
                 <div className={styles.amountSelector}>
                     {predefinedAmounts.map((preAmount) => (
@@ -126,7 +124,7 @@ const DonatePage = () => {
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(Number(e.target.value))}
-                            placeholder="Məbləğ"
+                            placeholder="Amount"
                         />
                         <span>AZN</span>
                     </div>

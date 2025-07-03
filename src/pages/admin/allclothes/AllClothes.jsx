@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AllClothes.css';
 
-// Redaktə pəncərəsi (modal) üçün köməkçi komponent
 const EditClothModal = ({ cloth, onClose, onSave }) => {
     const [clothData, setClothData] = useState({ 
         name: cloth.name, 
@@ -23,24 +22,23 @@ const EditClothModal = ({ cloth, onClose, onSave }) => {
     return (
         <div className="modal-backdrop">
             <div className="modal-content">
-                <h2>Geyimi Redaktə Et</h2>
+                <h2>Edit Clothing Item</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label>Ad</label>
+                        <label>Name</label>
                         <input type="text" name="name" value={clothData.name} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
-                        <label>Kateqoriya</label>
+                        <label>Category</label>
                         <input type="text" name="category" value={clothData.category} onChange={handleChange} required />
                     </div>
-                     <div className="form-group">
-                        <label>Mövsüm</label>
+                    <div className="form-group">
+                        <label>Season</label>
                         <input type="text" name="season" value={clothData.season} onChange={handleChange} />
                     </div>
-                    {/* Digər sahələr üçün də inputlar əlavə edə bilərsiniz */}
                     <div className="modal-actions">
-                        <button type="submit" className="btn-primary">Yadda Saxla</button>
-                        <button type="button" onClick={onClose}>Ləğv Et</button>
+                        <button type="submit" className="btn-primary">Save</button>
+                        <button type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
             </div>
@@ -49,14 +47,12 @@ const EditClothModal = ({ cloth, onClose, onSave }) => {
 };
 
 
-// Ana komponent
 const AllClothesScreen = () => {
     const [clothes, setClothes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     
-    // === Redaktə Modal üçün State-lər ===
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [currentClothToEdit, setCurrentClothToEdit] = useState(null);
 
@@ -64,7 +60,7 @@ const AllClothesScreen = () => {
         const fetchAllClothes = async () => {
             const token = localStorage.getItem('token');
             if (!token) {
-                setError("Autentifikasiya tokeni tapılmadı.");
+                setError("Authentication token not found.");
                 setLoading(false);
                 return;
             }
@@ -74,14 +70,13 @@ const AllClothesScreen = () => {
                 setClothes(data);
                 setError('');
             } catch (err) {
-                setError('Geyimləri yükləmək mümkün olmadı.');
-                console.error("Bütün geyimləri yükləyərkən xəta:", err);
+                setError('Failed to load clothes.');
+                console.error("Error loading all clothes:", err);
             } finally {
                 setLoading(false);
             }
         };
-        fetchAllClothes();
-           const delayDebounceFn = setTimeout(() => {
+        const delayDebounceFn = setTimeout(() => {
             fetchAllClothes();
         }, 300);
 
@@ -89,21 +84,20 @@ const AllClothesScreen = () => {
     }, [searchTerm]);
 
     const handleDeleteCloth = async (clothId) => {
-        if(window.confirm('Bu geyimi silməyə əminsinizmi?')) {
+        if(window.confirm('Are you sure you want to delete this clothing item?')) {
             try {
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
                 await axios.delete(`http://localhost:5000/api/clothes/${clothId}`, config);
                 setClothes(clothes.filter(c => c._id !== clothId));
-                alert('Geyim uğurla silindi.');
+                alert('Clothing item deleted successfully.');
             } catch (err) {
-                const errorMessage = err.response?.data?.message || 'Server xətası';
-                alert(`Xəta: ${errorMessage}`);
+                const errorMessage = err.response?.data?.message || 'Server error';
+                alert(`Error: ${errorMessage}`);
             }
         }
     };
 
-    // === Redaktə Modalını idarə edən funksiyalar ===
     const openEditModal = (cloth) => {
         setCurrentClothToEdit(cloth);
         setIsEditModalOpen(true);
@@ -115,62 +109,54 @@ const AllClothesScreen = () => {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const { data: updatedCloth } = await axios.put(`http://localhost:5000/api/clothes/${clothId}`, updatedData, config);
             
-            // Siyahını yeniləyirik
             setClothes(clothes.map(c => c._id === clothId ? updatedCloth : c));
             
-            // Modalı bağlayırıq
             setIsEditModalOpen(false);
             setCurrentClothToEdit(null);
-            alert('Geyim məlumatları yeniləndi.');
+            alert('Clothing item information updated successfully.');
         } catch (err) {
-            const errorMessage = err.response?.data?.message || 'Server xətası';
-            alert(`Xəta: ${errorMessage}`);
+            const errorMessage = err.response?.data?.message || 'Server error';
+            alert(`Error: ${errorMessage}`);
         }
     };
 
-
-
     return (
         <div className="all-clothes-page">
-            <h1>Bütün Geyimlər</h1>
+            <h1>All Clothes</h1>
 
-            {/* YENİ: Axtarış İnputu */}
             <div className="search-container" style={{ marginBottom: '20px' }}>
                 <input
                     type="text"
-                    placeholder="Ad və ya kateqoriya ilə axtar..."
+                    placeholder="Search by name or category..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="search-input" // Eyni stili istifadə edə bilərsiniz
+                    className="search-input" 
                 />
             </div>
 
-            {/* Render məntiqini burada idarə edirik */}
             <div className="clothes-grid">
                 {loading ? (
-                    <p>Yüklənir...</p>
+                    <p>Loading...</p>
                 ) : error ? (
                     <p style={{ color: 'red' }}>{error}</p>
                 ) : clothes.length > 0 ? (
                     clothes.map((cloth) => (
                         <div key={cloth._id} className="cloth-card">
-                            {/* DİQQƏT: Şəkil URL-nin düzgün olduğundan əmin olun (localhost olmadan) */}
                             <img src={cloth.image} alt={cloth.name} />
                             <h4>{cloth.name}</h4>
-                            <p>Kateqoriya: {cloth.category}</p>
-                            <p>Sahibi: {cloth.user ? cloth.user.name : 'Naməlum'}</p>
+                            <p>Category: {cloth.category}</p>
+                            <p>Owner: {cloth.user ? cloth.user.name : 'Unknown'}</p>
                             <div className='action-buttons'>
-                                <button className="edit-btn" onClick={() => openEditModal(cloth)}>Redaktə Et</button>
-                                <button className="delete-btn" onClick={() => handleDeleteCloth(cloth._id)}>Sil</button>
+                                <button className="edit-btn" onClick={() => openEditModal(cloth)}>Edit</button>
+                                <button className="delete-btn" onClick={() => handleDeleteCloth(cloth._id)}>Delete</button>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p>Heç bir geyim tapılmadı.</p>
+                    <p>No clothing items found.</p>
                 )}
             </div>
 
-            {/* Modal olduğu kimi qalır */}
             {isEditModalOpen && (
                 <EditClothModal
                     cloth={currentClothToEdit}

@@ -18,43 +18,43 @@ const Features = () => {
     return (
         <div className="features-page-container">
             <header className="features-header">
-                <h1>Tətbiqin Bütün İmkanları</h1>
-                <p>StyleFolio-nun həyatınızı asanlaşdıracaq güclü alətlərini kəşf edin.</p>
+                <h1>All Features of the Application</h1>
+                <p>Discover StyleFolio's powerful tools that will simplify your life.</p>
             </header>
 
             <main className="features-main-content">
-                <FeatureDetailCard icon={<FaBoxOpen />} title="Əhatəli Virtual Qarderob">
-                    Bütün geyimlərinizi şəkilləri, kateqoriyaları, mövsümləri, rəngləri və hətta qeydlərinizlə birlikdə rəqəmsal olaraq saxlayın. Güclü axtarış və filterləmə sistemi ilə istədiyiniz geyimi saniyələr içində tapın.
+                <FeatureDetailCard icon={<FaBoxOpen />} title="Comprehensive Virtual Wardrobe">
+                    Digitally store all your clothes with images, categories, seasons, colors, and even your own notes. With a powerful search and filter system, find the clothing item you need in seconds.
                 </FeatureDetailCard>
 
-                <FeatureDetailCard icon={<FaLayerGroup />} title="Limitsiz Kombin Yaratmaq">
-                    Qarderobunuzdakı parçaları bir araya gətirərək hər bir vəziyyət – iş görüşü, gündəlik gəzinti və ya xüsusi bir tədbir üçün fərqli kombinlər hazırlayın və onları yadda saxlayın.
+                <FeatureDetailCard icon={<FaLayerGroup />} title="Unlimited Outfit Creation">
+                    Combine pieces from your wardrobe to create different outfits for every occasion – whether it's a business meeting, a casual stroll, or a special event – and save them.
                 </FeatureDetailCard>
 
-                <FeatureDetailCard icon={<FaCalendarCheck />} title="Ağıllı Təqvim Planlayıcısı">
-                    Yaratdığınız kombinləri interaktiv təqvim üzərində günlərə təyin edin. Planlanmış kombinlərinizə baxın, tarixləri dəyişdirin və bir daha "bu gün nə geyinsəm?" stresi yaşamayın.
+                <FeatureDetailCard icon={<FaCalendarCheck />} title="Smart Calendar Planner">
+                    Plan your created outfits on an interactive calendar. View your planned outfits, change dates, and never again experience the stress of "what should I wear today?".
                 </FeatureDetailCard>
 
-                <FeatureDetailCard icon={<FaMagic />} title="“Nə Geyinsəm?” Təklif Sistemi">
-                    Qərarsız qaldığınız anlarda, bir düyməyə basaraq tətbiqin sizin üçün düşünməsini təmin edin. Ağıllı alqoritmimiz, hava proqnozuna və qarderobunuza əsaslanaraq sizə fərdi kombin təklifləri sunacaq.
+                <FeatureDetailCard icon={<FaMagic />} title="“What Should I Wear?” Suggestion System">
+                    When you're undecided, just press a button and let the application think for you. Our smart algorithm will provide you with personalized outfit suggestions based on the weather forecast and your wardrobe.
                 </FeatureDetailCard>
 
-                <FeatureDetailCard icon={<FaHeart />} title="Arzu Siyahısı (Wishlist)">
-                    Almağı planlaşdırdığınız geyimləri qiyməti və mağaza linki ilə birlikdə bir siyahıda saxlayın. Aldıqdan sonra isə bir kliklə qarderobunuza köçürün.
+                <FeatureDetailCard icon={<FaHeart />} title="Wishlist">
+                    Keep a list of clothing items you plan to buy, complete with their price and store link. Once purchased, transfer them to your wardrobe with a single click.
                 </FeatureDetailCard>
                 
-                 <FeatureDetailCard icon={<FaMobileAlt />} title="Mobil və Responsiv Dizayn">
-                    StyleFolio, istər masaüstü kompüterdə, istər tabletdə, istərsə də mobil telefonda qüsursuz işləmək üçün hazırlanıb. Hətta geyimlərinizin şəklini birbaşa telefonunuzun kamerası ilə çəkib yükləyə bilərsiniz.
+                <FeatureDetailCard icon={<FaMobileAlt />} title="Mobile and Responsive Design">
+                    StyleFolio is designed to work seamlessly on desktop computers, tablets, and mobile phones. You can even capture and upload images of your clothes directly from your phone's camera.
                 </FeatureDetailCard>
 
-                <FeatureDetailCard icon={<FaLock />} title="Təhlükəsizlik və Məxfilik">
-                    Bütün məlumatlarınız (istifadəçi məlumatları, geyimlər, kombinlər) təhlükəsiz şəkildə saxlanılır. Admin paneli ilə sistemin idarəetməsi tam nəzarət altındadır.
+                <FeatureDetailCard icon={<FaLock />} title="Security and Privacy">
+                    All your data (user information, clothing items, outfits) is securely stored. System management through the Admin Panel is under full control.
                 </FeatureDetailCard>
 
                 <div className="features-cta">
-                    <h2>Hazırsınız?</h2>
-                    <p>Stilinizi idarə etməyin yeni və ağıllı yolunu kəşf etmək üçün elə indi qeydiyyatdan keçin.</p>
-                    <Link to="/register" className="cta-button-features">Pulsuz Hesab Yarat</Link>
+                    <h2>Ready?</h2>
+                    <p>Discover a new and smart way to manage your style by signing up now.</p>
+                    <Link to="/register" className="cta-button-features">Create Free Account</Link>
                 </div>
             </main>
         </div>

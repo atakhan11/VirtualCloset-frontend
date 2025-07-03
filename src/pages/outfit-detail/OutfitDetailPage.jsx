@@ -4,7 +4,7 @@ import axios from 'axios';
 import './OutfitDetailPage.css';
 
 const OutfitDetailPage = () => {
-    const { id } = useParams(); // URL-dən kombinin ID-sini götürür
+    const { id } = useParams();
     const [outfit, setOutfit] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -17,7 +17,7 @@ const OutfitDetailPage = () => {
                 const { data } = await axios.get(`http://localhost:5000/api/outfits/${id}`, config);
                 setOutfit(data);
             } catch (err) {
-                setError('Kombin məlumatlarını yükləmək mümkün olmadı.');
+                setError('Failed to load outfit details.');
             } finally {
                 setLoading(false);
             }
@@ -26,31 +26,25 @@ const OutfitDetailPage = () => {
         fetchOutfitDetails();
     }, [id]);
 
-
     const getImageUrl = (imagePath) => {
-    // Əgər imagePath yoxdursa və ya boşdursa, boş string qaytar
-    if (!imagePath) {
-        return ''; 
-    }
-    
-    // Əgər imagePath tam bir URL-dirsə (http ilə başlayırsa),
-    // ona toxunmadan olduğu kimi qaytar.
-    if (imagePath.startsWith('http')) {
-        return imagePath;
-    }
-    
-    // Əks halda, bu lokal bir yoldur, ona görə də serverin ünvanını əlavə et.
-    return `http://localhost:5000${imagePath}`;
-};
+        if (!imagePath) {
+            return ''; 
+        }
+        
+        if (imagePath.startsWith('http')) {
+            return imagePath;
+        }
+        
+        return `http://localhost:5000${imagePath}`;
+    };
 
-
-    if (loading) return <p className="page-status">Yüklənir...</p>;
+    if (loading) return <p className="page-status">Loading...</p>;
     if (error) return <p className="page-status error">{error}</p>;
-    if (!outfit) return <p className="page-status">Kombin tapılmadı.</p>;
+    if (!outfit) return <p className="page-status">Outfit not found.</p>;
 
     return (
         <div className="outfit-detail-container">
-            <Link to="/outfit-planner" className="back-link">← Kombin Planlayıcıya Qayıt</Link>
+            <Link to="/outfit-planner" className="back-link">← Return to Outfit Planner</Link>
             <h1>{outfit.name}</h1>
             <div className="outfit-items-grid">
                 {outfit.items.map(item => (

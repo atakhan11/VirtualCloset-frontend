@@ -6,7 +6,7 @@ import './Chat.css';
 const Chat = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { from: 'ai', text: 'Salam! Mən sizin fərdi stil məsləhətçinizəm. Bu gün sizə necə kömək edə bilərəm?' }
+        { from: 'ai', text: 'Hello! I am your personal style advisor. How can I help you today?' }
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,7 @@ const Chat = () => {
                     const { data } = await axios.get('http://localhost:5000/api/clothes', config);
                     setWardrobe(data);
                 } catch (error) {
-                    console.error("Qarderobu yükləmək mümkün olmadı:", error);
+                    console.error("Failed to load wardrobe:", error);
                 }
             };
             fetchWardrobe();
@@ -58,7 +58,7 @@ const Chat = () => {
             setMessages(prev => [...prev, { from: 'ai', text: data.answer }]);
 
         } catch (error) {
-            const errorMsg = error.response?.data?.message || 'Üzr istəyirəm, bir xəta baş verdi.';
+            const errorMsg = error.response?.data?.message || 'Sorry, an error occurred.';
             setMessages(prev => [...prev, { from: 'ai', text: errorMsg }]);
         } finally {
             setIsLoading(false);
@@ -73,10 +73,9 @@ const Chat = () => {
 
     return (
         <div className="chat-container">
-            {/* Pəncərə artıq həmişə render olunur, sadəcə CSS ilə gizlədilir/göstərilir */}
             <div className={`chat-window ${isOpen ? 'open' : 'closed'}`}>
                 <div className="chat-header">
-                    <h3>AI Stil Məsləhətçisi</h3>
+                    <h3>AI Style Advisor</h3>
                 </div>
                 <div className="chat-messages">
                     {messages.map((msg, index) => (
@@ -85,16 +84,16 @@ const Chat = () => {
                         </div>
                     ))}
                     {isLoading && (
-                         <div className="message-bubble ai loading">
-                            <span></span><span></span><span></span>
-                        </div>
+                             <div className="message-bubble ai loading">
+                                <span></span><span></span><span></span>
+                            </div>
                     )}
                     <div ref={messagesEndRef} />
                 </div>
                 <div className="chat-input-area">
                     <input 
                         type="text" 
-                        placeholder="Sualınızı yazın..." 
+                        placeholder="Type your question..." 
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyPress={handleKeyPress}
@@ -106,8 +105,7 @@ const Chat = () => {
                 </div>
             </div>
             
-            {/* Bu düymə artıq həm açır, həm də bağlayır */}
-            <button className="chat-bubble" onClick={() => setIsOpen(!isOpen)} aria-label="Çatı aç/bağla">
+            <button className="chat-bubble" onClick={() => setIsOpen(!isOpen)} aria-label="Open/Close chat">
                 {isOpen ? <FaTimes /> : <FaCommentDots />}
             </button>
         </div>

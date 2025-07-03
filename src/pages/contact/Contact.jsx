@@ -3,7 +3,6 @@ import './Contact.css';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 
 const Contact = () => {
-    // Formun məntiqi (state, handleChange, handleSubmit) olduğu kimi qalır
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -19,7 +18,7 @@ const Contact = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setStatus('Göndərilir...');
+        setStatus('Sending...');
         try {
             const response = await fetch('/api/contact', {
                 method: 'POST',
@@ -28,82 +27,72 @@ const Contact = () => {
             });
             const result = await response.json();
             if (response.ok) {
-                setStatus('Mesajınız uğurla göndərildi!');
+                setStatus('Your message has been sent successfully!');
                 setFormData({ name: '', email: '', subject: '', message: '' });
             } else {
-                setStatus(`Xəta: ${result.message || 'Server cavab vermir.'}`);
+                setStatus(`Error: ${result.message || 'Server did not respond.'}`);
             }
         } catch (error) {
-            setStatus('Şəbəkə xətası. İnternet bağlantınızı yoxlayın.');
+            setStatus('Network error. Check your internet connection.');
         }
     };
 
     return (
         <div className="contact-container">
             <div className="contact-header">
-                <h1>Bizimlə Əlaqə Saxlayın</h1>
-                <p>Suallarınız, təklifləriniz və ya əməkdaşlıq üçün bizə yazın.</p>
+                <h1>Contact Us</h1>
+                <p>For your questions, suggestions, or collaboration inquiries, please write to us.</p>
             </div>
             <div className="contact-main-content">
-                {/* Sol Tərəf: Əlaqə Formu (dəyişiklik tələb etmir) */}
                 <div className="contact-form-wrapper">
-                    <h2>Mesaj Göndərin</h2>
+                    <h2>Send a Message</h2>
                     <form className="contact-form" onSubmit={handleSubmit}>
                         <div className="form-group">
-                            <label htmlFor="name">Adınız</label>
+                            <label htmlFor="name">Your Name</label>
                             <input type="text" id="name" value={formData.name} onChange={handleChange} required />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="email">E-poçt Ünvanınız</label>
+                            <label htmlFor="email">Your Email Address</label>
                             <input type="email" id="email" value={formData.email} onChange={handleChange} required />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="subject">Mövzu</label>
+                            <label htmlFor="subject">Subject</label>
                             <input type="text" id="subject" value={formData.subject} onChange={handleChange} required />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="message">Mesajınız</label>
+                            <label htmlFor="message">Your Message</label>
                             <textarea id="message" rows="6" value={formData.message} onChange={handleChange} required></textarea>
                         </div>
-                        <button type="submit" className="cta-button" disabled={status === 'Göndərilir...'}>
-                            {status === 'Göndərilir...' ? '...' : 'Göndər'}
+                        <button type="submit" className="cta-button" disabled={status === 'Sending...'}>
+                            {status === 'Sending...' ? '...' : 'Send'}
                         </button>
                         {status && <p className="status-message">{status}</p>}
                     </form>
                 </div>
 
-                {/* === SAĞ TƏRƏF: ƏLAQƏ MƏLUMATLARI (BURANI DƏYİŞİN) === */}
                 <div className="contact-info-wrapper">
-                    <h2>Əlaqə Məlumatları</h2>
+                    <h2>Contact Information</h2>
                     
-                    {/* 1. Bu mətni istədiyiniz kimi dəyişin */}
                     <p className="contact-info-intro">
-                        Bizimlə bağlı hər hansı bir sualınız varsa, aşağıdakı məlumatlardan istifadə edərək əlaqə saxlaya bilərsiniz.
+                        If you have any questions, you can contact us using the information below.
                     </p>
                     
                     <ul className="contact-details-list">
                         <li>
                             <FaMapMarkerAlt className="contact-icon" />
-                            {/* 2. Ünvanı burada dəyişin */}
-                            <span>111 Fatali Khan Khoyski, Bakı, Azərbaycan</span>
+                            <span>111 Fatali Khan Khoyski, Baku, Azerbaijan</span>
                         </li>
                         <li>
                             <FaPhone className="contact-icon" />
-                            {/* 3. Telefon nömrəsini burada dəyişin */}
                             <span>+994 50 603 72 22</span>
                         </li>
                         <li>
                             <FaEnvelope className="contact-icon" />
-                            {/* 4. E-poçt ünvanını burada dəyişin */}
                             <span>hacizadeataxann@gmail.com</span>
                         </li>
                     </ul>
                     
                     <div className="contact-map">
-                        {/* 5. XƏRİTƏNİ DƏYİŞMƏK ÜÇÜN: */}
-                        {/* a. Google Maps-də istədiyiniz ünvanı tapın. */}
-                        {/* b. "Share" -> "Embed a map" seçin. */}
-                        {/* c. "Copy HTML" düyməsinə basın və src="..." hissəsini aşağıdakı ilə əvəz edin. */}
                         <iframe
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3038.205424647481!2d49.86289597686297!3d40.404299771441536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40307d4fe10b1b3d%3A0x8ae39842506a69aa!2s111%20Fatali%20Khan%20Khoyski%2C%20Baku%201052!5e0!3m2!1sen!2saz!4v1751043670370!5m2!1sen!2saz"
                             width="100%"

@@ -156,6 +156,57 @@
   color: var(--text-primary); /* Dəyişdirildi */
 }
 
+
+
+.btn {
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 1rem; /* Səliqəli boşluq ilə */
+    font-weight: 600;
+    outline: none;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+    text-decoration: none;
+    text-align: center;
+}
+
+
+
+
+
+/* Əsas düymə (Sign Up) */
+
+/* Əsas düymə (Sign Up) */
+.btnPrimary {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+    border-color: var(--primary-color);
+}
+
+.btnPrimary:hover {
+    background-color: var(--primary-hover-color);
+    border-color: var(--primary-hover-color);
+}
+
+/* İkinci dərəcəli düymə (Login) */
+.btnSecondary {
+    background-color: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btnSecondary:hover {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+}
+
+.navAuth {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* YENİ ƏLAVƏ: Düymələr arasına 1rem (təxminən 16px) boşluq qoyur */
+}
+
 /* === MOBİL GÖRÜNÜŞ ÜÇÜN BÜTÜN QAYDALAR === */
 @media screen and (max-width: 960px) {
   .navMenu {

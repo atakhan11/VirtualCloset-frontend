@@ -5,13 +5,9 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
-import az from 'date-fns/locale/az';
+import enUS from 'date-fns/locale/en-US';
 import { FaTrash, FaTimes, FaCalendarTimes } from 'react-icons/fa';
 import './OutfitCalendarPage.css';
-
-// =======================================================
-// YARDIMÇI KOMPONENTLƏR VƏ FUNKSİYALAR
-// =======================================================
 
 const getImageUrl = (imagePath) => {
     if (!imagePath) return '';
@@ -19,11 +15,10 @@ const getImageUrl = (imagePath) => {
     return `http://localhost:5000${imagePath}`;
 };
 
-const locales = { 'az': az };
+const locales = { 'en-US': enUS };
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 const DnDCalendar = withDragAndDrop(Calendar);
 
-// Təqvimdəki hadisə üçün xüsusi görünüş
 const CustomEvent = ({ event }) => {
     return (
         <div className="rbc-event-content-custom">
@@ -35,7 +30,6 @@ const CustomEvent = ({ event }) => {
     );
 };
 
-// Detal pəncərəsi (Modal)
 const OutfitDetailModal = ({ event, onClose, onUnplan, onDelete }) => {
     if (!event) return null;
     const { resource: outfit } = event;
@@ -44,7 +38,7 @@ const OutfitDetailModal = ({ event, onClose, onUnplan, onDelete }) => {
         <div className="modal-backdrop" onClick={onClose}>
             <div className="modal-content calendar-modal" onClick={(e) => e.stopPropagation()}>
                 <h2>{outfit.name}</h2>
-                <p>Planlanan tarix: {new Date(outfit.plannedDate).toLocaleDateString()}</p>
+                <p>Planned Date: {new Date(outfit.plannedDate).toLocaleDateString()}</p>
                 <div className="modal-outfit-images">
                     {outfit.items.map(item => (
                         item && <img key={item._id} src={getImageUrl(item.image)} alt={item.name} title={item.name} />
@@ -52,10 +46,10 @@ const OutfitDetailModal = ({ event, onClose, onUnplan, onDelete }) => {
                 </div>
                 <div className="modal-actions">
                     <button onClick={() => onUnplan(outfit._id)} className="btn btn-secondary">
-                        <FaCalendarTimes /> Planı Ləğv Et
+                        <FaCalendarTimes /> Unplan
                     </button>
                     <button onClick={() => onDelete(outfit._id)} className="btn btn-danger">
-                        <FaTrash /> Kombini Sil
+                        <FaTrash /> Delete Outfit
                     </button>
                 </div>
                 <button onClick={onClose} className="close-modal-btn"><FaTimes /></button>
@@ -64,9 +58,6 @@ const OutfitDetailModal = ({ event, onClose, onUnplan, onDelete }) => {
     );
 };
 
-// =======================================================
-// ƏSAS TƏQVİM KOMPONENTİ (YENİ MƏNTİQLƏ)
-// =======================================================
 const OutfitCalendarPage = () => {
     const [myOutfits, setMyOutfits] = useState([]);
     const [events, setEvents] = useState([]);
@@ -80,7 +71,7 @@ const OutfitCalendarPage = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            if (!token) throw new Error("Zəhmət olmasa, sistemə daxil olun.");
+            if (!token) throw new Error("Please log in to the system.");
             
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const { data } = await axios.get('http://localhost:5000/api/outfits', config);
@@ -96,7 +87,7 @@ const OutfitCalendarPage = () => {
                 }));
             setEvents(calendarEvents);
         } catch (err) {
-            setError(err.message || 'Məlumatları yükləmək mümkün olmadı.');
+            setError(err.message || 'Failed to load data.');
         } finally {
             setLoading(false);
         }
@@ -113,12 +104,12 @@ const OutfitCalendarPage = () => {
             await axios.put(`http://localhost:5000/api/outfits/${outfit._id}/plan`, { date: newDate }, config);
             await fetchData();
         } catch (error) {
-            alert('Kombini planlaşdırarkən xəta baş verdi.');
+            alert('An error occurred while planning the outfit.');
         }
     }, [fetchData]);
 
     const handleUnplanOutfit = useCallback(async (outfitId) => {
-        if (!window.confirm("Bu kombinin planını ləğv etməyə əminsiniz?")) return;
+        if (!window.confirm("Are you sure you want to unplan this outfit?")) return;
         try {
             const token = localStorage.getItem('token');
             const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -126,12 +117,12 @@ const OutfitCalendarPage = () => {
             setSelectedEvent(null);
             await fetchData();
         } catch (error) {
-            alert('Plan ləğv edilərkən xəta baş verdi.');
+            alert('An error occurred while unplanning.');
         }
     }, [fetchData]);
 
     const handleDeleteOutfit = useCallback(async (outfitId) => {
-        if (!window.confirm("Bu kombini birdəfəlik silməyə əminsinizmi?")) return;
+        if (!window.confirm("Are you sure you want to permanently delete this outfit?")) return;
         try {
             const token = localStorage.getItem('token');
             const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -139,7 +130,7 @@ const OutfitCalendarPage = () => {
             setSelectedEvent(null);
             await fetchData();
         } catch (error) {
-            alert('Kombin silinərkən xəta baş verdi.');
+            alert('An error occurred while deleting the outfit.');
         }
     }, [fetchData]);
 
@@ -147,7 +138,6 @@ const OutfitCalendarPage = () => {
         handlePlanOutfit(event.resource, start);
     }, [handlePlanOutfit]);
 
-    // YENİ MƏNTİQ: HTML Drag-and-Drop API istifadə edirik
     const handleDragStart = (e, outfit) => {
         e.dataTransfer.setData("text/plain", outfit._id);
     };
@@ -159,11 +149,11 @@ const OutfitCalendarPage = () => {
             if (outfitToPlan) {
                 handlePlanOutfit(outfitToPlan, start);
             }
-            window.draggedOutfitId = null; // Yaddaşı təmizləyirik
+            window.draggedOutfitId = null;
         }
     }, [myOutfits, handlePlanOutfit]);
 
-    if (loading) return <p className="page-status">Yüklənir...</p>;
+    if (loading) return <p className="page-status">Loading...</p>;
     if (error) return <p className="page-status error">{error}</p>;
     
     const unplannedOutfits = myOutfits.filter(outfit => !outfit.isPlanned);
@@ -171,17 +161,16 @@ const OutfitCalendarPage = () => {
     return (
         <div className="calendar-page-container">
             <div className="calendar-sidebar">
-                <h3>Planlanmamış Kombinlər</h3>
-                <p>Planlamaq üçün kombini sürükləyib təqvimə atın.</p>
+                <h3>Unplanned Outfits</h3>
+                <p>Drag and drop an outfit to the calendar to plan it.</p>
                 <div className="unplanned-outfits-list">
                     {unplannedOutfits.length > 0 ? (
                         unplannedOutfits.map(outfit => 
                             <div 
                                 key={outfit._id} 
                                 className="unplanned-outfit-item"
-                                draggable="true" // Sürüklənə bilən edirik
+                                draggable="true" 
                                 onDragStart={(e) => {
-                                    // Sürüklənən kombinin ID-sini yadda saxlayırıq
                                     window.draggedOutfitId = outfit._id;
                                 }}
                             >
@@ -189,7 +178,7 @@ const OutfitCalendarPage = () => {
                             </div>
                         )
                     ) : (
-                        <p className="no-outfits-message">Bütün kombinlər planlanıb!</p>
+                        <p className="no-outfits-message">All outfits are planned!</p>
                     )}
                 </div>
             </div>
@@ -200,7 +189,7 @@ const OutfitCalendarPage = () => {
                     startAccessor="start"
                     endAccessor="end"
                     style={{ height: 'calc(100vh - 90px)' }}
-                    culture='az'
+                    culture='en-US'
                     onEventDrop={handleEventDrop}
                     onDropFromOutside={handleDropFromOutside}
                     onSelectEvent={(event) => setSelectedEvent(event)}
@@ -210,8 +199,8 @@ const OutfitCalendarPage = () => {
                     onNavigate={setDate}
                     onView={setView}
                     messages={{
-                        next: "Növbəti", previous: "Əvvəlki", today: "Bugün",
-                        month: "Ay", week: "Həftə", day: "Gün", agenda: "Gündəlik"
+                        next: "Next", previous: "Previous", today: "Today",
+                        month: "Month", week: "Week", day: "Day", agenda: "Agenda"
                     }}
                 />
             </div>
@@ -225,5 +214,4 @@ const OutfitCalendarPage = () => {
     );
 };
 
-// DndProvider artıq lazım deyil
 export default OutfitCalendarPage;

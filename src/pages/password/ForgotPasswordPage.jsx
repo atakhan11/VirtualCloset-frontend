@@ -7,8 +7,8 @@ import styles from '../password/PasswordReset.module.css';
 
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState('');
-    const [message, setMessage] = useState(''); // Uğur mesajı üçün
-    const [error, setError] = useState('');     // Xəta mesajı üçün
+    const [message, setMessage] = useState(''); 
+    const [error, setError] = useState(''); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,12 +16,10 @@ const ForgotPasswordPage = () => {
         setError('');
 
         try {
-            // Backend-də yaratdığımız /forgotpassword endpoint-inə sorğu göndəririk
             const { data } = await axios.post('/api/users/forgotpassword', { email });
-            setMessage(data.message); // Backend-dən gələn uğur mesajını göstəririk
+            setMessage(data.message); 
         } catch (err) {
-            // Əgər backend xəta qaytarsa (məsələn, server işləmirsə)
-            const errorMessage = err.response?.data?.message || 'Xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.';
+            const errorMessage = err.response?.data?.message || 'An error occurred. Please try again.';
             setError(errorMessage);
         }
     };
@@ -29,12 +27,11 @@ const ForgotPasswordPage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.formWrapper}>
-                <h2 className={styles.formTitle}>Şifrəni Unutdum</h2>
+                <h2 className={styles.formTitle}>Forgot Password</h2>
                 <p style={{ textAlign: 'center', marginBottom: '20px', color: '#666' }}>
-                    Şifrənizi sıfırlamaq üçün qeydiyyatdan keçdiyiniz email ünvanını daxil edin.
+                    Enter your registered email address to reset your password.
                 </p>
 
-                {/* Uğur və ya Xəta mesajlarını göstərən bloklar */}
                 {message && <p className={styles.successMessage}>{message}</p>}
                 {error && <p className={styles.errorMessage}>{error}</p>}
 
@@ -48,14 +45,14 @@ const ForgotPasswordPage = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            placeholder="email@nümunə.com"
+                            placeholder="email@example.com"
                         />
                     </div>
                     <button type="submit" className={styles.button}>
-                        Sıfırlama Linki Göndər
+                        Send Reset Link
                     </button>
                     <p className={styles.switchLink}>
-                        Şifrənizi xatırladınız? <Link to="/login">Daxil olun</Link>
+                        Remember your password? <Link to="/login">Login</Link>
                     </p>
                 </form>
             </div>

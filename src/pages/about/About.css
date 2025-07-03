@@ -15,13 +15,14 @@
 
 /* === ABOUT HERO BÖLMƏSİ === */
 .about-hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat;
-    background-size: cover;
-    background-position: center 15%;
     height: 80vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.pexels.com/photos/3755706/pexels-photo-3755706.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     text-align: center;
     /* Dəyişdirildi: Şəklin üzərindəki mətn həmişə ağ qalmalıdır */
     color: #ffffff; 
@@ -191,6 +192,119 @@
     background-color: var(--surface-secondary-color); /* Dəyişdirildi */
 }
 
+
+.roadmap-section {
+    padding: 80px 20px;
+    background-color: #fff; /* Və ya #f8f9fa kimi çox açıq boz rəng */
+    font-family: 'Poppins', sans-serif; /* Saytınızda istifadə etdiyiniz şriftlə əvəz edin */
+}
+
+/* Bölmə başlığının stili (Digər səhifələrlə eyni) */
+.section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title span {
+    color: #007bff; /* Saytınızın əsas mavi rəngi */
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.section-title h2 {
+    color: #212529; /* Başlıq üçün tünd rəng */
+    font-size: 36px;
+    font-weight: 700;
+}
+
+/* Mərhələləri saxlayan konteyner */
+.roadmap-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap; /* Kiçik ekranlarda alt-alta düşməsi üçün */
+}
+
+/* Hər bir mərhələ kartının stili */
+.roadmap-stage {
+    flex: 1;
+    min-width: 280px;
+    max-width: 340px;
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.roadmap-stage:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Mərhələ başlıqları (Now, Next, Future) */
+.roadmap-stage h4 {
+    font-size: 24px;
+    color: #343a40;
+    margin-top: 0;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 15px;
+}
+
+/* Mərhələlərin içindəki siyahı */
+.roadmap-stage ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.roadmap-stage li {
+    color: #6c757d; /* Mətn üçün boz rəng */
+    font-size: 16px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Siyahı elementlərinin önündəki işarə */
+.roadmap-stage li::before {
+    content: '✔';
+    color: #007bff; /* Mavi rəngli işarə */
+    font-weight: bold;
+    margin-right: 12px;
+    margin-top: 2px;
+}
+
+/* --- Xüsusi Mərhələlərin Stil Fərqləri --- */
+
+/* "Next" mərhələsini vurğulamaq üçün */
+.roadmap-stage.upcoming {
+    border-color: #007bff;
+    box-shadow: 0 5px 20px rgba(0, 123, 255, 0.1);
+}
+
+.roadmap-stage.upcoming h4 {
+    color: #007bff;
+    border-bottom-color: rgba(0, 123, 255, 0.2);
+}
+
+/* "Future" mərhələsinin daha gələcəkdə olduğunu bildirmək üçün */
+.roadmap-stage.future {
+    opacity: 0.85;
+}
+
+.roadmap-stage.future li::before {
+    content: '→'; /* Fərqli işarə */
+    color: #6c757d;
+}
+
+
 /* === RESPONSİVLİK === */
 @media (max-width: 992px) {
     /* ... dəyişiklik yoxdur ... */
@@ -221,5 +335,14 @@
     }
     .mission-content h2 {
         font-size: 2rem;
+    }
+    .roadmap-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .roadmap-stage {
+        width: 100%;
+        max-width: 500px; /* Ortada daha səliqəli görünməsi üçün */
     }
 }

@@ -3,12 +3,11 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { registerUser } from '../../redux/reducers/userSlice'; // Fayl yolunu yoxlayın
+import { registerUser } from '../../redux/reducers/userSlice'; 
 import { unwrapResult } from '@reduxjs/toolkit';
-import styles from './Signup.module.css'; // Yeni CSS modulunu import edirik
+import styles from './Signup.module.css'; 
 
 const SignupPage = () => {
-    // Yeni sahələrə uyğun state-lər
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -23,30 +22,29 @@ const SignupPage = () => {
         setError(null);
 
         if (password !== confirmPassword) {
-            setError("Şifrələr üst-üstə düşmür!");
+            setError("Passwords do not match!");
             return;
         }
 
         try {
-            // Dispatch-ə yeni məlumatları ötürürük
             const actionResult = await dispatch(registerUser({ name, email, password }));
             unwrapResult(actionResult);
 
             navigate('/');
 
         } catch (err) {
-            setError(err.message || 'Qeydiyyat baş tutmadı. Zəhmət olmasa, yenidən cəhd edin.');
+            setError(err.message || 'Registration failed. Please try again.');
         }
     };
 
     return (
         <div className={styles.signupContainer}>
             <div className={styles.formWrapper}>
-                <h2 className={styles.formTitle}>Qeydiyyat</h2>
+                <h2 className={styles.formTitle}>Sign Up</h2>
                 {error && <p className={styles.errorMessage}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className={styles.formGroup}>
-                        <label htmlFor="name" className={styles.label}>Ad</label>
+                        <label htmlFor="name" className={styles.label}>Name</label>
                         <input
                             type="text"
                             id="name"
@@ -68,7 +66,7 @@ const SignupPage = () => {
                         />
                     </div>
                     <div className={styles.formGroup}>
-                        <label htmlFor="password" className={styles.label}>Şifrə</label>
+                        <label htmlFor="password" className={styles.label}>Password</label>
                         <input
                             type="password"
                             id="password"
@@ -79,7 +77,7 @@ const SignupPage = () => {
                         />
                     </div>
                     <div className={styles.formGroup}>
-                        <label htmlFor="confirmPassword" className={styles.label}>Şifrəni Təsdiqləyin</label>
+                        <label htmlFor="confirmPassword" className={styles.label}>Confirm Password</label>
                         <input
                             type="password"
                             id="confirmPassword"
@@ -89,14 +87,13 @@ const SignupPage = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className={styles.button}>Qeydiyyatdan Keç</button>
+                    <button type="submit" className={styles.button}>Sign Up</button>
                     <p className={styles.switchLink}>
-                        Hesabınız var? <Link to="/login">Daxil olun</Link>
+                        Already have an account? <Link to="/login">Login</Link>
                     </p>
                 </form>
                 <div className={styles.orDivider}>OR</div>
 <a href="http://localhost:5000/api/users/auth/google" className={styles.socialBtn}>
-    {/* Google ikonunu public qovluğuna qoyub birbaşa çağıra bilərsiniz */}
     <img src="https://image.similarpng.com/file/similarpng/very-thumbnail/2020/06/Logo-google-icon-PNG.png" alt="Google" /> 
     Continue with Google
 </a>

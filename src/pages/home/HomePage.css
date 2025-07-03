@@ -37,20 +37,28 @@ body {
 
 /* === ƏSAS QARŞILAMA BÖLMƏSİ (HERO) === */
 .hero-section-enhanced {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6rem 2rem;
-    /* Dəyişdirildi: Brend rənglərindən gradient yaradırıq */
-    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color)); 
-    color: var(--primary-text-color); /* Dəyişdirildi */
-    min-height: 90vh;
+  height: 100vh;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.pexels.com/photos/5264907/pexels-photo-5264907.jpeg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-image-enhanced {
+  display: none;
 }
 
 .hero-content-enhanced {
-    max-width: 600px;
-    margin-right: 2rem;
-    animation: slideInFromLeft 1s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+    color: white;
+    padding: 20px;
 }
 
 .hero-title {
@@ -234,6 +242,12 @@ body {
     padding: 6rem 2rem;
     background-color: var(--text-primary); /* Dəyişdirildi */
     color: var(--background-color); /* Dəyişdirildi */
+    height: 30vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.pexels.com/photos/6461485/pexels-photo-6461485.jpeg');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    text-align: center;
 }
 
 .final-cta-section-enhanced h2 {

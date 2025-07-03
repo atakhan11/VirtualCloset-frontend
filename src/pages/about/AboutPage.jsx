@@ -3,85 +3,94 @@ import { Link } from 'react-router-dom';
 import { FaBullseye, FaLightbulb, FaHeart, FaUsers } from 'react-icons/fa';
 import './About.css';
 
-// Təqdimat üçün müvəqqəti şəkil. Bunu öz şəklinizlə əvəz edin.
-const yourImageUrl = "https://via.placeholder.com/300"; // Nümunə şəkil
+const yourImageUrl = "https://via.placeholder.com/300";
 
 const AboutPage = () => {
     return (
         <div className="about-container">
-            {/* === SƏHİFƏ BAŞLIĞI === */}
             <header className="about-hero">
                 <div className="about-hero-content">
-                    <h1>Bizim Hekayəmiz</h1>
-                    <p>Stilin sadəcə geyim deyil, bir ifadə tərzi olduğuna inanırıq.</p>
+                    <h1>Our Story</h1>
+                    <p>We believe style is not just clothing, but a form of expression.</p>
                 </div>
             </header>
 
-            {/* === MƏQSƏDİMİZ BÖLMƏSİ === */}
             <section className="mission-section">
                 <div className="mission-content">
-                    <span className="section-subtitle">Məqsədimiz</span>
-                    <h2>Qarderobunuzla Barışıq Yaradın</h2>
+                    <span className="section-subtitle">Our Mission</span>
+                    <h2>Make Peace with Your Wardrobe</h2>
                     <p>
-                        StyleFolio, "Nə geyinsəm?" sualının yaratdığı gündəlik stressi aradan qaldırmaq üçün doğuldu. Əsas hədəfimiz, insanların mövcud geyimlərinin potensialını tam olaraq kəşf etmələrinə kömək etmək, israfçılığın qarşısını almaq və hər kəsin özünəməxsus stilini inamla ifadə etməsini təmin etməkdir. Biz inanırıq ki, doğru alətlərlə hər qarderob bir xəzinəyə çevrilə bilər.
+                        StyleFolio was born to alleviate the daily stress of "What should I wear?". Our main goal is to help people fully discover the potential of their existing clothes, prevent wastefulness, and enable everyone to express their unique style with confidence. We believe that with the right tools, every wardrobe can be transformed into a treasure.
                     </p>
                 </div>
                 <div className="mission-image">
-                    <img src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Səliqəli qarderob" />
+                    <img src="https://images.pexels.com/photos/322207/pexels-photo-322207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Tidy wardrobe" />
                 </div>
             </section>
             
-            {/* === DƏYƏRLƏRİMİZ BÖLMƏSİ === */}
             <section className="values-section">
-                 <div className="section-title">
-                    <span>PRİNSİPLƏRİMİZ</span>
-                    <h2>Bizi İrəli Aparan Dəyərlər</h2>
-                </div>
+                   <div className="section-title">
+                     <span>OUR PRINCIPLES</span>
+                     <h2>Values That Drive Us Forward</h2>
+                 </div>
                 <div className="values-grid">
                     <div className="value-card">
                         <FaLightbulb className="value-icon" />
-                        <h3>Kreativlik</h3>
-                        <p>İstifadəçilərimizi mövcud parçalardan yeni və həyəcanverici kombinlər yaratmağa təşviq edirik.</p>
+                        <h3>Creativity</h3>
+                        <p>We encourage our users to create new and exciting combinations from existing pieces.</p>
                     </div>
                     <div className="value-card">
                         <FaBullseye className="value-icon" />
-                        <h3>Şüurluluq</h3>
-                        <p>Nəyə sahib olduğunuzu bilmək, daha az və daha məqsədyönlü alış-veriş etməyə kömək edir.</p>
+                        <h3>Mindfulness</h3>
+                        <p>Knowing what you own helps you shop less and more purposefully.</p>
                     </div>
                     <div className="value-card">
                         <FaHeart className="value-icon" />
-                        <h3>Özgüvən</h3>
-                        <p>Stilinizi öncədən planlaşdıraraq hər günə daha inamlı və hazır başlamağınızı hədəfləyirik.</p>
+                        <h3>Confidence</h3>
+                        <p>We aim for you to start each day more confident and prepared by planning your style in advance.</p>
                     </div>
-                     <div className="value-card">
+                    <div className="value-card">
                         <FaUsers className="value-icon" />
-                        <h3>Cəmiyyət</h3>
-                        <p>İstifadəçilərin bir-birindən ilham aldığı, dəstəkləyici və yaradıcı bir icma qururuq.</p>
+                        <h3>Community</h3>
+                        <p>We build a supportive and creative community where users inspire each other.</p>
                     </div>
                 </div>
             </section>
 
-            {/* === KOMANDA (YARADICI) BÖLMƏSİ === */}
-            <section className="team-section">
-                <div className="section-title">
-                    <span>LAYİHƏNİN RƏHBƏRİ</span>
-                    <h2>Bu Fikrin Arxasındakı Siması</h2>
-                </div>
-                <div className="team-member-card">
-                    <img src={yourImageUrl} alt="Layihə rəhbəri" className="team-member-avatar" />
-                    <h3>Sizin Adınız Soyadınız</h3>
-                    <span>Proqram Tərtibatçısı / Stil Entuziastı</span>
-                    <p className="team-member-bio">
-                        Buraya özünüz haqqında 1-2 cümləlik məlumat yaza bilərsiniz. Məsələn: "Texnologiya və modaya olan həvəsimi birləşdirərək insanların gündəlik həyatını asanlaşdıran bu layihəni ərsəyə gətirdim."
-                    </p>
-                </div>
-            </section>
+           <section className="roadmap-section">
+    <div className="section-title">
+        <span>OUR JOURNEY AHEAD</span>
+        <h2>Vision for the Future</h2>
+    </div>
+    <div className="roadmap-container">
+        <div className="roadmap-stage">
+            <h4>Now</h4>
+            <ul>
+                <li>Virtual Wardrobe & Outfit Planner</li>
+                <li>Smart Calendar Integration</li>
+            </ul>
+        </div>
+        <div className="roadmap-stage upcoming">
+            <h4>Next</h4>
+            <ul>
+                <li>AI Shopping Assistant</li>
+                <li>Advanced Weather-Based Suggestions</li>
+            </ul>
+        </div>
+        <div className="roadmap-stage future">
+            <h4>Future</h4>
+            <ul>
+                <li>Virtual Try-On Feature</li>
+                <li>Direct Integration with Fashion Stores</li>
+            </ul>
+        </div>
+    </div>
+</section>
 
-             {/* === SON ÇAĞIRIŞ BÖLMƏSİ (FINAL CTA) === */}
             <section className="about-final-cta">
-                <h2>Stil İnqilabına Qoşulun</h2>
-                <p>Qarderobunuzu yenidən kəşf etməyə və stilinizi növbəti səviyyəyə daşımağa hazırsınızsa, bizə qoşulun.</p>
-                <Link to="/register" className="cta-button-primary-about">İndi Başla</Link>
+                <h2>Join the Style Revolution</h2>
+                <p>If you're ready to rediscover your wardrobe and take your style to the next level, join us.</p>
+                <Link to="/register" className="cta-button-primary-about">Start Now</Link>
             </section>
         </div>
     );

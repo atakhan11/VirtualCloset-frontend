@@ -3,10 +3,6 @@ import axios from 'axios';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import './MyWardrobePage.css';
 
-// =======================================================
-// YARDIMÇI FUNKSİYA VƏ SABİTLƏR
-// =======================================================
-
 const colorTranslator = (colorName) => {
     const trimmedColor = colorName.trim().toLowerCase();
     const colorMap = {
@@ -19,30 +15,24 @@ const colorTranslator = (colorName) => {
 };
 
 const CATEGORIES = [
-    'Köynək (T-shirt)', 'Köynək (Klassik)', 'Polo', 'Swea / Hudi', 
-    'Sviter / Cemper', 'Gödəkçə / Palto', 'Pencək / Blazer', 'Şalvar / Cins', 
-    'Şort', 'Ayaqqabı', 'Aksesuar', 'İdman Geyimi', 'Kostyum', 'Başqa'
+    'T-shirt', 'Classic Shirt', 'Polo', 'Sweatshirt / Hoodie', 
+    'Sweater / Jumper', 'Jacket / Coat', 'Blazer / Suit Jacket', 'Trousers / Jeans', 
+    'Shorts', 'Shoes', 'Accessory', 'Sportswear', 'Suit', 'Other'
 ];
 
-const SEASONS = ['Yay', 'Qış', 'Payız', 'Yaz', 'Mövsümsüz'];
+const SEASONS = ['Summer', 'Winter', 'Autumn', 'Spring', 'All-season'];
 
-
-// =======================================================
-// 1. MODAL KOMPONENTİ (YENİLƏNMİŞ)
-// Fon təmizləmə məntiqi bura inteqrasiya edildi.
-// =======================================================
 const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
     const initialFormData = {
         name: '', category: '', season: '', brand: '', colors: '', notes: ''
     };
     const [formData, setFormData] = useState(initialFormData);
     
-    // --- YENİ STATE-LƏR ---
-    const [imageFile, setImageFile] = useState(null); // Orijinal fayl
-    const [preview, setPreview] = useState(null); // Orijinal faylın önbaxışı
-    const [processedImageUrl, setProcessedImageUrl] = useState(''); // Fonsuz şəklin URL-i
-    const [isProcessing, setIsProcessing] = useState(false); // Fon təmizlənir?
-    const [message, setMessage] = useState(''); // İstifadəçiyə mesaj
+    const [imageFile, setImageFile] = useState(null); 
+    const [preview, setPreview] = useState(null); 
+    const [processedImageUrl, setProcessedImageUrl] = useState(''); 
+    const [isProcessing, setIsProcessing] = useState(false); 
+    const [message, setMessage] = useState(''); 
 
     useEffect(() => {
         if (clothToEdit) {
@@ -54,7 +44,6 @@ const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
                 colors: clothToEdit.colors?.join(', ') || '',
                 notes: clothToEdit.notes || ''
             });
-            // Redaktə rejimində mövcud şəkli göstəririk
             setProcessedImageUrl(clothToEdit.image || '');
             setPreview(clothToEdit.image || null);
         } else {
@@ -75,28 +64,27 @@ const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
         if (file) {
             setImageFile(file);
             setPreview(URL.createObjectURL(file));
-            setProcessedImageUrl(''); // Yeni şəkil seçiləndə köhnə emal olunmuş şəkli təmizlə
+            setProcessedImageUrl(''); 
             setMessage('');
         }
     };
 
-    // --- YENİ FUNKSİYA: FON TƏMİZLƏMƏ ---
     const handleRemoveBackground = async () => {
         if (!imageFile) {
-            setMessage('Zəhmət olmasa, əvvəlcə yeni bir şəkil seçin.');
+            setMessage('Please select a new image first.');
             return;
         }
         setIsProcessing(true);
-        setMessage('Fon təmizlənir, zəhmət olmasa gözləyin...');
+        setMessage('Removing background, please wait...');
         const uploadFormData = new FormData();
         uploadFormData.append('image', imageFile);
 
         try {
             const res = await axios.post('/api/upload/remove-bg', uploadFormData);
             setProcessedImageUrl(res.data.imageUrl);
-            setMessage('Fon uğurla təmizləndi!');
+            setMessage('Background successfully removed!');
         } catch (error) {
-            setMessage(`Xəta: ${error.response?.data?.message || 'Server xətası'}`);
+            setMessage(`Error: ${error.response?.data?.message || 'Server error'}`);
         } finally {
             setIsProcessing(false);
         }
@@ -105,7 +93,7 @@ const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!processedImageUrl) {
-            setMessage('Zəhmət olmasa, "Fonunu Təmizlə" düyməsinə basın və ya redaktə üçün mövcud şəkli saxlayın.');
+            setMessage('Please click "Remove Background" or keep the existing image for editing.');
             return;
         }
         const finalData = { ...formData, image: processedImageUrl };
@@ -115,62 +103,60 @@ const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
     return (
         <div className="modal-backdrop">
             <div className="modal-content">
-                <h2>{clothToEdit ? 'Geyimi Redaktə Et' : 'Yeni Geyim Əlavə Et'}</h2>
+                <h2>{clothToEdit ? 'Edit Clothing Item' : 'Add New Clothing Item'}</h2>
                 <form onSubmit={handleSubmit}>
-                    {/* --- Şəkil Yükləmə Bloku (Yenilənmiş) --- */}
                     <div className="form-group">
-                        <label>Şəkil</label>
+                        <label>Image</label>
                         <div className="image-previews">
-                           {preview && <img src={preview} alt="Önbaxış" className="image-preview" />}
+                           {preview && <img src={preview} alt="Preview" className="image-preview" />}
                            {processedImageUrl && preview !== processedImageUrl && (
-                               <img src={processedImageUrl} alt="Fonsuz şəkil" className="image-preview" />
+                               <img src={processedImageUrl} alt="Background removed image" className="image-preview" />
                            )}
                         </div>
                         <input type="file" onChange={handleImageChange} accept="image/*" />
                         {imageFile && (
                             <button type="button" className="btn-secondary" onClick={handleRemoveBackground} disabled={isProcessing}>
-                                {isProcessing ? 'Emal olunur...' : 'Fonunu Təmizlə'}
+                                {isProcessing ? 'Processing...' : 'Remove Background'}
                             </button>
                         )}
                     </div>
                     
-                    {/* Digər form sahələri olduğu kimi qalır */}
                     <div className="form-group">
-                        <label>Ad</label>
+                        <label>Name</label>
                         <input type="text" name="name" value={formData.name} onChange={handleChange} required />
                     </div>
                     <div className="form-group">
-                        <label>Kateqoriya</label>
+                        <label>Category</label>
                         <select name="category" value={formData.category} onChange={handleChange} required>
-                            <option value="" disabled>Kateqoriya seçin...</option>
+                            <option value="" disabled>Select category...</option>
                             {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                         </select>
                     </div>
                     <div className="form-group">
-                        <label>Mövsüm</label>
+                        <label>Season</label>
                         <select name="season" value={formData.season} onChange={handleChange}>
-                            <option value="">Mövsüm seçin...</option>
+                            <option value="">Select season...</option>
                             {SEASONS.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
                     </div>
                     <div className="form-group">
-                        <label>Brend</label>
+                        <label>Brand</label>
                         <input type="text" name="brand" value={formData.brand} onChange={handleChange} />
                     </div>
                     <div className="form-group">
-                        <label>Rənglər (Vergüllə ayırın)</label>
+                        <label>Colors (Comma separated)</label>
                         <input type="text" name="colors" value={formData.colors} onChange={handleChange} />
                     </div>
                     <div className="form-group">
-                        <label>Qeydlər</label>
+                        <label>Notes</label>
                         <textarea name="notes" value={formData.notes} onChange={handleChange} rows="3"></textarea>
                     </div>
 
                     {message && <p className="form-message">{message}</p>}
 
                     <div className="modal-actions">
-                        <button type="submit" className="btn-primary">Yadda Saxla</button>
-                        <button type="button" onClick={onClose}>Ləğv Et</button>
+                        <button type="submit" className="btn-primary">Save</button>
+                        <button type="button" onClick={onClose}>Cancel</button>
                     </div>
                 </form>
             </div>
@@ -178,10 +164,6 @@ const ClothFormModal = ({ clothToEdit, onSave, onClose }) => {
     );
 };
 
-
-// =======================================================
-// 2. ANA SƏHİFƏ KOMPONENTİ (YENİLƏNMİŞ)
-// =======================================================
 const MyWardrobePage = () => {
     const [allClothes, setAllClothes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -198,7 +180,7 @@ const MyWardrobePage = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                setError("Zəhmət olmasa, sistemə daxil olun.");
+                setError("Please log in to the system.");
                 setLoading(false);
                 return;
             }
@@ -206,7 +188,7 @@ const MyWardrobePage = () => {
             const { data } = await axios.get('/api/clothes', config);
             setAllClothes(data);
         } catch (err) {
-            setError('Geyimləri yükləmək mümkün olmadı.');
+            setError('Failed to load clothing items.');
         } finally {
             setLoading(false);
         }
@@ -217,7 +199,7 @@ const MyWardrobePage = () => {
     }, []);
 
     const handleDelete = async (clothId) => {
-        if (window.confirm('Bu geyimi silməyə əminsinizmi?')) {
+        if (window.confirm('Are you sure you want to delete this clothing item?')) {
             try {
                 setLoading(true);
                 const token = localStorage.getItem('token');
@@ -225,20 +207,18 @@ const MyWardrobePage = () => {
                 await axios.delete(`/api/clothes/${clothId}`, config);
                 await fetchMyClothes(); 
             } catch (err) {
-                alert('Geyim silinərkən xəta baş verdi.');
+                alert('An error occurred while deleting the clothing item.');
                 setLoading(false);
             }
         }
     };
     
-    // --- handleSave FUNKSİYASI YENİLƏNDİ ---
-    // Artıq FormData yox, JSON göndərir.
     const handleSave = async (clothData, clothId) => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
             const config = { headers: { 
-                'Content-Type': 'application/json', // Dəyişiklik
+                'Content-Type': 'application/json', 
                 Authorization: `Bearer ${token}` 
             }};
             if (clothId) {
@@ -250,8 +230,8 @@ const MyWardrobePage = () => {
             setEditingCloth(null);
             await fetchMyClothes();
         } catch(err) {
-            const errorMessage = err.response?.data?.message || 'Server xətası';
-            alert(`Xəta: ${errorMessage}`);
+            const errorMessage = err.response?.data?.message || 'Server error';
+            alert(`Error: ${errorMessage}`);
             setLoading(false);
         }
     };
@@ -263,49 +243,46 @@ const MyWardrobePage = () => {
 
     const filteredClothes = allClothes.filter(cloth => {
         const matchesSearch = cloth.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                              (cloth.brand && cloth.brand.toLowerCase().includes(searchTerm.toLowerCase()));
+                             (cloth.brand && cloth.brand.toLowerCase().includes(searchTerm.toLowerCase()));
         const matchesCategory = filterCategory === 'All' || cloth.category === filterCategory;
         const matchesSeason = filterSeason === 'All' || cloth.season === filterSeason;
         return matchesSearch && matchesCategory && matchesSeason;
     });
 
-    // --- Şəkil URL-ni düzgün göstərmək üçün yardımçı funksiya ---
     const getImageUrl = (imagePath) => {
-        if (!imagePath) return ''; // Boş şəkil yolu üçün
-        // Əgər URL Cloudinary-dəndirsə (http ilə başlayırsa), olduğu kimi qaytar
+        if (!imagePath) return '';
         if (imagePath.startsWith('http')) {
             return imagePath;
         }
-        // Əks halda, köhnə sistemə uyğun olaraq serverin adresini əlavə et
         return `http://localhost:5000${imagePath}`;
     };
 
-    if (loading) return <p>Yüklənir...</p>;
+    if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
     return (
         <div className="wardrobe-container">
             <div className="wardrobe-header">
-                <h1>Mənim Qarderobum</h1>
+                <h1>My Wardrobe</h1>
                 <button className="add-new-btn" onClick={() => openModal()}>
-                    <FaPlus /> Yeni Geyim Əlavə Et
+                    <FaPlus /> Add New Clothing Item
                 </button>
             </div>
 
             <div className="filter-controls">
                 <input 
                     type="text"
-                    placeholder="Ad və ya brendə görə axtar..."
+                    placeholder="Search by name or brand..."
                     className="search-input"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="filter-select">
-                    <option value="All">Bütün Kateqoriyalar</option>
+                    <option value="All">All Categories</option>
                     {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                 </select>
                 <select value={filterSeason} onChange={(e) => setFilterSeason(e.target.value)} className="filter-select">
-                    <option value="All">Bütün Mövsümlər</option>
+                    <option value="All">All Seasons</option>
                     {SEASONS.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
             </div>
@@ -313,18 +290,17 @@ const MyWardrobePage = () => {
             <div className="clothes-grid">
                 {filteredClothes.length > 0 ? filteredClothes.map((cloth) => (
                     <div key={cloth._id} className="cloth-card">
-                        {/* Şəkilləri düzgün göstərmək üçün getImageUrl istifadə olunur */}
                         <img src={getImageUrl(cloth.image)} alt={cloth.name} />
                         <div className="card-content">
                             <h4>{cloth.name}</h4>
                             <div className="card-details">
                                 <p className="category-tag">{cloth.category}</p>
-                                {cloth.brand && <p className="brand-tag"><strong>Brend:</strong> {cloth.brand}</p>}
-                                {cloth.season && <p className="season-tag"><strong>Mövsüm:</strong> {cloth.season}</p>}
+                                {cloth.brand && <p className="brand-tag"><strong>Brand:</strong> {cloth.brand}</p>}
+                                {cloth.season && <p className="season-tag"><strong>Season:</strong> {cloth.season}</p>}
                                 
                                 {cloth.colors && cloth.colors.length > 0 && (
                                     <div className="colors-container">
-                                        <strong>Rənglər:</strong>
+                                        <strong>Colors:</strong>
                                         <div className="color-swatches">
                                             {cloth.colors.map((color, index) => (
                                                 <span 
@@ -345,14 +321,14 @@ const MyWardrobePage = () => {
                                 )}
                             </div>
                             <div className='action-buttons'>
-                                <button className="icon-btn edit-btn" title="Redaktə Et" onClick={() => openModal(cloth)}><FaEdit /></button>
-                                <button className="icon-btn delete-btn" title="Sil" onClick={() => handleDelete(cloth._id)}><FaTrash /></button>
+                                <button className="icon-btn edit-btn" title="Edit" onClick={() => openModal(cloth)}><FaEdit /></button>
+                                <button className="icon-btn delete-btn" title="Delete" onClick={() => handleDelete(cloth._id)}><FaTrash /></button>
                             </div>
                         </div>
                     </div>
                 )) : (
                     <div className="empty-wardrobe">
-                        <p>{allClothes.length > 0 ? 'Filterlərinizə uyğun heç bir nəticə tapılmadı.' : 'Qarderobunuz boşdur. Elə indi yeni geyim əlavə edin!'}</p>
+                        <p>{allClothes.length > 0 ? 'No results found matching your filters.' : 'Your wardrobe is empty. Add new clothing items now!'}</p>
                     </div>
                 )}
             </div>

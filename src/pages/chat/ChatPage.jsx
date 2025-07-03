@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-// DÜZƏLİŞ: selectUser-i düzgün yoldan import edirik
 import { selectUser } from '../../redux/reducers/userSlice'; 
 import axios from 'axios';
 
-// Firebase kitabxanaları
 import { initializeApp } from 'firebase/app';
 import { 
     getFirestore, collection, query, where, onSnapshot, 
@@ -18,9 +16,8 @@ import {
     getDatabase, ref as dbRef, onValue, onDisconnect, set, serverTimestamp as rtdbServerTimestamp 
 } from "firebase/database";
 
-// Tarix formatlaması üçün kitabxana
 import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns';
-import { az } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale';
 
 import styles from './ChatPage.module.css';
 import { 
@@ -61,20 +58,20 @@ const formatDuration = (seconds) => {
 };
 
 const formatLastSeen = (timestamp) => {
-    if (!timestamp) return 'bir müddət əvvəl';
+    if (!timestamp) return 'a while ago';
     const date = new Date(timestamp);
     const now = new Date();
     
     const diffSeconds = (now.getTime() - date.getTime()) / 1000;
-    if (diffSeconds < 60) return 'indicə';
+    if (diffSeconds < 60) return 'just now';
 
     if (diffSeconds < 3600) {
-        return formatDistanceToNow(date, { addSuffix: true, locale: az });
+        return formatDistanceToNow(date, { addSuffix: true, locale: enUS });
     }
-    if (isToday(date)) return `bu gün, ${format(date, 'HH:mm')}`;
-    if (isYesterday(date)) return `dünən, ${format(date, 'HH:mm')}`;
+    if (isToday(date)) return `today, ${format(date, 'HH:mm')}`;
+    if (isYesterday(date)) return `yesterday, ${format(date, 'HH:mm')}`;
     
-    return format(date, 'd MMM, HH:mm', { locale: az });
+    return format(date, 'd MMM, HH:mm', { locale: enUS });
 };
 
 
@@ -103,7 +100,6 @@ const ChatPage = () => {
     const navigate = useNavigate();
     const { conversationId } = useParams();
 
-    // DÜZƏLİŞ: Bütün 'reduxUser.id' istifadələri 'reduxUser._id' ilə əvəz edildi
     const currentUserId = reduxUser?._id;
 
     useEffect(() => {
@@ -115,10 +111,10 @@ const ChatPage = () => {
                 onDisconnect(userStatusDatabaseRef).set({
                     isOnline: false,
                     last_seen: rtdbServerTimestamp(),
-                }).catch((err) => console.error("onDisconnect quraşdırılarkən xəta:", err));
+                }).catch((err) => console.error("Error setting onDisconnect:", err));
                 set(userStatusDatabaseRef, {
                     isOnline: true,
-                }).catch(err => console.error("Status təyin edilərkən xəta:", err));
+                }).catch(err => console.error("Error setting status:", err));
             }
         });
         return () => unsubscribe();
@@ -157,27 +153,22 @@ const ChatPage = () => {
                     const { data } = await axios.get('http://localhost:5000/api/users/chatlist', config);
                     setUsers(data);
                 } catch (error) {
-                    console.error("Çat üçün istifadəçiləri yükləmək mümkün olmadı:", error);
+                    console.error("Failed to load users for chat:", error);
                 }
             };
             fetchUsers();
         }
     }, [reduxUser]);
 
-// Yuxarıdakı blokun yerinə BU BLOKU ƏLAVƏ EDİN
 useEffect(() => {
-    // Əgər istifadəçi daxil olmayıbsa, yükləməni dayandırırıq.
     if (!currentUserId) {
         setLoading(false);
         return;
     }
 
-    // `users` massivinin boş olmasından asılı olmadan söhbətləri axtarırıq.
     const q = query(collection(db, "chats"), where('participants', 'array-contains', currentUserId));
 
     const unsubscribeConvos = onSnapshot(q, async (querySnapshot) => {
-        // `users` massivi hələ yüklənməyibsə, adlar müvəqqəti olaraq fərqli göstəriləcək.
-        // `users` yükləndikdən sonra bu blok onsuz da yenidən işə düşəcək və adlar yenilənəcək.
         const convosPromises = querySnapshot.docs.map(async (doc) => {
             const convoData = doc.data();
             const otherUserId = convoData.participants.find(uid => uid !== currentUserId);
@@ -185,7 +176,7 @@ useEffect(() => {
             return {
                 id: doc.id,
                 ...convoData,
-                otherUserName: otherUser?.name || 'Naməlum istifadəçi', // Ad hələ məlum deyilsə...
+                otherUserName: otherUser?.name || 'Unknown user', 
                 otherUserAvatar: otherUser?.avatar,
                 otherUserId: otherUserId
             };
@@ -194,39 +185,26 @@ useEffect(() => {
         const convos = await Promise.all(convosPromises);
         setConversations(convos);
         
-        // Əsas düzəliş: Firestore-dan cavab gələn kimi (istər boş, istər dolu) yükləməni dayandırırıq.
         setLoading(false);
 
     }, (error) => {
-        // Xəta baş verərsə də yükləməni dayandırmaq vacibdir.
-        console.error("Söhbətləri yükləyərkən xəta:", error);
+        console.error("Error loading conversations:", error);
         setLoading(false);
     });
 
-    // Komponentdən çıxdıqda listener-i ləğv edirik.
     return () => unsubscribeConvos();
 
-}, [currentUserId, users]); // `users` massivini asılılıqda saxlayırıq ki, adlar gələndə siyahı yenilənsin.
+}, [currentUserId, users]);
 
-// Yuxarıdakı blokun yerinə BU BLOKU ƏLAVƏ EDİN
 useEffect(() => {
-    // Əgər URL-də söhbət ID-si varsa...
     if (conversationId) {
-        // Həmin söhbəti lokal `conversations` siyahımızda axtarırıq
         const selected = conversations.find(c => c.id === conversationId);
 
-        // Əgər siyahıda tapdıqsa, onu aktiv söhbət kimi seçirik.
-        // Bu, mövcud söhbətlərə klikləmə və ya birbaşa URL ilə daxil olma hallarını təmin edir.
         if (selected) {
             setSelectedConversation(selected);
         }
-        // ƏGƏR TAPMADIAQSA, HEÇ NƏ ETMİRİK!
-        // `else { setSelectedConversation(null) }` hissəsini qəsdən silirik.
-        // Bu, `handleSelectUser` funksiyasının manual olaraq təyin etdiyi state-i qoruyur
-        // və `onSnapshot`-un siyahını yeniləməsini gözləyir.
 
     } else {
-        // Əgər URL-də heç bir ID yoxdursa, deməli heç bir söhbət seçilməməlidir.
         setSelectedConversation(null);
     }
 }, [conversationId, conversations]);
@@ -255,26 +233,20 @@ useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-// Köhnə handleSelectUser funksiyasını silib bunu yerləşdirin
-
 const handleSelectUser = async (user) => {
-    // Funksiya başlanğıcı eyni qalır
     if (!currentUserId) return;
 
     const participants = [currentUserId, user._id].sort();
     const q = query(collection(db, "chats"), where('participants', '==', participants));
     
     try {
-        setLoading(true); // Proses başlayanda yüklənmə ekranı göstərək
+        setLoading(true); 
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
-            // Əgər söhbət artıq mövcuddursa, sadəcə həmin səhifəyə keçid edirik.
-            // Bu hissə düzgün işləyir, çünki söhbət onsuz da `conversations` siyahısındadır.
             const existingConvoId = querySnapshot.docs[0].id;
             navigate(`/chat/${existingConvoId}`);
         } else {
-            // Söhbət mövcud deyilsə, yenisini yaradırıq.
             const newConvoData = {
                 participants: participants,
                 participantNames: [reduxUser.name, user.name].sort(),
@@ -282,27 +254,22 @@ const handleSelectUser = async (user) => {
             };
             const newConvoRef = await addDoc(collection(db, "chats"), newConvoData);
 
-            // ----- ƏSAS DÜZƏLİŞ BURADADIR -----
-            // Firestore listener-ini gözləmədən, yeni söhbət obyektini manual olaraq yaradırıq.
             const newSelectedConvoObject = {
                 id: newConvoRef.id,
                 participants: newConvoData.participants,
-                otherUserName: user.name, // Kliklənən istifadəçinin adı
-                otherUserId: user._id,    // və ID-si
-                createdAt: { toDate: () => new Date() } // Müvəqqəti lokal tarix
+                otherUserName: user.name, 
+                otherUserId: user._id, 
+                createdAt: { toDate: () => new Date() } 
             };
 
-            // Yaradılan obyekti dərhal "seçilmiş söhbət" state-inə mənimsədirik.
             setSelectedConversation(newSelectedConvoObject);
 
-            // Və bundan sonra URL-i dəyişirik.
             navigate(`/chat/${newConvoRef.id}`);
         }
     } catch (error) {
-        console.error("Söhbətə keçid zamanı xəta:", error);
-        // Xəta baş verərsə istifadəçiyə məlumat vermək olar
+        console.error("Error navigating to chat:", error);
     } finally {
-        setLoading(false); // Proses bitdikdən sonra yüklənməni dayandırırıq
+        setLoading(false); 
     }
 };
     
@@ -321,7 +288,7 @@ const handleSelectUser = async (user) => {
         setUploadingFile(file);
         const fileStorageRef = storageRef(storage, `chat_images/${selectedConversation.id}/${Date.now()}_${file.name}`);
         const uploadTask = uploadBytesResumable(fileStorageRef, file);
-        uploadTask.on('state_changed', () => {}, (error) => { console.error("Fayl yükləmə xətası:", error); setUploadingFile(null); }, () => {
+        uploadTask.on('state_changed', () => {}, (error) => { console.error("File upload error:", error); setUploadingFile(null); }, () => {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                 sendMessage(downloadURL, 'image');
                 setUploadingFile(null);
@@ -352,7 +319,7 @@ const handleSelectUser = async (user) => {
         const fileName = `audio/${selectedConversation.id}/${Date.now()}.webm`;
         const audioStorageRef = storageRef(storage, fileName);
         const uploadTask = uploadBytesResumable(audioStorageRef, audioBlob);
-        uploadTask.on('state_changed', () => {}, (error) => console.error("Səs faylı yükləmə xətası:", error), () => {
+        uploadTask.on('state_changed', () => {}, (error) => console.error("Audio file upload error:", error), () => {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                 sendMessage(downloadURL, 'audio');
             });
@@ -377,8 +344,8 @@ const handleSelectUser = async (user) => {
                 setRecordingDuration(prev => prev + 1);
             }, 1000);
         } catch (err) {
-            console.error("Mikrofon icazəsi alınmadı:", err);
-            alert("Səs yazmaq üçün mikrofon icazəsi verməlisiniz.");
+            console.error("Microphone permission denied:", err);
+            alert("You need to grant microphone permission to record audio.");
         }
     };
 
@@ -444,52 +411,52 @@ const handleSelectUser = async (user) => {
         setShowEmojiPicker(false);
     };
     
-    if (loading) return <div className={styles.loadingScreen}>Yüklənir...</div>;
+    if (loading) return <div className={styles.loadingScreen}>Loading...</div>;
 
     return (
         <div className={styles.chatPageContainer}>
             <div className={styles.sidebar}>
-                 <div className={styles.userList}>
-                     <h3>Yeni Söhbət</h3>
-                     <ul>
-                         {users.map(user => (
+                   <div className={styles.userList}>
+                     <h3>New Chat</h3>
+                       <ul>
+                           {users.map(user => (
 
-                             <li key={user._id} onClick={() => handleSelectUser(user)}>
-                             <img 
+                               <li key={user._id} onClick={() => handleSelectUser(user)}>
+                               <img 
                     src={user.avatar ? getImageUrl(user.avatar) : `https://ui-avatars.com/api/?name=${user.name}&background=0D8ABC&color=fff`} 
                     alt={user.name}
                     className={styles.sidebarAvatar}
                 />
-                                 <span className={`${styles.statusIndicator} ${userStatuses[user._id]?.isOnline ? styles.online : ''}`}></span>
-                                 {user.name}
-                             </li>
-                         ))}
-                     </ul>
-                 </div>
-                 <div className={styles.conversationList}>
-                     <h3>Söhbətlərim</h3>
-                     <ul>
-                         {conversations.map(convo => (
-                             <li 
-                                 key={convo.id} 
-                                 className={convo.id === selectedConversation?.id ? styles.selected : ''}
-                                 onClick={() => navigate(`/chat/${convo.id}`)}
-                             > <img 
+                                <span className={`${styles.statusIndicator} ${userStatuses[user._id]?.isOnline ? styles.online : ''}`}></span>
+                                {user.name}
+                               </li>
+                           ))}
+                       </ul>
+                   </div>
+                   <div className={styles.conversationList}>
+                     <h3>My Chats</h3>
+                       <ul>
+                           {conversations.map(convo => (
+                               <li 
+                                   key={convo.id} 
+                                   className={convo.id === selectedConversation?.id ? styles.selected : ''}
+                                   onClick={() => navigate(`/chat/${convo.id}`)}
+                               > <img 
                     src={convo.otherUserAvatar ? getImageUrl(convo.otherUserAvatar) : `https://ui-avatars.com/api/?name=${convo.otherUserName}&background=0D8ABC&color=fff`} 
                     alt={convo.otherUserName}
                     className={styles.sidebarAvatar}
                 />
-                                 <span className={`${styles.statusIndicator} ${userStatuses[convo.otherUserId]?.isOnline ? styles.online : ''}`}></span>
-                                 {convo.otherUserName}
-                             </li>
-                         ))}
-                     </ul>
-                 </div>
+                                <span className={`${styles.statusIndicator} ${userStatuses[convo.otherUserId]?.isOnline ? styles.online : ''}`}></span>
+                                {convo.otherUserName}
+                               </li>
+                           ))}
+                       </ul>
+                   </div>
             </div>
 
             <div className={styles.mainChatArea}>
                 {!selectedConversation ? (
-                    <div className={styles.chatWindowPlaceholder}>Başlamaq üçün bir istifadəçi və ya söhbət seçin.</div>
+                    <div className={styles.chatWindowPlaceholder}>Select a user or conversation to start.</div>
                 ) : (
                     <>
                         <div className={styles.chatWindowHeader}>
@@ -501,12 +468,12 @@ const handleSelectUser = async (user) => {
                             <div className={styles.headerUserInfo}>
                                 <span className={styles.headerUserName}>{selectedConversation.otherUserName}</span>
                                 {isOtherUserTyping ? (
-                                    <span className={styles.typingIndicator}>Yazır...</span>
+                                    <span className={styles.typingIndicator}>Typing...</span>
                                 ) : userStatuses[selectedConversation.otherUserId]?.isOnline ? (
-                                    <span className={styles.headerStatusOnline}>Aktivdir</span>
+                                    <span className={styles.headerStatusOnline}>Online</span>
                                 ) : (
                                     <span className={styles.headerStatusOffline}>
-                                        Son görülmə: {formatLastSeen(userStatuses[selectedConversation.otherUserId]?.last_seen)}
+                                        Last seen: {formatLastSeen(userStatuses[selectedConversation.otherUserId]?.last_seen)}
                                     </span>
                                 )}
                             </div>
@@ -515,7 +482,7 @@ const handleSelectUser = async (user) => {
                             {messages.map(msg => (
                                 <div key={msg.id} className={`${styles.messageWrapper} ${msg.senderId === currentUserId ? styles.sentWrapper : styles.receivedWrapper}`}>
                                     <div className={styles.messageBubble}>
-                                        {msg.type === 'image' && <img src={msg.content} alt="Söhbətdən şəkil" className={styles.chatImage} />}
+                                        {msg.type === 'image' && <img src={msg.content} alt="Chat image" className={styles.chatImage} />}
                                         {msg.type === 'audio' && <audio controls src={msg.content} className={styles.chatAudio}></audio>}
                                         {msg.type === 'text' && <p>{msg.content}</p>}
                                         <div className={styles.reactionPicker}>
@@ -534,7 +501,7 @@ const handleSelectUser = async (user) => {
                                     </div>
                                     <div className={styles.messageInfo}>
                                         <span className={styles.messageTimestamp}>
-                                            {msg.timestamp?.toDate().toLocaleTimeString('az-AZ', { hour: '2-digit', minute: '2-digit' })}
+                                            {msg.timestamp?.toDate().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                                         </span>
                                         {renderStatusIcon(msg)}
                                     </div>
@@ -558,7 +525,7 @@ const handleSelectUser = async (user) => {
                             ) : isRecording ? (
                                 <div className={styles.recordingIndicator}>
                                     <button type="button" className={`${styles.iconButton} ${styles.recording}`} onClick={handleMicButtonClick}><FaStop /></button>
-                                    <span>Səs yazılır... {formatDuration(recordingDuration)}</span>
+                                    <span>Recording... {formatDuration(recordingDuration)}</span>
                                 </div>
                             ) : (
                                 <form className={styles.textInputForm} onSubmit={handleSubmit}>
@@ -569,12 +536,12 @@ const handleSelectUser = async (user) => {
                                         className={styles.messageInput}
                                         value={newMessage}
                                         onChange={handleNewMessageChange}
-                                        placeholder="Mesajınızı yazın..."
+                                        placeholder="Type your message..."
                                         disabled={uploadingFile}
                                         onFocus={() => setShowEmojiPicker(false)}
                                     />
                                     <button type="button" className={styles.iconButton} onClick={handleMicButtonClick}><FaMicrophone /></button>
-                                    <button type="submit" className={styles.sendButton} aria-label="Göndər" disabled={!newMessage.trim() || uploadingFile}><FaPaperPlane /></button>
+                                    <button type="submit" className={styles.sendButton} aria-label="Send" disabled={!newMessage.trim() || uploadingFile}><FaPaperPlane /></button>
                                     <input type="file" ref={fileInputRef} style={{ display: 'none' }} accept="image/*" onChange={handleFileChange} />
                                 </form>
                             )}
