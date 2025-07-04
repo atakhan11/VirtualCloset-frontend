@@ -1,30 +1,17 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectUser } from '../../redux/reducers/userSlice'; 
+import { selectUser } from '../../redux/reducers/userSlice';
 import axios from 'axios';
-
 import { initializeApp } from 'firebase/app';
-import { 
-    getFirestore, collection, query, where, onSnapshot, 
-    addDoc, serverTimestamp as firestoreServerTimestamp, orderBy, getDocs, doc, updateDoc,
-} from 'firebase/firestore';
-import { 
-    getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL 
-} from "firebase/storage";
-import { 
-    getDatabase, ref as dbRef, onValue, onDisconnect, set, serverTimestamp as rtdbServerTimestamp 
-} from "firebase/database";
-
+import { getFirestore, collection, query, where, onSnapshot, addDoc, serverTimestamp as firestoreServerTimestamp, orderBy, getDocs, doc, updateDoc } from 'firebase/firestore';
+import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getDatabase, ref as dbRef, onValue, onDisconnect, set, serverTimestamp as rtdbServerTimestamp } from "firebase/database";
 import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-
 import styles from './ChatPage.module.css';
-import { 
-    FaPaperPlane, FaPaperclip, FaMicrophone, 
-    FaThumbsUp, FaHeart, FaFire, FaLaugh, FaStop, FaTrash, FaSmile
-} from 'react-icons/fa';
-import { BsCheck, BsCheckAll } from 'react-icons/bs';
+import { FaPaperPlane, FaPaperclip, FaMicrophone, FaThumbsUp, FaHeart, FaFire, FaLaugh, FaStop, FaTrash, FaSmile } from 'react-icons/fa';
+import { BsCheckAll } from 'react-icons/bs';
 import EmojiPicker from 'emoji-picker-react';
 
 const firebaseConfig = {
@@ -43,13 +30,11 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const rtdb = getDatabase(app);
 
-
 const getImageUrl = (imagePath) => {
     if (!imagePath) return '';
     if (imagePath.startsWith('http')) return imagePath;
     return `http://localhost:5000${imagePath}`;
 };
-
 
 const formatDuration = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -74,7 +59,6 @@ const formatLastSeen = (timestamp) => {
     return format(date, 'd MMM, HH:mm', { locale: enUS });
 };
 
-
 const ChatPage = () => {
     const [users, setUsers] = useState([]);
     const [conversations, setConversations] = useState([]);
@@ -89,6 +73,7 @@ const ChatPage = () => {
     const [userStatuses, setUserStatuses] = useState({});
     const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [activeMobileView, setActiveMobileView] = useState('list');
 
     const typingTimeoutRef = useRef(null);
     const mediaRecorderRef = useRef(null);
@@ -131,7 +116,7 @@ const ChatPage = () => {
     
     useEffect(() => {
         if (!selectedConversation || !currentUserId) return;
-        const otherUserId = selectedConversation.participants.find(uid => uid !== currentUserId);
+        const otherUserId = selectedConversation.participants?.find(uid => uid !== currentUserId);
         if (!otherUserId) return;
         const typingRef = dbRef(rtdb, `typing/${selectedConversation.id}/${otherUserId}`);
         const unsubscribe = onValue(typingRef, (snapshot) => {
@@ -160,54 +145,54 @@ const ChatPage = () => {
         }
     }, [reduxUser]);
 
-useEffect(() => {
-    if (!currentUserId) {
-        setLoading(false);
-        return;
-    }
-
-    const q = query(collection(db, "chats"), where('participants', 'array-contains', currentUserId));
-
-    const unsubscribeConvos = onSnapshot(q, async (querySnapshot) => {
-        const convosPromises = querySnapshot.docs.map(async (doc) => {
-            const convoData = doc.data();
-            const otherUserId = convoData.participants.find(uid => uid !== currentUserId);
-            const otherUser = users.find(u => u._id === otherUserId);
-            return {
-                id: doc.id,
-                ...convoData,
-                otherUserName: otherUser?.name || 'Unknown user', 
-                otherUserAvatar: otherUser?.avatar,
-                otherUserId: otherUserId
-            };
-        });
-
-        const convos = await Promise.all(convosPromises);
-        setConversations(convos);
-        
-        setLoading(false);
-
-    }, (error) => {
-        console.error("Error loading conversations:", error);
-        setLoading(false);
-    });
-
-    return () => unsubscribeConvos();
-
-}, [currentUserId, users]);
-
-useEffect(() => {
-    if (conversationId) {
-        const selected = conversations.find(c => c.id === conversationId);
-
-        if (selected) {
-            setSelectedConversation(selected);
+    useEffect(() => {
+        if (!currentUserId) {
+            setLoading(false);
+            return;
         }
 
-    } else {
-        setSelectedConversation(null);
-    }
-}, [conversationId, conversations]);
+        const q = query(collection(db, "chats"), where('participants', 'array-contains', currentUserId));
+
+        const unsubscribeConvos = onSnapshot(q, async (querySnapshot) => {
+            const convosPromises = querySnapshot.docs.map(async (doc) => {
+                const convoData = doc.data();
+                const otherUserId = convoData.participants.find(uid => uid !== currentUserId);
+                const otherUser = users.find(u => u._id === otherUserId);
+                return {
+                    id: doc.id,
+                    ...convoData,
+                    otherUserName: otherUser?.name || 'Unknown user',
+                    otherUserAvatar: otherUser?.avatar,
+                    otherUserId: otherUserId
+                };
+            });
+
+            const convos = await Promise.all(convosPromises);
+            setConversations(convos);
+            
+            setLoading(false);
+
+        }, (error) => {
+            console.error("Error loading conversations:", error);
+            setLoading(false);
+        });
+
+        return () => unsubscribeConvos();
+
+    }, [currentUserId, users]);
+
+    useEffect(() => {
+        if (conversationId) {
+            const selected = conversations.find(c => c.id === conversationId);
+
+            if (selected) {
+                setSelectedConversation(selected);
+            }
+
+        } else {
+            setSelectedConversation(null);
+        }
+    }, [conversationId, conversations]);
 
     useEffect(() => {
         if (!selectedConversation) {
@@ -233,45 +218,45 @@ useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-const handleSelectUser = async (user) => {
-    if (!currentUserId) return;
+    const handleSelectUser = async (user) => {
+        if (!currentUserId) return;
 
-    const participants = [currentUserId, user._id].sort();
-    const q = query(collection(db, "chats"), where('participants', '==', participants));
-    
-    try {
-        setLoading(true); 
-        const querySnapshot = await getDocs(q);
+        const participants = [currentUserId, user._id].sort();
+        const q = query(collection(db, "chats"), where('participants', '==', participants));
+        
+        try {
+            setLoading(true);
+            const querySnapshot = await getDocs(q);
 
-        if (!querySnapshot.empty) {
-            const existingConvoId = querySnapshot.docs[0].id;
-            navigate(`/chat/${existingConvoId}`);
-        } else {
-            const newConvoData = {
-                participants: participants,
-                participantNames: [reduxUser.name, user.name].sort(),
-                createdAt: firestoreServerTimestamp()
-            };
-            const newConvoRef = await addDoc(collection(db, "chats"), newConvoData);
+            if (!querySnapshot.empty) {
+                const existingConvoId = querySnapshot.docs[0].id;
+                navigate(`/chat/${existingConvoId}`);
+            } else {
+                const newConvoData = {
+                    participants: participants,
+                    participantNames: [reduxUser.name, user.name].sort(),
+                    createdAt: firestoreServerTimestamp()
+                };
+                const newConvoRef = await addDoc(collection(db, "chats"), newConvoData);
 
-            const newSelectedConvoObject = {
-                id: newConvoRef.id,
-                participants: newConvoData.participants,
-                otherUserName: user.name, 
-                otherUserId: user._id, 
-                createdAt: { toDate: () => new Date() } 
-            };
+                const newSelectedConvoObject = {
+                    id: newConvoRef.id,
+                    participants: newConvoData.participants,
+                    otherUserName: user.name,
+                    otherUserId: user._id,
+                    createdAt: { toDate: () => new Date() }
+                };
 
-            setSelectedConversation(newSelectedConvoObject);
+                setSelectedConversation(newSelectedConvoObject);
 
-            navigate(`/chat/${newConvoRef.id}`);
+                navigate(`/chat/${newConvoRef.id}`);
+            }
+        } catch (error) {
+            console.error("Error navigating to chat:", error);
+        } finally {
+            setLoading(false);
         }
-    } catch (error) {
-        console.error("Error navigating to chat:", error);
-    } finally {
-        setLoading(false); 
-    }
-};
+    };
     
     const sendMessage = async (content, type = 'text') => {
         if (!selectedConversation || !currentUserId) return;
@@ -410,61 +395,73 @@ const handleSelectUser = async (user) => {
         setNewMessage(prevInput => prevInput + emojiObject.emoji);
         setShowEmojiPicker(false);
     };
+
+    const handleConversationSelect = (conversation) => {
+        setSelectedConversation(conversation);
+        setActiveMobileView('chat');
+    };
+
+    const handleBackToList = () => {
+        setActiveMobileView('list');
+    };
     
     if (loading) return <div className={styles.loadingScreen}>Loading...</div>;
 
     return (
         <div className={styles.chatPageContainer}>
-            <div className={styles.sidebar}>
-                   <div className={styles.userList}>
-                     <h3>New Chat</h3>
-                       <ul>
-                           {users.map(user => (
-
-                               <li key={user._id} onClick={() => handleSelectUser(user)}>
-                               <img 
-                    src={user.avatar ? getImageUrl(user.avatar) : `https://ui-avatars.com/api/?name=${user.name}&background=0D8ABC&color=fff`} 
-                    alt={user.name}
-                    className={styles.sidebarAvatar}
-                />
+            <div className={`${styles.sidebar} ${activeMobileView === 'list' ? styles['mobile-visible'] : ''}`}>
+                <div className={styles.userList}>
+                    <h3>New Chat</h3>
+                    <ul>
+                        {users.map(user => (
+                            <li key={user._id} onClick={() => handleConversationSelect({ id: null, otherUserId: user._id, otherUserName: user.name, otherUserAvatar: user.avatar })}>
+                                <img
+                                    src={user.avatar ? getImageUrl(user.avatar) : `https://ui-avatars.com/api/?name=${user.name}&background=0D8ABC&color=fff`}
+                                    alt={user.name}
+                                    className={styles.sidebarAvatar}
+                                />
                                 <span className={`${styles.statusIndicator} ${userStatuses[user._id]?.isOnline ? styles.online : ''}`}></span>
                                 {user.name}
-                               </li>
-                           ))}
-                       </ul>
-                   </div>
-                   <div className={styles.conversationList}>
-                     <h3>My Chats</h3>
-                       <ul>
-                           {conversations.map(convo => (
-                               <li 
-                                   key={convo.id} 
-                                   className={convo.id === selectedConversation?.id ? styles.selected : ''}
-                                   onClick={() => navigate(`/chat/${convo.id}`)}
-                               > <img 
-                    src={convo.otherUserAvatar ? getImageUrl(convo.otherUserAvatar) : `https://ui-avatars.com/api/?name=${convo.otherUserName}&background=0D8ABC&color=fff`} 
-                    alt={convo.otherUserName}
-                    className={styles.sidebarAvatar}
-                />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className={styles.conversationList}>
+                    <h3>My Chats</h3>
+                    <ul>
+                        {conversations.map(convo => (
+                            <li
+                                key={convo.id}
+                                className={convo.id === selectedConversation?.id ? styles.selected : ''}
+                                onClick={() => handleConversationSelect(convo)}
+                            >
+                                <img
+                                    src={convo.otherUserAvatar ? getImageUrl(convo.otherUserAvatar) : `https://ui-avatars.com/api/?name=${convo.otherUserName}&background=0D8ABC&color=fff`}
+                                    alt={convo.otherUserName}
+                                    className={styles.sidebarAvatar}
+                                />
                                 <span className={`${styles.statusIndicator} ${userStatuses[convo.otherUserId]?.isOnline ? styles.online : ''}`}></span>
                                 {convo.otherUserName}
-                               </li>
-                           ))}
-                       </ul>
-                   </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
 
-            <div className={styles.mainChatArea}>
+            <div className={`${styles.mainChatArea} ${activeMobileView === 'chat' ? styles['mobile-visible'] : ''}`}>
                 {!selectedConversation ? (
                     <div className={styles.chatWindowPlaceholder}>Select a user or conversation to start.</div>
                 ) : (
                     <>
                         <div className={styles.chatWindowHeader}>
-                        <img 
-        src={selectedConversation.otherUserAvatar ? getImageUrl(selectedConversation.otherUserAvatar) : `https://ui-avatars.com/api/?name=${selectedConversation.otherUserName}&background=0D8ABC&color=fff`} 
-        alt={selectedConversation.otherUserName}
-        className={styles.headerAvatar}
-    />
+                            <button className={styles.backButton} onClick={handleBackToList}>
+                                &larr;
+                            </button>
+                            <img
+                                src={selectedConversation.otherUserAvatar ? getImageUrl(selectedConversation.otherUserAvatar) : `https://ui-avatars.com/api/?name=${selectedConversation.otherUserName}&background=0D8ABC&color=fff`}
+                                alt={selectedConversation.otherUserName}
+                                className={styles.headerAvatar}
+                            />
                             <div className={styles.headerUserInfo}>
                                 <span className={styles.headerUserName}>{selectedConversation.otherUserName}</span>
                                 {isOtherUserTyping ? (
@@ -493,7 +490,7 @@ const handleSelectUser = async (user) => {
                                         </div>
                                         {msg.reactions && Object.keys(msg.reactions).length > 0 && (
                                             <div className={styles.reactionsContainer}>
-                                                {Object.entries(msg.reactions).map(([emoji, users]) => 
+                                                {Object.entries(msg.reactions).map(([emoji, users]) =>
                                                     users.length > 0 ? <span key={emoji}>{emoji} {users.length}</span> : null
                                                 )}
                                             </div>

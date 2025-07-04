@@ -1,6 +1,4 @@
-/* Header.module.css (TAM VƏ TEMA UYUMLU VERSİYA) */
 
-/* === ƏSAS NAVBAR KONTEYNERİ (YAPIŞQAN OLAN ELEMENT) === */
 .navbar {
   background:var(--navbar-background);;
   height: 80px;
@@ -17,11 +15,11 @@
 }
 
 .navbar.isSticky {
-  background: var(--surface-color); /* Dəyişdirildi */
-  box-shadow: 0 4px 12px var(--shadow-color); /* Dəyişdirildi */
+  background: var(--surface-color); 
+  box-shadow: 0 4px 12px var(--shadow-color); 
 }
 
-/* === NAVBAR-IN İÇİNDƏKİ MƏZMUN ÜÇÜN KONTEYNER === */
+
 .navbarContainer {
   display: flex;
   justify-content: space-between;
@@ -32,7 +30,7 @@
   padding: 0 2rem;
 }
 
-/* === LOQO === */
+
 .navbarLogo {
   display: flex;
   align-items: center;
@@ -44,7 +42,6 @@
   object-fit: contain;
 }
 
-/* === NAVİQASİYA MENYUSU (BÖYÜK EKRAN) === */
 .navMenu {
   display: flex;
   align-items: center;
@@ -58,7 +55,7 @@
   height: 80px;
 }
 .navLinks {
-  color: var(--text-secondary); /* Dəyişdirildi */
+  color: var(--text-secondary); 
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -70,15 +67,15 @@
   transition: color 0.3s ease, border-color 0.3s ease;
 }
 .navLinks:hover {
-  color: var(--text-primary); /* Dəyişdirildi */
+  color: var(--text-primary); 
 }
 .activeLink {
   composes: navLinks;
-  color: var(--primary-color); /* Dəyişdirildi */
-  border-bottom-color: var(--primary-color); /* Dəyişdirildi */
+  color: var(--primary-color); 
+  border-bottom-color: var(--primary-color); 
 }
 
-/* === AVTORİZASİYA VƏ PROFİL DROPDOWN BLOKU === */
+
 .navAuth, .profileDropdown {
   display: flex;
   align-items: center;
@@ -102,16 +99,16 @@
 }
 .profileName {
   font-weight: 600;
-  color: var(--text-primary); /* Dəyişdirildi */
+  color: var(--text-primary); 
 }
 .dropdownMenu {
   position: absolute;
   top: calc(100% + 15px);
   right: 0;
-  background-color: var(--surface-color); /* Dəyişdirildi */
+  background-color: var(--surface-color); 
   min-width: 230px;
-  box-shadow: 0 10px 25px var(--shadow-color); /* Dəyişdirildi */
-  border: 1px solid var(--border-color); /* Dəyişdirildi */
+  box-shadow: 0 10px 25px var(--shadow-color); 
+  border: 1px solid var(--border-color); 
   border-radius: 10px;
   z-index: 1000;
   padding: 0.5rem 0;
@@ -127,7 +124,7 @@
   visibility: visible;
 }
 .dropdownMenu a, .dropdownMenu button, .dropdownMenu .menuItem {
-  color: var(--text-primary); /* Dəyişdirildi */
+  color: var(--text-primary); 
   padding: 12px 20px;
   text-decoration: none;
   display: flex;
@@ -142,18 +139,18 @@
   transition: background-color 0.2s ease;
 }
 .dropdownMenu a:hover, .dropdownMenu button:hover, .dropdownMenu .menuItem:hover {
-  background-color: var(--surface-secondary-color); /* Dəyişdirildi */
+  background-color: var(--surface-secondary-color); 
 }
 .separator {
   height: 1px;
-  background-color: var(--border-color); /* Dəyişdirildi */
+  background-color: var(--border-color); 
   margin: 0.5rem 0;
 }
 
-/* === HAMBURGER MENYU İKONU (BÖYÜK EKRANDA GİZLİ) === */
+
 .menuIcon {
   display: none;
-  color: var(--text-primary); /* Dəyişdirildi */
+  color: var(--text-primary); 
 }
 
 
@@ -161,7 +158,7 @@
 .btn {
     border-radius: 8px;
     padding: 10px 22px;
-    font-size: 1rem; /* Səliqəli boşluq ilə */
+    font-size: 1rem; 
     font-weight: 600;
     outline: none;
     border: 2px solid transparent;
@@ -172,12 +169,6 @@
 }
 
 
-
-
-
-/* Əsas düymə (Sign Up) */
-
-/* Əsas düymə (Sign Up) */
 .btnPrimary {
     background-color: var(--primary-color);
     color: var(--primary-text-color);
@@ -189,7 +180,7 @@
     border-color: var(--primary-hover-color);
 }
 
-/* İkinci dərəcəli düymə (Login) */
+
 .btnSecondary {
     background-color: transparent;
     color: var(--primary-color);
@@ -204,10 +195,49 @@
 .navAuth {
   display: flex;
   align-items: center;
-  gap: 1rem; /* YENİ ƏLAVƏ: Düymələr arasına 1rem (təxminən 16px) boşluq qoyur */
+  gap: 1rem; 
 }
 
-/* === MOBİL GÖRÜNÜŞ ÜÇÜN BÜTÜN QAYDALAR === */
+
+
+.navMobileActions {
+    display: none;
+    width: 100%;
+    margin-top: auto; 
+    padding-top: 1rem;
+}
+
+
+.mobileMenuItem {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 1.25rem;
+    width: 100%;
+    text-align: left;
+    
+    background: none;
+    border: none;
+    border-top: 1px solid var(--border-color);
+    
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.mobileMenuItem:hover {
+    background-color: var(--primary-accent-background);
+    color: var(--primary-color);
+}
+
+.navMobileAuth {
+  display: none;
+}
+
+
 @media screen and (max-width: 960px) {
   .navMenu {
     display: flex;
@@ -219,7 +249,7 @@
     left: -100%;
     opacity: 1;
     transition: all 0.5s ease;
-    background: var(--surface-color); /* Dəyişdirildi */
+    background: var(--surface-color); 
     gap: 0;
   }
   .navMenu.active {
@@ -231,10 +261,9 @@
   }
   .navLinks {
     text-align: center;
-    padding: 1.5rem;
+    padding: 1rem;
     width: 100%;
     display: table;
-    border-bottom: 1px solid var(--border-color); /* Dəyişdirildi */
   }
   .activeLink {
     border-bottom-color: transparent;
@@ -247,4 +276,23 @@
     font-size: 1.8rem;
     cursor: pointer;
   }
+   .navMobileActions {
+        display: block; 
+    }
+    .navMobileAuth {
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        gap: 1rem; 
+        padding: 2rem; 
+        margin-top: 1rem;
+        border-top: 1px solid var(--border-color);
+        width: 100%;
+        box-sizing: border-box; 
+    }
+
+
+    .navMobileAuth .btn {
+        width: 70%;
+    }
 }

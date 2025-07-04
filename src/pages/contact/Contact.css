@@ -1,57 +1,55 @@
-/* ContactPage.css (YENİLƏNMİŞ VƏ TEMA UYUMLU VERSİYA) */
-
-.contact-container {
-    color: var(--text-primary); /* Dəyişdirildi */
-    padding: 2rem 4rem;
-    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
-}
 
 .contact-header {
     text-align: center;
-    padding: 3rem 0;
-    border-bottom: 1px solid var(--border-color); /* Dəyişdirildi */
-    margin-bottom: 3rem;
+    padding: 5rem 2rem;
+    background-color: var(--surface-color); 
 }
 
 .contact-header h1 {
-    font-size: 3rem;
+    font-size: clamp(2.5rem, 5vw, 3.5rem); 
     font-weight: 700;
-    color: var(--text-primary); /* Dəyişdirildi */
+    color: var(--text-primary);
 }
 
 .contact-header p {
     font-size: 1.1rem;
-    color: var(--text-secondary); /* Dəyişdirildi */
-    max-width: 600px;
-    margin: 0.5rem auto 0;
+    color: var(--text-secondary);
+    max-width: 650px;
+    margin: 1rem auto 0;
+    line-height: 1.6;
 }
+
 
 .contact-main-content {
     display: flex;
-    gap: 4rem;
+    gap: 3rem;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 4rem auto;
+    padding: 0 2rem;
 }
+
 
 .contact-form-wrapper,
 .contact-info-wrapper {
-    background-color: var(--surface-color); /* Dəyişdirildi */
+    background-color: var(--surface-color);
     padding: 2.5rem;
-    border-radius: 8px; /* Dəyişdirildi */
-    box-shadow: 0 5px 15px var(--shadow-color); /* Dəyişdirildi */
+    border-radius: 16px; 
+    box-shadow: 0 8px 30px -10px var(--shadow-color);
     flex: 1;
 }
 
 .contact-form-wrapper h2,
 .contact-info-wrapper h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 600;
     margin-bottom: 2rem;
-    color: var(--text-primary); /* Dəyişdirildi */
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 0.5rem;
-    display: inline-block;
+    color: var(--text-primary);
+    border-bottom: none; 
+    display: flex; 
+    align-items: center;
+    gap: 0.8rem;
 }
+
 
 .contact-form .form-group {
     margin-bottom: 1.5rem;
@@ -61,31 +59,36 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: var(--text-secondary); /* Dəyişdirildi */
+    color: var(--text-secondary);
 }
 
-/* Input və textarea qlobal stilləri onsuz da alır, bu sadəcə təsdiq üçündür */
 .contact-form input,
 .contact-form textarea {
     width: 100%;
-    padding: 0.8rem 1rem;
-    border: 1px solid var(--border-color); /* Dəyişdirildi */
-    border-radius: 8px; /* Dəyişdirildi */
+    box-sizing: border-box; 
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    background-color: var(--background-color); 
+    color: var(--text-primary);
+    transition: all 0.3s ease;
 }
 
 .contact-form input:focus,
 .contact-form textarea:focus {
     outline: none;
     border-color: var(--primary-color);
+   
+    box-shadow: 0 0 0 3px var(--primary-focus-shadow, rgba(0,123,255,0.25));
 }
 
 .cta-button {
+    width: 100%; 
+    padding: 1rem; 
     background-color: var(--primary-color);
-    color: var(--primary-text-color); /* Dəyişdirildi */
-    padding: 0.8rem 2rem;
-    border-radius: 50px;
+    color: var(--primary-text-color);
+    border-radius: 8px; 
     border: none;
     font-weight: 600;
     font-size: 1rem;
@@ -94,70 +97,82 @@
 }
 
 .cta-button:hover {
-    background-color: var(--primary-hover-color); /* Dəyişdirildi */
+    background-color: var(--primary-hover-color);
     transform: translateY(-3px);
+    box-shadow: 0 5px 15px var(--primary-shadow-color, rgba(0,123,255,0.2));
 }
+
 
 .contact-info-intro {
     line-height: 1.7;
     margin-bottom: 2rem;
-    color: var(--text-secondary); /* Dəyişdirildi */
+    color: var(--text-secondary);
 }
 
 .contact-details-list {
     list-style: none;
     padding: 0;
-    margin-bottom: 2rem;
+    margin: 0;
 }
 
 .contact-details-list li {
     display: flex;
     align-items: center;
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    color: var(--text-primary); /* Dəyişdirildi */
+    font-size: 1.05rem;
+    margin-bottom: 1.8rem;
+    color: var(--text-primary);
+    word-break: break-all; 
 }
 
 .contact-icon {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: var(--primary-color);
     margin-right: 1.5rem;
     width: 25px;
+    text-align: center;
 }
 
 .contact-map {
     margin-top: 2rem;
+    border-radius: 8px;
+    overflow: hidden; 
 }
 
-/* Media query-lərdə dəyişiklik yoxdur, olduğu kimi qalır */
+.contact-map iframe {
+    width: 100%;
+    border: none;
+}
+
+
+
 @media (max-width: 992px) {
     .contact-main-content {
         flex-direction: column;
     }
 }
-@media (max-width: 768px) {
-    /* ... */
-}
 
-/* === RESPONSİVLİK === */
-@media (max-width: 992px) {
-    .contact-main-content {
-        flex-direction: column;
-    }
-}
-
+/* --- Mobil Görünüşü --- */
 @media (max-width: 768px) {
-    .contact-container {
-        padding: 1rem 1.5rem;
+    .contact-container, .contact-main-content {
+        padding: 0 1.5rem;
     }
-    .contact-header h1 {
-        font-size: 2.2rem;
+
+    .contact-header {
+        padding: 4rem 1.5rem;
     }
+    
     .contact-main-content {
+        margin: 3rem auto;
         gap: 2rem;
     }
+
     .contact-form-wrapper,
     .contact-info-wrapper {
-        padding: 1.5rem;
+        padding: 2rem 1.5rem;
+    }
+
+    .contact-form-wrapper h2,
+    .contact-info-wrapper h2 {
+        font-size: 1.5rem;
     }
 }

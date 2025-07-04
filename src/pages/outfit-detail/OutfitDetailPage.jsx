@@ -44,7 +44,7 @@ const OutfitDetailPage = () => {
 
     return (
         <div className="outfit-detail-container">
-            <Link to="/outfit-planner" className="back-link">← Return to Outfit Planner</Link>
+            <Link to="/outfit-creator" className="back-link">← Return to Outfit Planner</Link>
             <h1>{outfit.name}</h1>
             <div className="outfit-items-grid">
                 {outfit.items.map(item => (

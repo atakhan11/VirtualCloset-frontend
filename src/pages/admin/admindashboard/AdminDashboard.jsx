@@ -5,7 +5,7 @@ import axios from 'axios';
 import { selectToken } from '../../../redux/reducers/userSlice';
 import styles from './AdminDashboard.module.css';
 
-import { FaUsers, FaTshirt } from 'react-icons/fa';
+import { FaUsers, FaTshirt, FaBullhorn, FaTrash } from 'react-icons/fa'; 
 
 import { 
     BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, 
@@ -14,28 +14,77 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { enUS } from 'date-fns/locale'; 
 
+const AnnouncementForm = ({ token, onNewAnnouncement }) => {
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMessage('');
+        setError('');
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            await axios.post('/api/admin/announcements', { title, content }, config);
+            
+            setMessage('Announcement shared successfully!');
+            setTitle(''); 
+            setContent('');
+            
+            if (onNewAnnouncement) onNewAnnouncement(); 
+        } catch (err) {
+            setError(err.response?.data?.message || 'Error sharing announcement.');
+        }
+    };
+
+    return (
+        <div className={`${styles.chartContainer} ${styles.shareFormContainer}`}>
+            <h2><FaBullhorn /> Share a New Announcement</h2>
+            <form onSubmit={handleSubmit}>
+                <input 
+                    type="text" 
+                    placeholder="Title (e.g., New Features Available!)" 
+                    value={title} 
+                    onChange={e => setTitle(e.target.value)} 
+                    required 
+                />
+                <textarea 
+                    rows="3" 
+                    placeholder="Content of the announcement..." 
+                    value={content} 
+                    onChange={e => setContent(e.target.value)} 
+                    required 
+                />
+                <button type="submit">Share Now</button>
+            </form>
+            {message && <p className={styles.formMessageSuccess}>{message}</p>}
+            {error && <p className={styles.formMessageError}>{error}</p>}
+        </div>
+    );
+};
+
+
 const AdminDashboard = () => {
     const [stats, setStats] = useState(null);
-    const [activities, setActivities] = useState([]); 
+    const [activities, setActivities] = useState([]);
+    const [announcements, setAnnouncements] = useState([]); 
     const [loading, setLoading] = useState(true);
     const token = useSelector(selectToken);
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF'];
 
-    useEffect(() => {
-    const getStats = async () => {
-        setLoading(true); 
+    const fetchData = async () => {
         try {
-            const config = {
-                headers: { Authorization: `Bearer ${token}` }
-            };
-            
-            const { data: statsData } = await axios.get('/api/admin/stats', config);
-            setStats(statsData);
-            
-            const { data: activitiesData } = await axios.get('/api/admin/activities', config);
-            setActivities(activitiesData);
-
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const [statsRes, activitiesRes, announcementsRes] = await Promise.all([
+                axios.get('/api/admin/stats', config),
+                axios.get('/api/admin/activities', config),
+                axios.get('/api/admin/announcements', config)
+            ]);
+            setStats(statsRes.data);
+            setActivities(activitiesRes.data);
+            setAnnouncements(announcementsRes.data);
         } catch (error) {
             console.error("Failed to load dashboard data", error);
         } finally {
@@ -43,15 +92,29 @@ const AdminDashboard = () => {
         }
     };
 
-    getStats();
-}, [token]);
+    useEffect(() => {
+        setLoading(true);
+        fetchData();
+    }, [token]);
+
+    const handleDeleteAnnouncement = async (id) => {
+        if(window.confirm('Are you sure you want to delete this announcement?')){
+            try {
+                const config = { headers: { Authorization: `Bearer ${token}` } };
+                await axios.delete(`/api/admin/announcements/${id}`, config);
+                fetchData(); 
+            } catch (error) {
+                console.error('Failed to delete announcement', error);
+                alert('Could not delete the announcement.');
+            }
+        }
+    };
 
     if (loading) return <p>Loading...</p>;
 
     return (
         <div className={styles.dashboard}>
             <h1 className={styles.title}>Admin Panel</h1>
-
             <div className={styles.summaryCards}>
                 <div className={styles.card}>
                     <div className={styles.icon} style={{ backgroundColor: '#007bff' }}><FaUsers /></div>
@@ -78,6 +141,23 @@ const AdminDashboard = () => {
                     <FaTshirt className={styles.navIcon} />
                     <span>View Clothes</span>
                 </Link>
+            </div>
+
+            <AnnouncementForm token={token} onNewAnnouncement={fetchData} />
+
+            <div className={styles.activitySection}>
+                <h2>Posted Announcements</h2>
+                <ul className={styles.itemList}>
+                    {announcements.length > 0 ? announcements.map(ann => (
+                        <li key={ann._id} className={!ann.isActive ? styles.inactive : ''}>
+                            <div className={styles.itemContent}>
+                                <strong>{ann.title} {!ann.isActive && "(Inactive)"}</strong>
+                                <p>{ann.content}</p>
+                            </div>
+                            <button onClick={() => handleDeleteAnnouncement(ann._id)} className={styles.deleteBtn}><FaTrash /></button>
+                        </li>
+                    )) : <p>No announcements found.</p>}
+                </ul>
             </div>
 
             <div className={styles.chartsRow}>

@@ -1,17 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaBullseye, FaLightbulb, FaHeart, FaUsers } from 'react-icons/fa';
-import './About.css';
-
-const yourImageUrl = "https://via.placeholder.com/300";
+import { FaBullseye, FaLightbulb, FaHeart, FaUsers, FaCodeBranch, FaPalette, FaRocket } from 'react-icons/fa';
+import './About.css'; 
 
 const AboutPage = () => {
     return (
         <div className="about-container">
             <header className="about-hero">
                 <div className="about-hero-content">
-                    <h1>Our Story</h1>
-                    <p>We believe style is not just clothing, but a form of expression.</p>
+                    <h1>A Closet Full of Clothes, But Nothing to Wear?</h1>
+                    <p>We've all been there. That's why we created StyleFolio – to transform the daily chaos of choosing an outfit into a moment of creativity and confidence.</p>
                 </div>
             </header>
 
@@ -29,10 +27,10 @@ const AboutPage = () => {
             </section>
             
             <section className="values-section">
-                   <div className="section-title">
-                     <span>OUR PRINCIPLES</span>
-                     <h2>Values That Drive Us Forward</h2>
-                 </div>
+                <div className="section-title">
+                   <span>OUR PRINCIPLES</span>
+                   <h2>Values That Drive Us Forward</h2>
+                </div>
                 <div className="values-grid">
                     <div className="value-card">
                         <FaLightbulb className="value-icon" />

@@ -1,7 +1,5 @@
-/* Footer.module.css (YENİLƏNMİŞ VƏ TEMA UYUMLU VERSİYA) */
 
 .footerContainer {
-  /* Dəyişdirildi */
   background-color: var(--footer-background-color);
   color: var(--footer-text-secondary);
   padding: 4rem 5% 2rem;
@@ -30,7 +28,7 @@
 
 .footerLinks h4,
 .footerContact h4 {
-  color: var(--footer-text-primary); /* Dəyişdirildi */
+  color: var(--footer-text-primary); 
   margin-top: 0;
   margin-bottom: 1.5rem;
   font-size: 1.1rem;
@@ -48,13 +46,13 @@
 }
 
 .footerLinks a {
-  color: var(--footer-text-secondary); /* Dəyişdirildi */
+  color: var(--footer-text-secondary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footerLinks a:hover {
-  color: var(--footer-text-primary); /* Dəyişdirildi */
+  color: var(--footer-text-primary); 
   text-decoration: underline;
 }
 
@@ -66,7 +64,7 @@
 
 .emailLink {
   display: inline-block;
-  color: var(--primary-color); /* Dəyişdirildi */
+  color: var(--primary-color); 
   text-decoration: none;
   font-weight: 500;
   transition: text-decoration 0.2s ease;
@@ -86,24 +84,24 @@
 }
 
 .socialIcons a {
-  color: var(--footer-text-secondary); /* Dəyişdirildi */
+  color: var(--footer-text-secondary); 
   font-size: 1.5rem;
   transition: all 0.2s ease;
 }
 
 .socialIcons a:hover {
-  color: var(--footer-text-primary); /* Dəyişdirildi */
+  color: var(--footer-text-primary); 
   transform: translateY(-3px);
 }
 
 .footerCopyright {
   text-align: center;
   padding-top: 2rem;
-  border-top: 1px solid var(--footer-border-color); /* Dəyişdirildi */
+  border-top: 1px solid var(--footer-border-color); 
   font-size: 0.85rem;
 }
 
-/* === RESPONSİVLİK (Dəyişiklik yoxdur) === */
+
 @media (max-width: 992px) {
   .footerContent {
       grid-template-columns: 1fr 1fr;
@@ -132,3 +130,4 @@
       justify-content: center;
   }
 }
+

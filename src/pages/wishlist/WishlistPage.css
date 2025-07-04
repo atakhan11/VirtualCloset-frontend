@@ -92,7 +92,7 @@
     color: #28a745;
 }
 
-/* YENİ: Kartların altındakı düymə paneli */
+
 .card-footer {
     display: flex;
     justify-content: space-around;
@@ -122,8 +122,7 @@
 }
 
 
-/* === Modal Pəncərəsi üçün Stillər === */
-/* Köhnə modal stilləri (modal-backdrop, modal-content) olduğu kimi qalır */
+
 .modal-backdrop {
     position: fixed;
     top: 0;
@@ -198,7 +197,7 @@
     color: #007bff;
 }
 
-/* YENİ: Linkdən məlumat çəkmə bölməsi */
+
 .scrape-section {
     background-color: #f8f9fa;
     padding: 1rem;
@@ -227,7 +226,7 @@
     color: #555;
 }
 
-/* YENİ: Modal Düymələri üçün Təkmilləşdirilmiş Stillər */
+
 .modal-actions {
     display: flex;
     justify-content: flex-end;
@@ -267,11 +266,30 @@
 }
 
 
+@media (max-width: 768px) {
+    .wishlist-container {
+        padding: 1rem;
+    }
+
+    .wishlist-header {
+        flex-direction: column;
+        align-items: stretch; 
+        text-align: center;
+    }
+
+    .wishlist-card img {
+        height: 250px; 
+    }
+}
+
+@media (max-width: 576px) {
+    .wishlist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+}
 
 
-/* ========================================================= */
-/* === Arzu Siyahısı Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
-/* ========================================================= */
 
 [data-theme='dark'] .wishlist-header {
     border-bottom-color: var(--border-color);

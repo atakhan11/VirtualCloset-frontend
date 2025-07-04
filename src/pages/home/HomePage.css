@@ -1,14 +1,8 @@
-/* === QLOBAL STİLLƏR VƏ DƏYİŞƏNLƏR === */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-/* HomePage.css (YENİLƏNMİŞ VƏ TƏK SİSTEMƏ UYĞUNLAŞDIRILMIŞ VERSİYA) */
-
-/* Köhnə :root bloku buradan silindi */
 
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
-    /* Bu stillər artıq qlobal index.css-də olduğu üçün buradan silinə bilər */
 }
 
 .home-container {
@@ -22,7 +16,7 @@ body {
 
 .section-title span {
     font-size: 1rem;
-    color: var(--primary-color); /* Dəyişdirildi */
+    color: var(--primary-color);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -32,24 +26,24 @@ body {
     font-size: 2.5rem;
     font-weight: 700;
     margin-top: 0.5rem;
-    color: var(--text-primary); /* Dəyişdirildi */
+    color: var(--text-primary);
 }
 
 /* === ƏSAS QARŞILAMA BÖLMƏSİ (HERO) === */
 .hero-section-enhanced {
-  height: 100vh;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.pexels.com/photos/5264907/pexels-photo-5264907.jpeg');
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.pexels.com/photos/5264907/pexels-photo-5264907.jpeg');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .hero-image-enhanced {
-  display: none;
+    display: none;
 }
 
 .hero-content-enhanced {
@@ -86,34 +80,46 @@ body {
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
-    border: 2px solid var(--primary-text-color); /* Dəyişdirildi */
+    border: 2px solid var(--primary-text-color);
+}
+
+.cta-button-secondaryy {
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid var(--primaryy-text-color);
+    color: var(--primaryy-text-color);
 }
 
 .cta-button-primary {
-    background-color: var(--primary-text-color); /* Dəyişdirildi */
+    background-color: var(--primary-text-color);
     color: var(--primary-color);
 }
 
 .cta-button-primary:hover {
     background-color: transparent;
-    color: var(--primary-text-color); /* Dəyişdirildi */
+    color: var(--primaryy-text-color);
+    border-color: var(--primaryy-text-color);
     transform: translateY(-3px);
 }
 
 .cta-button-secondary {
     background-color: transparent;
-    color: var(--primary-text-color); /* Dəyişdirildi */
+    color: var(--primaryy-text-color);
+    border-color: var(--primary-text-color);
 }
 
-.cta-button-secondary:hover {
-    background-color: var(--primary-text-color); /* Dəyişdirildi */
+.cta-button-secondaryy:hover {
+    background-color: var(--primary-text-color);
     color: var(--primary-color);
     transform: translateY(-3px);
 }
 
 .hero-image-enhanced img {
     max-width: 500px;
-    border-radius: 12px; /* Dəyişdirildi */
+    border-radius: 12px;
     box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4);
     animation: fadeIn 1.5s ease-out;
 }
@@ -122,27 +128,27 @@ body {
 /* === XÜSUSİYYƏTLƏR BÖLMƏSİ === */
 .features-section-enhanced {
     padding: 6rem 2rem;
-    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
+    background-color: var(--surface-secondary-color);
 }
 
 .features-grid-enhanced {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(470px, 1fr));
     gap: 2rem;
 }
 
 .feature-card-enhanced {
-    background: var(--surface-color); /* Dəyişdirildi */
+    background: var(--surface-color);
     padding: 2.5rem 2rem;
-    border-radius: 12px; /* Dəyişdirildi */
-    box-shadow: 0 10px 20px var(--shadow-color); /* Dəyişdirildi */
+    border-radius: 12px;
+    box-shadow: 0 10px 20px var(--shadow-color);
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card-enhanced:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px var(--shadow-color); /* Dəyişdirildi */
+    box-shadow: 0 15px 30px var(--shadow-color);
 }
 
 .feature-icon-enhanced {
@@ -155,19 +161,152 @@ body {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1rem;
-    color: var(--text-primary); /* Dəyişdirildi */
+    color: var(--text-primary);
 }
 
 .feature-card-enhanced p {
     font-size: 1rem;
     line-height: 1.6;
-    color: var(--text-secondary); /* Dəyişdirildi */
+    color: var(--text-secondary);
 }
+
+
+
+.how-it-works-section {
+    padding: 100px 20px;
+    background-color: var(--background-color); 
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.steps-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 30px;
+    margin-top: 70px;
+    flex-wrap: wrap;
+}
+
+.step-card {
+    background-color: var(--surface-color);
+    border-radius: 16px;
+    padding: 40px;
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border-top: 5px solid transparent;
+    box-shadow: 0 10px 40px var(--shadow-color);
+}
+
+.step-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 20px 50px var(--primary-shadow-color);
+    border-top-color: var(--primary-color);
+}
+
+.step-card::before {
+    position: absolute;
+    top: -20px;
+    right: 15px;
+    font-size: 100px;
+    font-weight: 800;
+    color: var(--step-number-color);
+    z-index: 0;
+    transition: color 0.4s ease;
+}
+
+#step-1::before { content: '01'; }
+#step-2::before { content: '02'; }
+#step-3::before { content: '03'; }
+
+.step-card:hover::before {
+    color: var(--step-number-hover-color);
+}
+
+.step-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--primary-accent-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px auto;
+    font-size: 36px;
+    color: var(--primary-color);
+    position: relative;
+    z-index: 1;
+    transition: all 0.4s ease;
+}
+
+.step-card:hover .step-icon-wrapper {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+    transform: scale(1.1) rotate(10deg);
+}
+
+.step-card h3, .step-card p {
+    position: relative;
+    z-index: 1;
+}
+
+.step-card h3 {
+    font-size: 24px;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+}
+
+.step-card p {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.7;
+    transition: color 0.3s ease;
+}
+
+.step-card-button {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 10px 22px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.step-card-button:hover {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+    .steps-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .step-card {
+        width: 100%;
+        max-width: 400px;
+    }
+}
+
+
 
 /* === İLHAM BÖLMƏSİ === */
 .inspiration-section {
     padding: 6rem 2rem;
-    background-color: var(--surface-color); /* Dəyişdirildi */
+    background-color: var(--surface-color);
 }
 
 .inspiration-grid {
@@ -180,8 +319,8 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 12px; /* Dəyişdirildi */
-    box-shadow: 0 10px 20px var(--shadow-color); /* Dəyişdirildi */
+    border-radius: 12px;
+    box-shadow: 0 10px 20px var(--shadow-color);
     transition: transform 0.3s ease;
 }
 
@@ -192,7 +331,7 @@ body {
 /* === RƏYLƏR BÖLMƏSİ === */
 .testimonials-section-enhanced {
     padding: 6rem 2rem;
-    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
+    background-color: var(--surface-secondary-color);
 }
 
 .testimonials-grid-enhanced {
@@ -204,10 +343,10 @@ body {
 }
 
 .testimonial-card-enhanced {
-    background: linear-gradient(45deg, var(--primary-hover-color), var(--primary-color)); /* Dəyişdirildi */
-    color: var(--primary-text-color); /* Dəyişdirildi */
+    background: linear-gradient(45deg, var(--primary-hover-color), var(--primary-color));
+    color: var(--primary-text-color);
     padding: 2.5rem;
-    border-radius: 12px; /* Dəyişdirildi */
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -218,7 +357,7 @@ body {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    border: 3px solid var(--primary-text-color); /* Dəyişdirildi */
+    border: 3px solid var(--primary-text-color);
     margin-bottom: 1.5rem;
 }
 
@@ -240,10 +379,10 @@ body {
 .final-cta-section-enhanced {
     text-align: center;
     padding: 6rem 2rem;
-    background-color: var(--text-primary); /* Dəyişdirildi */
-    color: var(--background-color); /* Dəyişdirildi */
-    height: 30vh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.pexels.com/photos/6461485/pexels-photo-6461485.jpeg');
+    background-color: var(--text-primary);
+    color: var(--background-color);
+    height: 40vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.pexels.com/photos/7679685/pexels-photo-7679685.jpeg');
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
@@ -262,8 +401,8 @@ body {
 }
 
 .cta-button-final {
-    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color)); /* Dəyişdirildi */
-    color: var(--primary-text-color); /* Dəyişdirildi */
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color));
+    color: var(--primary-text-color);
     padding: 1.2rem 2.5rem;
     border-radius: 50px;
     text-decoration: none;
@@ -277,14 +416,10 @@ body {
 
 .cta-button-final:hover {
     transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 10px 20px var(--primary-color); /* Dəyişdirildi, amma şəffaflıq əlavə etmək daha yaxşı olar */
+    box-shadow: 0 10px 20px var(--primary-color);
 }
 
 /* Animasiyalar (dəyişiklik yoxdur) */
-@keyframes slideInFromLeft { /*...*/ }
-@keyframes fadeIn { /*...*/ }
-
-/* === ANİMASİYALAR === */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -319,12 +454,19 @@ body {
     .section-title h2 {
         font-size: 2rem;
     }
-    .hero-title {
-        font-size: 2.5rem;
-    }
-    .hero-subtitle {
-        font-size: 1rem;
-    }
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: 300;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
     .hero-buttons {
         flex-direction: column;
     }
@@ -334,5 +476,24 @@ body {
     }
     .inspiration-grid {
         grid-template-columns: 1fr;
+    }
+    .final-cta-section-enhanced {
+        height: auto; 
+        padding: 5rem 1.5rem; 
+        background-attachment: scroll; 
+    }
+
+    .final-cta-section-enhanced h2 {
+        font-size: 1.8rem; 
+    }
+
+    .final-cta-section-enhanced p {
+        font-size: 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .cta-button-final {
+        padding: 1rem 2rem;
+        font-size: 1rem;
     }
 }

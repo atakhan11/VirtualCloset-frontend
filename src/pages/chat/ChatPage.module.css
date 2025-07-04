@@ -1,8 +1,8 @@
-/* ===== SİZİN MÖVCUD STİLLƏRİNİZ OLDUĞU KİMİ QALIR ===== */
+
 .chatPageContainer {
     flex-grow: 2;
     display: flex;
-    height: calc(100vh - 80px); /* Header hündürlüyünü nəzərə alır */
+    height: calc(100vh - 80px);
     width: 100%;
     background-color: var(--background-color);;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -56,14 +56,13 @@
     color: white;
 }
 
-/* Əsas Çat Pəncərəsi */
 .mainChatArea {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-     height: 100%; 
+    height: 100%; 
     overflow: hidden;
-     height: 100%; 
+    height: 100%; 
     min-height: 0;
 }
 
@@ -71,7 +70,7 @@
     padding: 15px 20px;
     background-color: #ffffff;
     border-bottom: 1px solid #d1d7db;
-     flex-shrink: 0;
+    flex-shrink: 0;
 }
 
 .chatWindowPlaceholder, .loadingScreen {
@@ -83,7 +82,6 @@
     color: #65676b;
 }
 
-/* MESAJ SAHƏSİ */
 .messagesArea {
     flex-grow: 1;
     padding: 20px;
@@ -93,7 +91,6 @@
     gap: 12px;
 }
 
-/* MESAJ BALONLARI */
 .messageWrapper {
     display: flex;
     flex-direction: column;
@@ -163,7 +160,6 @@
     color: #31a24c;
 }
 
-/* REAKSİYA STİLLƏRİ */
 .reactionPicker {
     position: absolute;
     top: -35px;
@@ -223,7 +219,6 @@
     align-items: center;
 }
 
-/* MESAJ GÖNDƏRMƏ PANELİ */
 .messageInputArea {
     display: flex;
     align-items: center;
@@ -262,7 +257,7 @@
     font-size: 15px;
     margin: 0 10px;
     outline: none;
-     flex-shrink: 0
+    flex-shrink: 0
 }
 .messageInput:disabled {
     background-color: #e4e6eb;
@@ -316,31 +311,26 @@
     height: 40px;
 }
 
-/* === YENİ STILLƏR: Aktivlik Statusu üçün === */
-
-/* Siyahıdakı adların yanındakı nöqtə */
 .statusIndicator {
     height: 10px;
     width: 10px;
-    background-color: #bbb; /* Offline rəngi */
+    background-color: #bbb;
     border-radius: 50%;
     display: inline-block;
     margin-right: 10px;
     transition: background-color 0.3s ease;
-    flex-shrink: 0; /* Sıxışmanın qarşısını alır */
+    flex-shrink: 0;
 }
 
 .statusIndicator.online {
-    background-color: #28a745; /* Online rəngi (yaşıl) */
+    background-color: #28a745;
 }
 
-/* Siyahıdakı elementlərin düzülüşü üçün */
 .userList li, .conversationList li {
     display: flex;
     align-items: center;
 }
 
-/* Söhbət başlığı (Header) üçün */
 .chatWindowHeader {
     display: flex;
     gap: 15px;
@@ -349,7 +339,7 @@
 
 .headerUserInfo {
     display: flex;
-    flex-direction: column; /* Ad və statusu alt-alta yerləşdirir */
+    flex-direction: column;
     line-height: 1.2;
 }
 
@@ -365,7 +355,7 @@
 }
 
 .headerStatusOnline {
-    color: #28a745; /* Yaşıl rəng */
+    color: #28a745;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -381,20 +371,18 @@
 }
 
 .headerStatusOffline {
-    color: #868e96; /* Boz rəng */
+    color: #868e96;
 }
 
-/* "Yazır..." indikatorunun stili */
 .typingIndicator {
     font-size: 0.8rem;
-    color: #007bff; /* Mavi rəng */
+    color: #007bff;
     font-style: italic;
     margin-top: 2px;
-    height: 16px; /* Status yazısı ilə eyni hündürlüyü tutması üçün */
+    height: 16px;
     animation: pulse 1.5s infinite ease-in-out;
 }
 
-/* "Yazır..." üçün nəbz effekti animasiyası */
 @keyframes pulse {
     0% {
         opacity: 0.5;
@@ -408,9 +396,6 @@
 }
 
 
-/* === YENİ STILLƏR: Mesaj Status İkonları (Quşlar) üçün === */
-
-/* Mesajın sağ altındakı məlumat bloku */
 .messageInfo {
     display: flex;
     align-items: center;
@@ -420,43 +405,37 @@
     padding: 0 5px;
 }
 
-/* Göndərilən mesajların məlumat bloku üçün xüsusi rəng */
 .sentWrapper .messageInfo {
     color: #a0a0a0;
 }
 
-/* Göndərilən mesajların status ikonlarının ümumi stili */
 .messageInfo svg {
-    font-size: 16px; /* İkonların ölçüsü */
-    color: #a0a0a0; /* Standard rəng (göndərildi/çatdırıldı üçün boz) */
+    font-size: 16px;
+    color: #a0a0a0;
 }
 
-/* Oxunmuş mesajların ikonları üçün xüsusi rəng (mavi) */
 .iconSeen {
-    color: #4599ff !important; /* Mavi rəng və digər stilləri üstələməsi üçün !important */
+    color: #4599ff !important;
 }
 
 
 .emojiPickerContainer {
     position: absolute;
-    bottom: 100%; /* Input sahəsinin tam üstündə */
-    right: 20px; /* Sağ tərəfə yapışdırırıq */
+    bottom: 100%;
+    right: 20px;
     z-index: 100;
     box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
     border-radius: 16px;
     overflow: hidden;
 }
 
-/* Kitabxananın öz stillərini üstələmək üçün */
 .emojiPickerContainer aside {
     border-radius: 16px !important;
     border: none !important;
-    background-color: #f8f9fa; /* Arxa fon rəngi */
+    background-color: #f8f9fa;
 }
 
-/* Emoji düyməsinin özü */
 .iconButton {
-    /* ... mövcud stillər ... */
     position: relative;
     z-index: 5;
 }
@@ -468,7 +447,7 @@
     border-radius: 50%;
     margin-right: 12px;
     object-fit: cover;
-    flex-shrink: 0; /* Konteyner daralanda avatarın ölçüsünün dəyişməsinin qarşısını alır */
+    flex-shrink: 0;
 
     img {
         width: 100%;
@@ -478,7 +457,6 @@
     }
 }
 
-/* Söhbət başlığı üçün avatar */
 .headerAvatar {
     width: 45px;
     height: 45px;
@@ -487,51 +465,89 @@
     object-fit: cover;
 }
 
-/* === LAYOUT DÜZƏLİŞLƏRİ === */
-
-/* Kenar siyahıdakı elementləri avatara görə düzənləyirik */
 .userList li, .conversationList li {
     display: flex;
     align-items: center;
-    position: relative; /* Status indikatoru üçün vacibdir */
+    position: relative;
     padding: 10px 15px;
-    /* Digər stillər (cursor, border-radius, transition) olduğu kimi qala bilər */
 }
 
-/* Söhbət başlığını avatara görə düzənləyirik */
 .chatWindowHeader {
     display: flex;
     align-items: center;
-    /* Digər stillər (padding, border, background) olduğu kimi qala bilər */
 }
 
-/* Status indikatorunun yerini avatara görə yeniləyirik */
 .statusIndicator {
     position: absolute;
     bottom: 10px;
-    left: 42px; /* Avatarın eni (40px) + bir az məsafə */
+    left: 42px;
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    border: 2px solid var(--background-color, #fff); /* Temaya uyğun arxa fon */
-    background-color: #888; /* Offline statusu */
+    border: 2px solid var(--background-color, #fff);
+    background-color: #888;
 }
 
 .statusIndicator.online {
-    background-color: #28a745; /* Online statusu */
+    background-color: #28a745;
+}
+
+.backButton {
+    display: none;
+    background: none; border: none; font-size: 1.8rem;
+    color: var(--primary-color); cursor: pointer;
+    margin-right: 0.5rem;
 }
 
 
+@media (max-width: 992px) {
+    .chatPageContainer {
+        position: relative;
+    }
+
+    .sidebar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 20;
+        transform: translateX(-100%);
+        border-right: none;
+    }
+
+    .sidebar.mobile-visible {
+        transform: translateX(0);
+    }
+
+    .mainChatArea {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+    }
+
+    .mainChatArea.mobile-visible {
+        z-index: 30;
+    }
+    
+    .backButton {
+        display: block;
+    }
+}
+
+@media (max-width: 576px) {
+    .messagesArea {
+        padding: 1rem;
+    }
+    .messageInputArea {
+        padding: 10px;
+    }
+}
 
 
-
-
-/* ============================================== */
-/* === QARANLIQ REJİM ÜÇÜN ƏLAVƏ STİLLƏR === */
-/* Bu blok yalnız qaranlıq rejim aktiv olduqda işə düşür */
-/* ============================================== */
-
-/* --- ÜMUMİ KONTEYNER VƏ KENAR PANEL (SIDEBAR) --- */
 [data-theme='dark'] .chatPageContainer {
     background-color: var(--background-color);
 }
@@ -566,7 +582,6 @@
 }
 
 
-/* --- ƏSAS ÇAT PƏNCƏRƏSİ --- */
 [data-theme='dark'] .chatWindowHeader {
     background-color: var(--surface-color);
     border-bottom-color: var(--border-color);
@@ -577,7 +592,6 @@
     color: var(--text-secondary);
 }
 
-/* --- MESAJ SAHƏSİ VƏ BALONLARI --- */
 [data-theme='dark'] .messagesArea {
     background-color: var(--surface-secondary-color);
 }
@@ -596,7 +610,6 @@
     color: var(--text-secondary);
 }
 
-/* --- REAKSİYA ELEMENTLƏRİ --- */
 [data-theme='dark'] .reactionPicker {
     background-color: var(--surface-color);
     border-color: var(--border-color);
@@ -612,7 +625,6 @@
 }
 
 
-/* --- MESAJ GÖNDƏRMƏ PANELİ --- */
 [data-theme='dark'] .messageInputArea {
     background-color: var(--surface-color);
     border-top-color: var(--border-color);
@@ -641,7 +653,6 @@
 }
 
 
-/* --- STATUS GÖSTƏRİCİLƏRİ --- */
 [data-theme='dark'] .headerUserName {
     color: var(--text-primary);
 }
@@ -670,7 +681,6 @@
     background-color: var(--success-color);
 }
 
-/* --- MESAJ STATUSU ("QUŞLAR") --- */
 [data-theme='dark'] .sentWrapper .messageInfo {
     color: var(--text-secondary);
     opacity: 0.8;
@@ -684,7 +694,6 @@
     color: var(--primary-color) !important;
 }
 
-/* --- EMOJI PƏNCƏRƏSİ --- */
 [data-theme='dark'] .emojiPickerContainer aside {
     background-color: var(--surface-color) !important;
     border: 1px solid var(--border-color) !important;

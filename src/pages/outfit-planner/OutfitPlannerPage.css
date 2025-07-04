@@ -24,6 +24,8 @@
     border-radius: 8px;
     padding: 1.5rem;
     border: 1px solid #dee2e6;
+    position: relative;
+    z-index: 1;
 }
 
 .all-clothes-panel h3 {
@@ -42,15 +44,13 @@
     padding-right: 10px;
 }
 
-/* === DƏYİŞİKLİK BURADADIR === */
 .cloth-item-small {
     position: relative;
-    cursor: grab; /* Sürükləmək üçün daha uyğun ikon */
+    cursor: grab;
     border-radius: 8px;
     overflow: hidden;
-    /* Keçid zamanı "atlamanın" qarşısını almaq üçün şəffaf çərçivə */
     border: 2px solid transparent; 
-    transition: all 0.2s ease-in-out; /* Animasiya */
+    transition: all 0.2s ease-in-out;
 }
 
 .cloth-item-small img {
@@ -58,16 +58,13 @@
     height: 100px;
     object-fit: cover;
     display: block;
-    border-radius: 6px; /* İçəridəki şəklin kənarlarını yumşaldır */
+    border-radius: 6px;
 }
 
-/* Yeni Hover Effekti */
 .cloth-item-small:hover {
-    border-color: #007bff; /* Üzərinə gələndə mavi çərçivə */
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.2); /* Mavi rəngdə kölgə */
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
 }
-
-/* .add-overlay stilləri artıq lazım olmadığı üçün silindi */
 
 
 /* Sağ Panel: Kombin Qurucu */
@@ -77,6 +74,8 @@
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 2;
 }
 
 .outfit-builder-panel h3 {
@@ -92,7 +91,7 @@
     gap: 10px;
     padding: 1rem;
     align-content: flex-start;
-    transition: background-color 0.3s ease; /* Drop zone üçün animasiya */
+    transition: background-color 0.3s ease;
 }
 
 .outfit-drop-zone p {
@@ -218,11 +217,76 @@
     color: inherit;
 }
 
+.cloth-item-small.is-dragging {
+    z-index: 100;
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.is-dragging {
+    z-index: 100;
+    transform: scale(1.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
 
+@media (max-width: 992px) {
+    .planner-layout {
+        flex-direction: column;
+    }
 
-/* ========================================================== */
-/* === Kombin Planlayıcı üçün QARANLIQ REJİM ƏLAVƏSİ === */
-/* ========================================================== */
+    .all-clothes-panel {
+        max-height: 300px;
+    }
+}
+
+/* --- Mobil Görünüşü --- */
+@media (max-width: 768px) {
+    .planner-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .all-clothes-panel {
+        max-height: 400px; 
+    }
+    
+    .clothes-list {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    }
+    
+    .outfit-drop-zone {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .outfit-item {
+        width: 100%; 
+        height: auto;
+        aspect-ratio: 3 / 4;
+    }
+
+    .outfit-item img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .remove-item-btn {
+        width: 24px;
+        height: 24px;
+        top: 4px;
+        right: 4px;
+    }
+
+    .outfit-actions {
+        flex-direction: column;
+    }
+
+    .outfit-name-input, .save-outfit-btn {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
 
 [data-theme='dark'] .planner-container h1,
 [data-theme='dark'] .all-clothes-panel h3,

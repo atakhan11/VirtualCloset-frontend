@@ -1,91 +1,103 @@
-/* Signup.module.css (YENİLƏNMİŞ VƏ TEMA UYUMLU VERSİYA) */
+
 
 .signupContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh;
-    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
-    padding: 20px;
+    min-height: calc(100vh - 80px);
+    background-color: var(--surface-secondary-color);
+    padding: 2rem 1rem;
+    box-sizing: border-box;
 }
 
 .formWrapper {
-    background: var(--surface-color); /* Dəyişdirildi */
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px var(--shadow-color); /* Dəyişdirildi */
+    background: var(--surface-color);
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px -10px var(--shadow-color);
     width: 100%;
-    max-width: 450px;
+    max-width: 480px;
+    border-top: 5px solid var(--primary-color);
 }
 
 .formTitle {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 2rem;
     font-size: 2rem;
-    color: var(--text-primary); /* Dəyişdirildi */
+    font-weight: 700;
+    color: var(--text-primary);
 }
 
 .formGroup {
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
 }
 
 .label {
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: var(--text-secondary); /* Dəyişdirildi */
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-secondary);
 }
 
-/* Input stilləri qlobal index.css-dən gəlir, lakin bəzi dəqiqləşdirmələr */
 .input {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid var(--border-color); /* Dəyişdirildi */
-    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     font-size: 1rem;
-    transition: border-color 0.3s;
-    /* background və color qlobal olaraq təyin edilib */
+    transition: all 0.3s ease;
+    background-color: var(--background-color);
+    color: var(--text-primary);
 }
 
 .input:focus {
     outline: none;
     border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-focus-shadow);
 }
 
-/* Button stilləri qlobal index.css-dən gəlir */
 .button {
     width: 100%;
-    padding: 15px;
+    padding: 1rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     background-color: var(--primary-color);
     color: var(--primary-text-color);
     font-size: 1.1rem;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 10px;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
 }
 
-.button:hover {
+.button:hover:not(:disabled) {
     background-color: var(--primary-hover-color);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px var(--primary-shadow-color);
+}
+
+.button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 .errorMessage {
-    color: var(--danger-color); /* Dəyişdirildi */
-    background-color: var(--danger-background-color); /* Dəyişdirildi */
-    border: 1px solid var(--danger-color); /* Dəyişdirildi */
-    padding: 10px;
-    border-radius: 5px;
+    color: var(--danger-color);
+    background-color: var(--danger-background-color);
+    border: 1px solid var(--danger-color);
+    padding: 1rem;
+    border-radius: 8px;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
 }
 
 .switchLink {
     text-align: center;
-    margin-top: 20px;
-    color: var(--text-secondary); /* Dəyişdirildi */
+    margin-top: 1.5rem;
+    color: var(--text-secondary);
 }
 
 .switchLink a {
@@ -99,10 +111,27 @@
 }
 
 .orDivider {
+    display: flex;
+    align-items: center;
     text-align: center;
-    margin: 20px 0;
-    color: var(--text-secondary); /* Dəyişdirildi */
-    font-weight: bold;
+    margin: 1.5rem 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.orDivider::before,
+.orDivider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.orDivider:not(:empty)::before {
+    margin-right: .75em;
+}
+
+.orDivider:not(:empty)::after {
+    margin-left: .75em;
 }
 
 .socialBtn {
@@ -110,25 +139,27 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 12px;
-    border-radius: 5px;
+    padding: 0.8rem;
+    border-radius: 8px;
     text-decoration: none;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    border: 1px solid var(--border-color); /* Dəyişdirildi */
-    background-color: var(--surface-color); /* Dəyişdirildi */
-    color: var(--text-primary); /* Dəyişdirildi */
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    color: var(--text-primary);
 }
 
 .socialBtn:hover {
-    box-shadow: 0 2px 8px var(--shadow-color); /* Dəyişdirildi */
+    border-color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--shadow-color);
 }
 
 .socialBtn img {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     margin-right: 12px;
 }
 
@@ -145,4 +176,22 @@
 
 .forgotPasswordLink:hover {
     text-decoration: underline;
+}
+
+
+@media (max-width: 768px) {
+    .signupContainer {
+        padding: 1rem;
+        align-items: flex-start; 
+        padding-top: 2rem;
+    }
+
+    .formWrapper {
+        padding: 1.5rem;
+    }
+
+    .formTitle {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
 }

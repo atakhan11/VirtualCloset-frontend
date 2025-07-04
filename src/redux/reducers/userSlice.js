@@ -8,7 +8,7 @@ const API_URL = 'http://localhost:5000/api/users';
 const token = localStorage.getItem('token');
 const userItem = localStorage.getItem('user');
 
-// Yoxlayırıq: userItem mövcuddurmu VƏ "undefined" mətnindən fərqlidirmi?
+
 const user = (userItem && userItem !== 'undefined') 
     ? JSON.parse(userItem) 
     : null;
@@ -80,7 +80,6 @@ const userSlice = createSlice({
             const { user, token } = action.payload;
             state.userInfo = user;
             state.token = token;
-            // Məlumatları localStorage-a da yazırıq ki, səhifə yenilənəndə itməsin
             localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('token', token);
         },

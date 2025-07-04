@@ -1,15 +1,14 @@
-/* AllClothesScreen.css */
 
 .clothes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsiv dizayn */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
     gap: 1.5rem;
 }
 
 .cloth-card {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    overflow: hidden; /* Şəklin kənarlarının kartdan çıxmasının qarşısını alır */
+    overflow: hidden; 
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
@@ -17,14 +16,14 @@
 
 .cloth-card img {
     width: 100%;
-    height: auto; /* <-- ƏSAS DƏYİŞİKLİK: Proporsiyanı qoruyur */
-    aspect-ratio: 1 / 1.2; /* Şəkillərin hündürlüyünü təxminən eyni saxlayır */
+    height: auto; 
+    aspect-ratio: 1 / 1.2; 
     object-fit: cover;
-    display: block; /* Şəklin altındakı boşluğu aradan qaldırır */
+    display: block; 
 }
 
 .cloth-card h4, .cloth-card p, .cloth-card .action-buttons {
-    padding: 0 1rem; /* Mətnləri kənarlardan içəri çəkir */
+    padding: 0 1rem; 
 }
 
 .cloth-card h4 {
@@ -39,6 +38,6 @@
 
 .cloth-card .action-buttons {
     padding-bottom: 1rem;
-    margin-top: auto; /* Düymələri həmişə kartın altına itələyir */
+    margin-top: auto; 
     padding-top: 0.5rem;
 }

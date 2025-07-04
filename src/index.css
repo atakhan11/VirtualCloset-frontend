@@ -2,33 +2,35 @@
 
 /* --- 1. TEMA RƏNG DƏYİŞƏNLƏRİ --- */
 :root {
-  /* İşıqlı rejim üçün standart rənglər */
-  --background-color: #f8f9fa; /* Əsas arxa fon */
-  --surface-color: #ffffff;    /* Kartlar, modallar, navbar kimi elementlərin fonu */
-  --surface-secondary-color: #f8f9fa; /* Bir az fərqli fon (məs: chat-da mesajlar) */
-  --text-primary: #212529;      /* Əsas qara mətn */
-  --text-secondary: #6c757d;    /* İkinci dərəcəli boz mətn */
-  --border-color: #e9ecef;      /* Ayırıcı xətlərin rəngi */
-  --shadow-color: rgba(0, 0, 0, 0.08); /* Kölgə rəngi */
-  --primary-color: #007bff;      /* Əsas brend rəngi (göy) */
+  --background-color: #f8f9fa;
+  --surface-color: #ffffff;
+  --surface-secondary-color: #f8f9fa;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --border-color: #e9ecef;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --primary-color: #007bff;
   --primary-hover-color: #0056b3;
-  --primary-text-color: #ffffff; /* Brend rəngli düymələrin üstündəki mətn */
-   --footer-background-color: #212529;
+  --primary-text-color: #ffffff;
+  --primaryy-text-color: #ffffff;
+  --footer-background-color: #212529;
   --footer-text-primary: #ffffff;
   --footer-text-secondary: #adb5bd;
   --footer-border-color: #343a40;
   --navbar-background: transparent;
-  --success-color: #28a745; /* Yaşıl rəng (online statusu üçün) */
-  --danger-color: #dc3545;  /* Qırmızı rəng (səs yazma və s. üçün) */
---success-hover-color: #218838; /* Yaşıl düymənin hover rəngi */
-  --primary-accent-background: #e7f5ff; /* Açıq mavi fon (ikonlar üçün) */
-   --success-background-color: #d1e7dd; 
-   --warning-color: #fcc419; /* Sarı rəng (redaktə ikonu üçün) */
-  --primary-focus-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Mavi fokus kölgəsi */
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --success-hover-color: #218838;
+  --primary-accent-background: #e7f5ff;
+  --success-background-color: #d1e7dd; 
+  --warning-color: #fcc419;
+  --primary-focus-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  --step-number-color: #e9ecef;
+  --step-number-hover-color: #ddeeff;
+  --primary-shadow-color: rgba(0, 123, 255, 0.15);
 }
 
 [data-theme='dark'] {
-  /* Qaranlıq rejim aktiv olduqda bu rənglər istifadə olunacaq */
   --background-color: #121212;
   --surface-color: #1e1e1e;
   --surface-secondary-color: #121212;
@@ -39,20 +41,23 @@
   --primary-color: #58a6ff;
   --primary-hover-color: #3e97ff;
   --primary-text-color: #1e1e1e;
-  --footer-background-color: #161618; /* Bir az daha fərqli tünd rəng */
-  --footer-text-primary: var(--text-primary); /* Qlobal açıq rəngli mətn */
-  --footer-text-secondary: var(--text-secondary); /* Qlobal ikinci dərəcəli mətn */
-  --footer-border-color: var(--border-color); /* Qlobal sərhəd xətti rəngi */
-   --navbar-background: var(--surface-color);
-    --success-color: #34c759; /* Daha parlaq yaşıl */
-  --danger-color: #ff453a;   /* Daha parlaq qırmızı */
-   --success-hover-color: #34c759; /* Qaranlıq rejimdə daha parlaq yaşıl */
-  --primary-accent-background: rgba(88, 166, 255, 0.1); /* Qaranlıq rejimdə tünd mavi fon */
-  --danger-background-color: #f8d7da; /* Xəta mesajları üçün açıq qırmızı fon */
-   --danger-background-color: rgba(255, 69, 58, 0.15); /* Qaranlıq rejimdə tünd qırmızı fon */
-     --success-background-color: rgba(52, 199, 89, 0.15);
-      --warning-color: #ffd43b; /* Qaranlıq rejimdə daha parlaq sarı */
+  --primaryy-text-color: #ffffff;
+  --footer-background-color: #161618;
+  --footer-text-primary: var(--text-primary);
+  --footer-text-secondary: var(--text-secondary);
+  --footer-border-color: var(--border-color);
+  --navbar-background: var(--surface-color);
+  --success-color: #34c759;
+  --danger-color: #ff453a;
+  --success-hover-color: #34c759;
+  --primary-accent-background: rgba(88, 166, 255, 0.1);
+  --danger-background-color: rgba(255, 69, 58, 0.15);
+  --success-background-color: rgba(52, 199, 89, 0.15);
+  --warning-color: #ffd43b;
   --primary-focus-shadow: 0 0 0 0.2rem rgba(88, 166, 255, 0.25);
+  --step-number-color: rgba(255, 255, 255, 0.08);
+  --step-number-hover-color: rgba(255, 255, 255, 0.12);
+  --primary-shadow-color: rgba(88, 166, 255, 0.2);
 }
 
 /* --- 2. QLOBAL ELEMENTLƏRƏ TƏTBİQ ETMƏK --- */
@@ -62,14 +67,13 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Bütün input, select, textarea və button-lar üçün baza stillər */
 input, textarea, select, button {
   background-color: var(--surface-color);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 10px;
-  font-family: inherit; /* body-dən gələn şrifti istifadə etsin */
+  font-family: inherit;
 }
 
 input:focus, textarea:focus, select:focus {
@@ -83,4 +87,10 @@ button {
   color: var(--primary-text-color);
   border: none;
   font-weight: 600;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }

@@ -2,12 +2,12 @@
 
 /* === QLOBAL ABOUT STİLLƏRİ === */
 .about-container {
-    color: var(--text-primary); /* Dəyişdirildi */
+    color: var(--text-primary);
 }
 
 .section-subtitle {
     font-size: 1rem;
-    color: var(--primary-color); /* Dəyişdirildi */
+    color: var(--primary-color);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -24,7 +24,6 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    /* Dəyişdirildi: Şəklin üzərindəki mətn həmişə ağ qalmalıdır */
     color: #ffffff; 
 }
 
@@ -46,7 +45,7 @@
     align-items: center;
     gap: 4rem;
     padding: 6rem 4rem;
-    background-color: var(--surface-color); /* Dəyişdirildi */
+    background-color: var(--surface-color);
 }
 
 .mission-content {
@@ -58,13 +57,13 @@
     font-weight: 700;
     margin-top: 0.5rem;
     margin-bottom: 1.5rem;
-    color: var(--text-primary); /* Dəyişdirildi */
+    color: var(--text-primary);
 }
 
 .mission-content p {
     font-size: 1.1rem;
     line-height: 1.8;
-    color: var(--text-secondary); /* Dəyişdirildi */
+    color: var(--text-secondary);
 }
 
 .mission-image {
@@ -73,15 +72,15 @@
 
 .mission-image img {
     width: 100%;
-    border-radius: 8px; /* Dəyişdirildi */
-    box-shadow: 0 10px 25px var(--shadow-color); /* Dəyişdirildi */
+    border-radius: 8px;
+    box-shadow: 0 10px 25px var(--shadow-color);
 }
 
 
 /* === DƏYƏRLƏR BÖLMƏSİ === */
 .values-section {
     padding: 6rem 2rem;
-    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
+    background-color: var(--surface-secondary-color);
 }
 
 .values-grid {
@@ -93,36 +92,36 @@
 }
 
 .value-card {
-    background-color: var(--surface-color); /* Dəyişdirildi */
+    background-color: var(--surface-color);
     padding: 2.5rem 2rem;
-    border-radius: 8px; /* Dəyişdirildi */
+    border-radius: 8px;
     text-align: center;
-    border: 1px solid var(--border-color); /* Dəyişdirildi */
+    border: 1px solid var(--border-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .value-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px var(--shadow-color); /* Dəyişdirildi */
+    box-shadow: 0 15px 30px var(--shadow-color);
 }
 
 .value-icon {
     font-size: 3rem;
-    color: var(--primary-color); /* Dəyişdirildi */
+    color: var(--primary-color);
     margin-bottom: 1.5rem;
 }
 
 .value-card h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
-    color: var(--text-primary); /* Dəyişdirildi */
+    color: var(--text-primary);
 }
 
 
 /* === KOMANDA (YARADICI) BÖLMƏSİ === */
 .team-section {
     padding: 6rem 2rem;
-    background-color: var(--surface-color); /* Dəyişdirildi */
+    background-color: var(--surface-color);
 }
 
 .team-member-card {
@@ -136,7 +135,7 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 5px solid var(--primary-color); /* Dəyişdirildi */
+    border: 5px solid var(--primary-color);
     margin-bottom: 1.5rem;
     object-fit: cover;
 }
@@ -145,11 +144,11 @@
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--text-primary); /* Dəyişdirildi */
+    color: var(--text-primary);
 }
 
 .team-member-card span {
-    color: var(--primary-color); /* Dəyişdirildi */
+    color: var(--primary-color);
     font-weight: 600;
 }
 
@@ -157,7 +156,7 @@
     font-size: 1.1rem;
     line-height: 1.7;
     margin-top: 1.5rem;
-    color: var(--text-secondary); /* Dəyişdirildi */
+    color: var(--text-secondary);
 }
 
 
@@ -165,9 +164,8 @@
 .about-final-cta {
     text-align: center;
     padding: 5rem 2rem;
-    /* Dəyişdirildi: Brend rənglərindən gradient yaradırıq */
     background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color));
-    color: var(--primary-text-color); /* Dəyişdirildi */
+    color: var(--primary-text-color);
 }
 .about-final-cta h2 {
     font-size: 2.5rem;
@@ -175,7 +173,6 @@
 }
 
 .cta-button-primary-about {
-    /* Dəyişdirildi: Bu, "tərs" düymədir */
     background-color: var(--primary-text-color);
     color: var(--primary-color);
     padding: 1rem 2.5rem;
@@ -189,24 +186,23 @@
 }
 .cta-button-primary-about:hover {
     transform: translateY(-5px) scale(1.05);
-    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
+    background-color: var(--surface-secondary-color);
 }
 
 
 .roadmap-section {
     padding: 80px 20px;
-    background-color: #fff; /* Və ya #f8f9fa kimi çox açıq boz rəng */
-    font-family: 'Poppins', sans-serif; /* Saytınızda istifadə etdiyiniz şriftlə əvəz edin */
+    background-color: #fff;
+    font-family: 'Poppins', sans-serif;
 }
 
-/* Bölmə başlığının stili (Digər səhifələrlə eyni) */
 .section-title {
     text-align: center;
     margin-bottom: 60px;
 }
 
 .section-title span {
-    color: #007bff; /* Saytınızın əsas mavi rəngi */
+    color: #007bff;
     font-weight: 600;
     font-size: 14px;
     text-transform: uppercase;
@@ -215,20 +211,18 @@
 }
 
 .section-title h2 {
-    color: #212529; /* Başlıq üçün tünd rəng */
+    color: #212529;
     font-size: 36px;
     font-weight: 700;
 }
 
-/* Mərhələləri saxlayan konteyner */
 .roadmap-container {
     display: flex;
     justify-content: center;
     gap: 30px;
-    flex-wrap: wrap; /* Kiçik ekranlarda alt-alta düşməsi üçün */
+    flex-wrap: wrap;
 }
 
-/* Hər bir mərhələ kartının stili */
 .roadmap-stage {
     flex: 1;
     min-width: 280px;
@@ -246,7 +240,6 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* Mərhələ başlıqları (Now, Next, Future) */
 .roadmap-stage h4 {
     font-size: 24px;
     color: #343a40;
@@ -256,7 +249,6 @@
     padding-bottom: 15px;
 }
 
-/* Mərhələlərin içindəki siyahı */
 .roadmap-stage ul {
     list-style: none;
     padding: 0;
@@ -264,7 +256,7 @@
 }
 
 .roadmap-stage li {
-    color: #6c757d; /* Mətn üçün boz rəng */
+    color: #6c757d;
     font-size: 16px;
     margin-bottom: 15px;
     line-height: 1.6;
@@ -272,18 +264,14 @@
     align-items: flex-start;
 }
 
-/* Siyahı elementlərinin önündəki işarə */
 .roadmap-stage li::before {
     content: '✔';
-    color: #007bff; /* Mavi rəngli işarə */
+    color: #007bff;
     font-weight: bold;
     margin-right: 12px;
     margin-top: 2px;
 }
 
-/* --- Xüsusi Mərhələlərin Stil Fərqləri --- */
-
-/* "Next" mərhələsini vurğulamaq üçün */
 .roadmap-stage.upcoming {
     border-color: #007bff;
     box-shadow: 0 5px 20px rgba(0, 123, 255, 0.1);
@@ -294,25 +282,15 @@
     border-bottom-color: rgba(0, 123, 255, 0.2);
 }
 
-/* "Future" mərhələsinin daha gələcəkdə olduğunu bildirmək üçün */
 .roadmap-stage.future {
     opacity: 0.85;
 }
 
 .roadmap-stage.future li::before {
-    content: '→'; /* Fərqli işarə */
+    content: '→';
     color: #6c757d;
 }
 
-
-/* === RESPONSİVLİK === */
-@media (max-width: 992px) {
-    /* ... dəyişiklik yoxdur ... */
-}
-
-@media (max-width: 768px) {
-    /* ... dəyişiklik yoxdur ... */
-}
 
 /* === RESPONSİVLİK === */
 @media (max-width: 992px) {
@@ -343,6 +321,33 @@
     
     .roadmap-stage {
         width: 100%;
-        max-width: 500px; /* Ortada daha səliqəli görünməsi üçün */
+        max-width: 500px;
     }
+    .mission-content p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+ 
+}
+
+@media (max-width: 576px) {
+  .about-hero {
+    background-image: none;
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+    background-attachment: scroll;
+
+    height: auto;
+    min-height: 40vh;
+
+    padding: 4rem 1.5rem; 
+  }
+
+  .about-hero-content h1 {
+    font-size: clamp(2.2rem, 8vw, 3rem);
+  }
+
+  .about-hero-content p {
+    font-size: 1rem;
+  }
 }

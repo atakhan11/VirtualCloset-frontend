@@ -336,26 +336,42 @@ input:checked + .slider:before {
 }
 
 /* Responsivlik */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .formsGrid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .profileContainer {
+        padding: 1rem;
+        margin: 1rem auto;
     }
     .profileHeader {
         flex-direction: column;
         text-align: center;
+        padding: 1.5rem;
     }
-    .themeSwitcher {
-        position: static;
-        margin-top: 1rem;
+    .statsPanel {
+        gap: 1rem;
+    }
+    .statItem {
+        padding: 1rem;
+    }
+    .statItem span { font-size: 1.5rem; }
+    .statItem p { font-size: 0.9rem; }
+}
+
+@media (max-width: 576px) {
+    .userInfo h1 {
+        font-size: 1.8rem;
+    }
+    .profileForm {
+        padding: 1.5rem;
     }
 }
 
 
-
-
-/* ======================================================= */
-/* === Profil Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
-/* ======================================================= */
 
 [data-theme='dark'] .profileContainer,
 [data-theme='dark'] .profileHeader,

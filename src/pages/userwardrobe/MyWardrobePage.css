@@ -1,16 +1,11 @@
-/* ======================================================= */
-/* ===         MyWardrobePage.css (Tam Versiya)        === */
-/* ======================================================= */
 
-/* --- Əsas Səhifə Konteyneri --- */
 .wardrobe-container {
     padding: 2rem 3rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f8f9fa; /* Səhifə arxa fonu */
+    font-family: -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f8f9fa;
     min-height: 100vh;
 }
 
-/* --- Səhifə Başlığı --- */
 .wardrobe-header {
     display: flex;
     justify-content: space-between;
@@ -47,10 +42,9 @@
     box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
 }
 
-/* --- Filter və Axtarış Paneli --- */
 .filter-controls {
     display: flex;
-    flex-wrap: wrap; /* Mobil cihazlar üçün */
+    flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 2rem;
     padding: 1rem;
@@ -84,7 +78,6 @@
     cursor: pointer;
 }
 
-/* --- Geyim Kartları --- */
 .clothes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -147,7 +140,6 @@
     margin: 4px 0;
 }
 
-/* Rənglər */
 .colors-container {
     margin-top: 10px;
     font-size: 0.9rem;
@@ -166,7 +158,6 @@
     cursor: pointer;
 }
 
-/* Qeydlər */
 .notes-container {
     margin-top: 10px;
 }
@@ -182,11 +173,10 @@
     word-break: break-word;
 }
 
-/* Kartın altındakı düymələr */
 .action-buttons {
     display: flex;
     gap: 10px;
-    margin-top: auto; /* Düymələri həmişə dibə itələyir */
+    margin-top: auto;
     padding-top: 1rem;
     border-top: 1px solid #f1f3f5;
 }
@@ -207,7 +197,6 @@
 .delete-btn { color: #fa5252; }
 
 
-/* Boş Qarderob və ya Nəticə Yoxdur */
 .empty-wardrobe {
     grid-column: 1 / -1;
     text-align: center;
@@ -223,8 +212,6 @@
 }
 
 
-/* --- Modal (Pəncərə) Stilləri --- */
-/* Bu stillər əvvəlki cavabda təqdim edilənlərə bənzəyir */
 .modal-backdrop {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
@@ -253,63 +240,51 @@
 
 
 
-/* === RESPONSİV DİZAYN ÜÇÜN ƏLAVƏLƏR === */
-
-/* --- Tablet Stilləri (məs, iPad) --- */
 @media (max-width: 992px) {
     .wardrobe-container {
-        padding: 2rem; /* Kənar boşluqları azaldırıq */
+        padding: 2rem;
     }
 
     .clothes-grid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Kartları bir az kiçildirirk */
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
 }
 
-/* --- Mobil Cihaz Stilləri (məs, iPhone, Android) --- */
 @media (max-width: 768px) {
     .wardrobe-container {
-        padding: 1rem; /* Kənar boşluqları daha da azaldırıq */
+        padding: 1rem;
     }
     
     .wardrobe-header {
-        flex-direction: column; /* Başlıq və düyməni alt-alta yerləşdiririk */
+        flex-direction: column;
         gap: 1rem;
-        align-items: flex-start; /* Elementləri sola sıxlaşdırırıq */
+        align-items: flex-start;
     }
 
     .wardrobe-header h1 {
-        font-size: 1.8rem; /* Başlıq mətnini kiçildirirk */
+        font-size: 1.8rem;
     }
 
     .filter-controls {
-        flex-direction: column; /* Filterləri alt-alta düzürük */
+        flex-direction: column;
     }
 
     .clothes-grid {
-        /* Mobil cihazlarda kartları 2 sütunda göstəririk */
         grid-template-columns: repeat(2, 1fr); 
         gap: 1rem;
     }
 
     .cloth-card img {
-        height: 200px; /* Mobil cihazlarda şəkillərin hündürlüyünü azaldırıq */
+        height: 200px;
     }
 }
 
-/* --- Çox Kiçik Mobil Cihaz Stilləri --- */
 @media (max-width: 480px) {
-     .clothes-grid {
-        /* Ən kiçik ekranlarda kartları tək sütunda göstəririk */
+    .clothes-grid {
         grid-template-columns: 1fr; 
     }
 }
 
-
-
-/* ============================================================== */
-/* === "Qarderobum" Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
-/* ============================================================== */
 
 [data-theme='dark'] .wardrobe-container,
 [data-theme='dark'] .notes-text {

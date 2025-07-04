@@ -1,13 +1,10 @@
 import React from 'react';
-// BrowserRouter, Routes, Route importlarının düzgün olduğundan əmin olun
 import { BrowserRouter, Route, Routes } from 'react-router-dom'; 
 
-// Komponentlərin importları
 import Layout from '../components/layout/Layout.jsx';
-import PrivateRoute from '../components/privateroute/PrivateRoute.jsx'; // Qorunan route üçün komponent
+import PrivateRoute from '../components/privateroute/PrivateRoute.jsx'; 
 import AdminRoute from '../components/adminroute/AdminRoute.jsx';
 
-// Səhifələrin importları
 import Features from '../pages/features/Features.jsx';
 import SignupPage from '../pages/signup/SignUp.jsx';
 import LoginPage from '../pages/login/Login.jsx';
@@ -16,8 +13,6 @@ import ForgotPasswordPage from '../pages/password/ForgotPasswordPage.jsx';
 import ResetPasswordPage from '../pages/password/ResetPasswordPage.jsx';
 import ProfilePage from '../pages/profile/ProfilePage.jsx';
 
-
-// Admin səhifələrinin importları
 import AdminDashboard from '../pages/admin/admindashboard/AdminDashboard.jsx';
 import UserListPage from '../pages/admin/userlist/UserListPage.jsx';
 import AllClothesScreen from '../pages/admin/allclothes/AllClothes.jsx';
@@ -61,12 +56,12 @@ const Router = () => {
             <Route path="/profile" element={<ProfilePage />} />
             {/* YENİ ROUTE BURADA ƏLAVƏ EDİLDİ */}
             <Route path="/my-wardrobe" element={<MyWardrobePage />} />
-            <Route path="/outfit-planner" element={<OutfitPlannerPage />} />
+            <Route path="/outfit-creator" element={<OutfitPlannerPage />} />
             <Route path="/outfits/:id" element={<OutfitDetailPage />} />
             <Route path="/calendar" element={<OutfitCalendarPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
-            <Route path="/chat" element={<ChatPage />} /> {/* <-- Ümumi çat səhifəsi */}
-            <Route path="/chat/:conversationId" element={<ChatPage />} /> {/* Seçilmiş söhbət üçün */}
+            <Route path="/chat" element={<ChatPage />} /> 
+            <Route path="/chat/:conversationId" element={<ChatPage />} /> 
           </Route>
         </Route>
         

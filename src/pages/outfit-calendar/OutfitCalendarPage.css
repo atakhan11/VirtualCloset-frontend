@@ -1,4 +1,4 @@
-/* === ÜMUMİ SƏHİFƏ === */
+
 .calendar-page-container {
     display: flex;
     gap: 1.5rem;
@@ -6,9 +6,8 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* === SOL PANEL (Sidebar) === */
 .calendar-sidebar {
-    flex: 0 0 280px; /* Sabit en */
+    flex: 0 0 280px;
     background: #f8f9fa;
     border-radius: 12px;
     padding: 1.5rem;
@@ -56,12 +55,10 @@
     padding-top: 2rem;
 }
 
-/* === SAĞ PANEL (Təqvim) === */
 .calendar-main {
     flex-grow: 1;
 }
 
-/* Təqvimdəki hadisələrin stili */
 .rbc-event {
     background-color: #007bff;
     border: none;
@@ -172,12 +169,36 @@
     cursor: pointer;
 }
 
+@media (max-width: 992px) {
+    .calendar-page-container {
+        flex-direction: column;
+        padding: 1.5rem;
+    }
 
+    .calendar-sidebar {
+        flex: 1;
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+    }
 
+    .unplanned-outfits-list {
+        max-height: 250px;
+    }
+}
 
-/* ========================================================= */
-/* === Təqvim Səhifəsi üçün QARANLIQ REJİM ƏLAVƏSİ === */
-/* ========================================================= */
+/* --- Mobil Görünüşü --- */
+@media (max-width: 576px) {
+    .calendar-page-container {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .calendar-sidebar, .calendar-main, .calendar-modal {
+        padding: 1rem;
+    }
+}
+
 
 /* --- ÜMUMİ ELEMENTLƏR --- */
 [data-theme='dark'] .calendar-sidebar {

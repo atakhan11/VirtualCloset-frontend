@@ -8,12 +8,11 @@
     align-items: flex-end;
 }
 
-/* Əsas açma/bağlama düyməsi */
+
 .chat-bubble {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    /* Dəyişdirildi: Brend rənglərini dəyişənlərdən götürür */
     background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color));
     color: var(--primary-text-color); 
     display: flex;
@@ -22,7 +21,6 @@
     font-size: 1.8rem;
     border: none;
     cursor: pointer;
-    /* Dəyişdirildi: Kölgə rəngi dəyişəndən gəlir */
     box-shadow: 0 4px 15px var(--shadow-color);
     transition: all 0.3s ease;
     z-index: 1001; 
@@ -37,17 +35,17 @@
     width: 370px;
     height: 500px;
     margin-bottom: 1rem;
-    background-color: var(--surface-color); /* Dəyişdirildi */
+    background-color: var(--surface-color); 
     border-radius: 15px;
-    box-shadow: 0 5px 25px var(--shadow-color); /* Dəyişdirildi */
+    box-shadow: 0 5px 25px var(--shadow-color); 
     display: flex;
     flex-direction: column;
     overflow: hidden;
     transform-origin: bottom right;
-    transition: transform 0.3s ease-out, opacity 0.2s ease-out, visibility 0.3s, background-color 0.3s ease; /* Dəyişdirildi */
+    transition: transform 0.3s ease-out, opacity 0.2s ease-out, visibility 0.3s, background-color 0.3s ease; 
 }
 
-/* Pəncərəni gizlədən və göstərən siniflər (dəyişiklik yoxdur) */
+
 .chat-window.closed {
     opacity: 0;
     transform: scale(0.9) translateY(20px);
@@ -64,11 +62,11 @@
     height: 500px;
 }
 
-/* Pəncərənin başlığı */
+
 .chat-header {
-    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
+    background-color: var(--surface-secondary-color); 
     padding: 1rem;
-    border-bottom: 1px solid var(--border-color); /* Dəyişdirildi */
+    border-bottom: 1px solid var(--border-color); 
     text-align: center;
     flex-shrink: 0;
 }
@@ -76,7 +74,7 @@
 .chat-header h3 {
     margin: 0;
     font-size: 1.1rem;
-    color: var(--text-primary); /* Dəyişdirildi */
+    color: var(--text-primary); 
 }
 
 .chat-messages {
@@ -90,42 +88,39 @@
 }
 
 .message-bubble.user {
-    background-color: var(--primary-color); /* Dəyişdirildi */
-    color: var(--primary-text-color); /* Dəyişdirildi */
+    background-color: var(--primary-color); 
+    color: var(--primary-text-color); 
     align-self: flex-end; border-bottom-right-radius: 5px;
 }
 
 .message-bubble.ai {
-    background-color: var(--surface-secondary-color); /* Dəyişdirildi */
-    color: var(--text-primary); /* Dəyişdirildi */
+    background-color: var(--surface-secondary-color); 
+    color: var(--text-primary); 
     align-self: flex-start; border-bottom-left-radius: 5px;
 }
 
 .chat-input-area {
     display: flex;
     padding: 1rem;
-    border-top: 1px solid var(--border-color); /* Dəyişdirildi */
+    border-top: 1px solid var(--border-color); 
     flex-shrink: 0;
-    /* Dəyişdirildi: Qlobal input stilinə uyğunlaşdırırıq */
     background-color: var(--surface-color); 
 }
 
-/* Inputun özü artıq qlobal index.css-dən stil alır, amma spesifik dəyişikliklər edə bilərik */
+
 .chat-input-area input {
     flex-grow: 1;
     border-radius: 20px;
     margin-right: 10px;
-    /* Dəyişdirildi: Qlobal input stilinə əsaslanır */
     background-color: var(--surface-secondary-color);
     border-color: var(--border-color);
 }
 .chat-input-area input:focus {
-    /* Fokus stili qlobal olaraq təyin edilib, əlavə dəyişikliyə ehtiyac yoxdur */
     border-color: var(--primary-color);
     outline: none;
 }
 
-/* Göndərmə düyməsi qlobal button stilinə əsaslanır */
+
 .chat-input-area button {
     border-radius: 50%;
     width: 45px;
@@ -135,16 +130,29 @@
 }
 
 .chat-input-area button:disabled {
-    background-color: var(--text-secondary); /* Dəyişdirildi */
+    background-color: var(--text-secondary);
     opacity: 0.6;
 }
 
-/* Yüklənmə animasiyası */
 .loading span {
     display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-    background-color: var(--text-secondary); /* Dəyişdirildi */
+    background-color: var(--text-secondary); 
     margin: 0 2px;
     animation: bounce 1.4s infinite ease-in-out both;
 }
 
 @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+    @media (max-width: 768px) {
+        .chat-window {
+            width: 500px;
+            height: 400px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .chat-window {
+            width: 270px;
+            height: 400px;
+        }
+    }

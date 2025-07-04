@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaBoxOpen, FaLayerGroup, FaCalendarCheck, FaMagic, FaHeart, FaUserFriends, FaRocket } from 'react-icons/fa';
+import { FaBoxOpen, FaLayerGroup, FaCalendarCheck, FaMagic, FaHeart, FaUserFriends, FaRocket, FaCamera, FaChartPie } from 'react-icons/fa';
 import './HomePage.css';
 
 const heroImageUrl = "https://images.pexels.com/photos/3755706/pexels-photo-3755706.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
@@ -22,7 +22,7 @@ const HomePage = () => {
                     </p>
                     <div className="hero-buttons">
                         <Link to="/register" className="cta-button-primary">Start for Free</Link>
-                        <Link to="/features" className="cta-button-secondary">Learn More</Link>
+                        <Link to="/features" className="cta-button-secondaryy">Learn More</Link>
                     </div>
                 </div>
                 <div className="hero-image-enhanced">
@@ -62,12 +62,56 @@ const HomePage = () => {
                         <p>Keep a list of items you want to buy and plan your shopping more effectively.</p>
                     </div>
                     <div className="feature-card-enhanced">
-                        <FaUserFriends className="feature-icon-enhanced" />
-                        <h3>Admin Panel</h3>
-                        <p>A powerful management panel to easily control users and the entire system.</p>
-                    </div>
+    <FaChartPie className="feature-icon-enhanced" />
+    <h3>Style Insights</h3>
+    <p>Discover your personal style DNA. See which colors and brands you wear most to make smarter shopping decisions.</p>
+</div>
                 </div>
             </section>
+
+            <section className="how-it-works-section">
+    <div className="section-title">
+        <span>EASY AS 1-2-3</span>
+        <h2>Get Started in Minutes</h2>
+    </div>
+    <div className="steps-container">
+        {/* Step 1 */}
+        <div className="step-card" id="step-1">
+            <div className="step-icon-wrapper">
+                <FaCamera /> 
+            </div>
+            <h3>Upload Your Clothes</h3>
+            <p>Quickly add items from your wardrobe using your phone's camera or computer.</p>
+            <Link to="/my-wardrobe" className="step-card-button">
+                Go to Wardrobe
+            </Link>
+        </div>
+        
+        {/* Step 2 */}
+        <div className="step-card" id="step-2">
+            <div className="step-icon-wrapper">
+                <FaLayerGroup />
+            </div>
+            <h3>Create Outfits</h3>
+            <p>Mix and match your clothes virtually to create unlimited stylish combinations.</p>
+            <Link to="/outfit-creator" className="step-card-button">
+                Create Outfits
+            </Link>
+        </div>
+
+        {/* Step 3 */}
+        <div className="step-card" id="step-3">
+            <div className="step-icon-wrapper">
+                <FaCalendarCheck /> 
+            </div>
+            <h3>Plan Your Week</h3>
+            <p>Assign your favorite outfits to your calendar and never worry about what to wear.</p>
+            <Link to="/calendar" className="step-card-button">
+                Open Calendar
+            </Link>
+        </div>
+    </div>
+</section>
 
             <section className="inspiration-section">
                 <div className="section-title">

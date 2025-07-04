@@ -4,16 +4,13 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { logout } from './userSlice';
 
-const API_URL = 'http://localhost:5000/api/clothes'; // Sizin clothes API ünvanınız
+const API_URL = 'http://localhost:5000/api/clothes';
 
-// ----- ASİNXRON THUNK-LAR -----
-
-// Geyimləri çəkmək
 export const fetchClothes = createAsyncThunk(
     'clothes/fetchClothes',
     async (_, { getState, rejectWithValue }) => {
         try {
-            const token = getState().user.token; // Tokeni birbaşa user state-indən götürürük
+            const token = getState().user.token;
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
@@ -25,7 +22,6 @@ export const fetchClothes = createAsyncThunk(
     }
 );
 
-// Geyim əlavə etmək
 export const addCloth = createAsyncThunk(
     'clothes/addCloth',
     async (clothData, { getState, rejectWithValue }) => {
@@ -45,7 +41,6 @@ export const addCloth = createAsyncThunk(
     }
 );
 
-// Geyimi silmək
 export const deleteCloth = createAsyncThunk(
     'clothes/deleteCloth',
     async (clothId, { getState, rejectWithValue }) => {
@@ -61,8 +56,6 @@ export const deleteCloth = createAsyncThunk(
         }
     }
 );
-
-// ----- SLICE-IN ÖZÜ -----
 
 const initialState = {
     items: [],
@@ -93,7 +86,6 @@ const clothesSlice = createSlice({
             .addCase(deleteCloth.fulfilled, (state, action) => {
                 state.items = state.items.filter(item => item._id !== action.payload);
             })
-            // Logout olanda geyimləri təmizləyək
             .addCase(logout, (state) => {
                 state.items = [];
                 state.status = 'idle';
